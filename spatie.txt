@@ -1,0 +1,99 @@
+
+
+
+
+----------
+| INSTALL | https://spatie.be/docs/laravel-permission/v6/installation-laravel
+-----------
+# this code make 4 tables in my database
+composer require spatie/laravel-permission
+
+# CMD
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+
+# CMD
+php artisan migrate:fresh --seed
+
+# App\Http\Models\user.php
+use HasRoles;
+
+# create controller
+php artisan make:controller Web\Backend\Admin\Authorization\PermissionController
+php artisan make:controller Web\Backend\Admin\Authorization\RoleController
+php artisan make:controller Web\Backend\Admin\Authorization\UserController
+
+# create view
+authorization
+  permission
+    index.blade.php
+    create.blade.php
+    edit.blade.php
+  roll
+    index.blade.php
+    create.blade.php
+    edit.blade.php
+  User
+    index.blade.php
+    create.blade.php
+    edit.blade.php
+
+# Route
+Route::resource('roles', RoleController::class);
+Route::resource('permissions', PermissionController::class);
+Route::resource('users', UserController::class);
+
+#bootstrap/app.php
+->withMiddleware(function (Middleware $middleware) {
+  $middleware->alias([
+    'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+    'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
+    'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class
+  );
+})
+
+
+--------
+| USES | https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
+--------
+Route:-
+Route::group(['middleware' => ['role:super-admin']], function(){}
+Route::group(['middleware' => ['role:super-admin|admin']], function(){}
+
+Route::get('delete', [CategoryController::class, 'delete'])->middleware('permission:delete')
+Route::get('delete', [CategoryController::class, 'delete'])->middleware(['role:super-admin', 'permission:delete'])
+
+Controller:-
+public function __construct()
+{
+  $this->middleware(['role:manager','permission:publish articles|edit articles']);
+  $this->middleware(['permission:view, ['only' => ['index', 'show']]);
+  $this->middleware(['permission:create, ['only' => ['create', 'store']]);
+}
+
+Middleware:-
+public function handle(Request $request, Closure $next): Response
+{
+  $user = Auth::user();
+  $user->hasRole('admin');
+  $user->hasRole(['admin', 'manager']);
+}
+
+View:- 
+#use only permissions
+@can('delete') 
+  <button>delete</button>
+@canend
+
+#for role
+@role('admin')
+  //code
+@else
+  //code
+@endrole
+
+#
+@hasrole('admin')
+@else
+@endhasrole
+
+

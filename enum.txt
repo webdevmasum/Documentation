@@ -1,0 +1,64 @@
+
+
+
+
+
+
+# package install 
+composer require bensampo/laravel-enum
+
+
+# এটা ব্যাবহার করা হয় কারন database এ অহেতুক static data এর জন্য table না তৈরী করা।
+php artisan make:enum PageEnum -string
+php artisan make:enum GenderEnum -int
+
+-----------------
+|    INSTALL    |
+-----------------
+
+GenderEnum.php -----------------------------------------------------------------------------------------------------------------
+namespace App\Enums;
+
+enum GenderEnum: string {
+  case MALE = 'male';
+  case FEMALE = 'female';
+  case OTHER = 'other';
+  
+  public function description(): string
+  {
+    return match($this) {
+      self::MALE => 'purus',
+      self::FEMALE => 'mohila',
+      self::OTHER => 'hijra',
+    };
+  }
+}
+--------------------------------------------------------------------------------------------------------------------------------
+
+-----------------
+|      USES     |
+-----------------
+
+#for loop show
+$genders = App/Enums/GenderEnum::cases();
+foreach($genders as $gender){
+  <option value="{{$gender->value}}">{{$gender->description()}}</option>
+}
+
+#for validation (Controller Or Request)
+$request->validate([
+    'gender' => ['required', new Enum(GenderEnum::class)],
+]);
+
+#for single show
+GenderEnum::MALE->value
+GenderEnum::MALE->description()
+
+#casts (model)
+protected $casts = [
+  'gender' => GenderEnum::class,
+];
+
+$user->gender->description
+
+
