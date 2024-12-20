@@ -1,0 +1,64 @@
+
+
+
+
+use Illuminate\Support\Facades\DB;
+use App\Models\Order;
+use App\Models\Payment;
+
+class OrderController extends Controller
+{
+    public function storeOrder(Request $request)
+    {
+        DB::beginTransaction(); // Step 2: Begin transaction
+
+        try {
+            // Step 3: Perform operations within the transaction
+            // 1. Create Order
+            $order = new Order();
+            $order->user_id = $request->user_id;
+            $order->total_amount = $request->total_amount;
+            $order->status = 'pending';
+            $order->save();
+
+            // 2. Create Payment
+            $payment = new Payment();
+            $payment->order_id = $order->id;
+            $payment->amount = $request->total_amount;
+            $payment->status = 'completed';
+            $payment->save();
+
+            DB::commit(); // Step 4: Commit if everything works fine
+            return response()->json(['message' => 'Order and payment processed successfully!']);
+
+        } catch (\Exception $e) {
+            DB::rollBack(); // Step 5: Rollback if something goes wrong
+            return response()->json(['error' => 'Failed to process the transaction.'], 500);
+        }
+    }
+}
+
+
+
+
+
+
+database transaction in Laravel:
+
+1. Set Up the Model and Controller
+Ensure you have the models and controllers ready. For this example, assume you are working with two models: Order and Payment.
+
+2. Begin a Transaction
+Start the transaction using the DB::beginTransaction() method. This tells the database to wait before applying the changes.
+
+3. Perform Database Operations
+You can perform any database operations that need to happen together within the transaction.
+
+4. Commit the Transaction
+If all operations are successful, use DB::commit() to finalize and save the changes to the database.
+
+5. Rollback in Case of Error
+If an error occurs during the transaction, you can roll back the changes with DB::rollBack(), undoing everything.
+
+6. Using try...catch for Error Handling
+Wrap the transaction logic inside a try...catch block to handle exceptions and ensure that you rollback in case of errors.

@@ -1,0 +1,114 @@
+###########################
+smtp set up
+############################
+1. https://mailtrap.io/
+	log in and Email testing->My inbox->click my inbox->show this:
+	
+	MAIL_MAILER=smtp
+	MAIL_HOST=smtp.mailtrap.io
+	MAIL_PORT=2525
+	MAIL_USERNAME=your_username
+	MAIL_PASSWORD=your_password
+	MAIL_ENCRYPTION=tls
+	MAIL_FROM_ADDRESS=no-reply@yourdomain.com
+	MAIL_FROM_NAME="${APP_NAME}"
+
+	then set up your .env
+
+
+2. 	php artisan make:mail ContactFormMail
+3. 	app/Mail/ContactFormMail.php
+
+	<?php
+
+	namespace App\Mail;
+
+	use Illuminate\Bus\Queueable;
+	use Illuminate\Mail\Mailable;
+	use Illuminate\Queue\SerializesModels;
+
+	class ContactFormMail extends Mailable
+	{
+    		use Queueable, SerializesModels;
+
+   	 public $name;
+   	 public $email;
+   	 public $message;
+
+
+   	 public function __construct($name, $email, $message)
+   	 {
+      	  $this->name = $name;
+       	 $this->email = $email;
+       	 $this->message = $message;
+   	 }
+
+
+    	public function build()
+   	 {
+       	 return $this->from($this->email)
+                    ->subject('Contact Form Submission')
+                    ->view('emails.contact');
+   	 }
+	}
+
+
+4.	php artisan make:controller ContactController
+	<?php
+
+	namespace App\Http\Controllers;
+
+	use Illuminate\Http\Request;
+	use App\Mail\ContactFormMail;
+	use Illuminate\Support\Facades\Mail;
+
+	class ContactController extends Controller
+	{
+    	public function showForm()
+   	 {
+      	  return view('contact');
+   	 }
+
+   	 public function sendEmail(Request $request)
+    	{
+       	 $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'message' => 'required|string',
+        ]);
+
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $message = $request->input('message');
+
+        Mail::to('asdf@gmail.com')->send(new ContactFormMail($name, $email, $message));
+
+        return redirect()->back()->with('success', 'Thank you for your message. It has been sent.');
+    }
+}
+5. web.php
+	Route::get('/smtpcontact', [ContactsController::class, 'showForm']);
+	Route::post('/smtpcontact/send', [ContactsController::class, 'sendEmail'])->name('contact.send');
+
+6. php artisan serve and check there https://mailtrap.io/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

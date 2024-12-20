@@ -1,0 +1,1 @@
+This PC->properties->advanced_system_seetings->Envirnment_variable->Path->edit->C:\xampp\php->okay

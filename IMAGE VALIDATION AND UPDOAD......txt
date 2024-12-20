@@ -1,0 +1,60 @@
+// IMAGE VALIDATION AND UPDOAD.....
+
+
+// in productController page and store method
+	if($request->image != ""){
+	  $rules['image']='image;'
+	}
+
+// than.....
+
+if($request->image != ""){
+	// img will store here
+	$image = $request->image;
+	$exten = $image->getClientOriginalExtension();
+	$imageName = time().'.'.#exten //Unique image name
+
+	// save img product directory, 
+	( now create folder in public path for img path and... )
+	$image->move(public_path('uploads/products'),$imageName);
+
+	// save img in database
+	$product->image=$imageName;
+	$product->save();
+	}
+
+
+// now in index/listing page on table
+
+	<td>
+	     @if ($product->image != "")
+		<img width="50" src="{{ asset('uploads/products/.$product->image}}" alt="">
+	     @endif
+	</td>
+
+
+
+
+// NOW for UPDATE...........
+
+	if($request->image != ""){
+
+	// delete old image
+	File::delete(public_path('uploades/products/'.$product->image));	
+
+	// img will update here
+	$image = $request->image;
+	$exten = $image->getClientOriginalExtension();
+	$imageName = time().'.'.#exten //Unique image name
+
+	// save img product directory, 
+	( now create folder in public path for img path and... )
+	$image->move(public_path('uploads/products'),$imageName);
+
+	// save img in database
+	$product->image=$imageName;-
+	$product->save();
+	}
+
+	return redirect()->route('products.index')->with('success','product updated  successfully');
+

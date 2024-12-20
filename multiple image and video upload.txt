@@ -1,0 +1,687 @@
+<?php
+
+namespace App\Http\Controllers\Web\Backend;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\TripRequest;
+use App\Models\Date;
+use App\Models\Facility;
+use App\Models\Guide;
+use App\Models\Hotel;
+use App\Models\Image;
+use App\Models\Location;
+use App\Models\Meal;
+use App\Models\Offer;
+use App\Models\Season;
+use App\Models\Transport;
+use App\Models\Trip;
+use App\Models\TripCategory;
+use Illuminate\Support\Str;
+use App\Models\Video;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\DataTables;
+
+class TripController extends Controller
+{
+    /**
+     * Display a listing of trips.
+     *
+     * This method handles both the main view and AJAX requests for retrieving
+     * trip data in a paginated format using DataTables. It orders trips by
+     * their creation date in descending order and includes action buttons
+     * for editing and deleting each trip.
+     *
+     * @param \Illuminate\Http\Request $request The incoming request instance.
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            return DataTables::of(Trip::orderBy('created_at', 'desc'))
+                ->addIndexColumn()
+                ->addColumn('action', function ($data) {
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="' . route('admin.trips.edit', $data->id) . '" type="button" class="btn btn-primary text-white" title="Edit">
+                                  <i class="bi bi-pencil"></i>
+                                  </a>
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger text-white" title="Delete">
+                                  <i class="bi bi-trash"></i>
+                                </a>
+                                </div>';
+                })
+                ->addColumn('status', function ($data) {
+                    $status = ' <div class="form-check form-switch" style="margin-left:40px;">';
+                    $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+                    if ($data->status == 1) {
+                        $status .= "checked";
+                    }
+                    $status .= '><label for="customSwitch' . $data->id . '" class="form-check-label" for="customSwitch"></label></div>';
+
+                    return $status;
+                })
+
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+        }
+        return view('backend.layout.trips.index');
+    }
+
+
+
+    /**
+     * Show the form for creating a new trip.
+     *
+     * This method retrieves all necessary data for the trip creation
+     * form, including seasons, offers, locations, transports,
+     * categories, dates, meals, facilities, guides, and hotels.
+     * It prepares this data to be passed to the view, where users
+     * can input trip details.
+     *
+     * @return \Illuminate\View\View The view for creating a trip.
+     */
+
+    public function create()
+    {
+        $seasons = Season::all();
+        $offers = Offer::all();
+        $locations = Location::all();
+        $transports = Transport::all();
+        $categoryes = TripCategory::all();
+        $dates = Date::all();
+        $meals = Meal::all();
+        $facilities = Facility::all();
+        $guides = Guide::all();
+        $hoteles = Hotel::all();
+        $compact = [
+            'seasons' => $seasons,
+            'offers' => $offers,
+            'transports' => $transports,
+            'locations' => $locations,
+            'categoryes' => $categoryes,
+            'dates' => $dates,
+            'meals' => $meals,
+            'facilities' => $facilities,
+            'guides' => $guides,
+            'hotels' => $hoteles,
+        ];
+        return view('backend.layout.trips.create', $compact);
+    }
+
+
+
+    /**
+     * Store a newly created trip in the database.
+     *
+     * This method handles the creation of a trip by validating the
+     * incoming request data, uploading the trip's thumbnail, and
+     * storing related information in the database. It begins a
+     * database transaction to ensure data integrity, attaching
+     * various related models such as locations, categories, and
+     * features. If the trip is successfully created, it redirects
+     * to the trips index with a success message. In case of an
+     * error, it rolls back the transaction, logs the error, and
+     * returns an error message.
+     *
+     * @param TripRequest $request The validated request instance.
+     * @return \Illuminate\Http\RedirectResponse A redirect response
+     * to the trips index with a status message.
+     */
+    public function store(TripRequest $request)
+    {
+
+        try {
+            DB::beginTransaction();
+            // Get validated data from the request
+            $validatedData = $request->validated();
+            // dd($validatedData);
+
+            // image uploading and getting the location path
+            $imageUrl = fileUpload($validatedData['thumbnail'], 'trip/thumbnail', $validatedData['name']);
+
+            //  tryp creation
+            $trip = Trip::create([
+                'name' => $validatedData['name'],
+                'slug' => generateUniqueSlug($validatedData['name'], 'trips'),
+                'code' => generateUniqueSlug($validatedData['name'], 'trips', 'code'),
+                'duration' => $validatedData['duration'],
+                'people' => $validatedData['people'],
+                'day' => $validatedData['day'],
+                'night' => $validatedData['night'],
+                'thumbnail' => $imageUrl,
+                'season_id' => $validatedData['season_id'],
+                'offer_id' => $validatedData['offer_id'],
+                'description' => $validatedData['description'],
+                'pricing_info' => $validatedData['pricing_info'],
+                'packge_include' => $validatedData['packge_include'],
+                'single_price' => $validatedData['single_price'],
+                'double_price' => $validatedData['double_price'],
+                'holiday_single_price' => $validatedData['holiday_single_price'],
+                'holiday_double_price' => $validatedData['holiday_double_price'],
+                'adult_three_price' => $validatedData['adult_three_price'],
+                'child_three_price' => $validatedData['child_three_price'],
+                'adult_four_price' => $validatedData['adult_four_price'],
+                'chile_four_price' => $validatedData['chile_four_price'],
+                'holiday_adult_three_price' => $validatedData['holiday_adult_three_price'],
+                'holiday_child_three_price' => $validatedData['holiday_child_three_price'],
+                'holiday_adult_four_price' => $validatedData['holiday_adult_four_price'],
+                'holiday_chile_four_price' => $validatedData['holiday_chile_four_price'],
+            ]);
+
+            // Handle video uploads
+            if ($request->hasFile('videos')) {
+                foreach ($request->file('videos') as $video) {
+                    $videoUrl = fileUpload($video, 'trip/videos', $trip->name);
+                    $trip->videos()->create(['usr' => $videoUrl]); // Assuming 'usr' is the column name in your videos table
+                }
+            }
+
+            // Handle image uploads for the trip
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    // Generate a unique name using Str::uuid() and the original file extension
+                    $uniqueId = Str::uuid()->toString();
+                    $imagePath = fileUpload($image, 'trip/images', $uniqueId . '.' . $image->getClientOriginalExtension()); // Use the unique ID for the file name
+                    $trip->images()->create(['usr' => $imagePath]); // Assuming 'usr' is the column in the 'images' table
+                }
+            }
+
+            // departure location added with tirp
+            foreach ($validatedData['departure'] as $departure) {
+                $trip->locations()->attach($departure, ['type' => 'departure']);
+            }
+            // arival location added with trip
+            foreach ($validatedData['arrival'] as $arrival) {
+                $trip->locations()->attach($arrival, ['type' => 'arrival']);
+            }
+            // category is connected with trips
+            foreach ($validatedData['category'] as $category) {
+                $trip->categories()->attach($category);
+            }
+            // $trip->categories()->sync($validatedData['category']);
+
+            // trip transports
+            foreach ($validatedData['transport'] as $transport) {
+                $trip->transports()->attach($transport);
+            }
+
+            // trip transports
+            foreach ($validatedData['dates'] as $dates) {
+                $trip->dates()->attach($dates);
+            }
+
+            // trip meals
+            foreach ($validatedData['meals'] as $meal) {
+                $trip->meals()->attach($meal);
+            }
+
+            // trip features
+            foreach ($validatedData['facilities'] as $feature) {
+                $trip->facilities()->attach($feature);
+            }
+
+            // trip guides
+            foreach ($validatedData['guides'] as $guide) {
+                $trip->guides()->attach($guide);
+            }
+
+            // trip hotles
+            foreach ($validatedData['hotels'] as $hotel) {
+                $trip->hotels()->attach($hotel);
+            }
+
+            DB::commit();
+            return redirect()->route('admin.trips.index')->with('t-success', 'Trip has been created');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error("Trip Store Failed: " . $e->getMessage());
+            return redirect()->back()->with('t-error', 'Something went wrong..!');
+        }
+    }
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Trip $trip)
+    {
+        //
+    }
+
+
+
+    public function edit($id)
+    {
+        // Retrieve the trip by its ID, throwing a 404 error if not found
+        $trip = Trip::findOrFail($id);
+
+        // Fetch all related data needed for the edit view
+        $seasons = Season::all();
+        $offers = Offer::all();
+        $locations = Location::all();
+        $transports = Transport::all();
+        $categoryes = TripCategory::all();
+        $dates = Date::all();
+        $meals = Meal::all();
+        $facilities = Facility::all();
+        $guides = Guide::all();
+        $hotels = Hotel::all();
+
+        // Preparing compact data for view
+        $compact = [
+            'trip' => $trip,
+            'seasons' => $seasons,
+            'offers' => $offers,
+            'transports' => $transports,
+            'locations' => $locations,
+            'categoryes' => $categoryes,
+            'dates' => $dates,
+            'meals' => $meals,
+            'facilities' => $facilities,
+            'guides' => $guides,
+            'hotels' => $hotels,
+        ];
+
+        return view('backend.layout.trips.edit', $compact);
+    }
+
+
+    public function update(TripRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Get validated data from the request
+            $validatedData = $request->validated();
+
+            // Find the trip by ID
+            $trip = Trip::findOrFail($id);
+            Log::info('Request has thumbnail: ' . $request->hasFile('thumbnail'));
+
+            // Check if a new thumbnail is uploaded, otherwise retain the old one
+            if ($request->hasFile('thumbnail')) {
+                $imageUrl = fileUpload($validatedData['thumbnail'], 'trip/thumbnail', $validatedData['name']);
+            } else {
+                $imageUrl = $trip->thumbnail;
+            }
+
+            // Remove existing videos if needed
+            if ($request->input('remove_videos', false)) {
+                // This is an optional check. If you want to remove old videos.
+                $trip->videos()->delete();
+            }
+
+            // Handle new video uploads
+            if ($request->hasFile('videos')) {
+                // Clear old video records if necessary
+                $trip->videos()->delete();
+
+                foreach ($request->file('videos') as $video) {
+                    // Upload each video
+                    $videoUrl = fileUpload($video, 'trip/videos', $trip->name);
+                    // Save the video record in the database
+                    $trip->videos()->create(['usr' => $videoUrl]);
+                }
+            }
+
+
+            // Update the trip record
+            $trip->update([
+                'name' => $validatedData['name'],
+                'slug' => generateUniqueSlug($validatedData['name'], 'trips'),
+                'code' => generateUniqueSlug($validatedData['name'], 'trips', 'code'),
+                'duration' => $validatedData['duration'],
+                'people' => $validatedData['people'],
+                'day' => $validatedData['day'],
+                'night' => $validatedData['night'],
+                'thumbnail' => $imageUrl,
+                'season_id' => $validatedData['season_id'],
+                'offer_id' => $validatedData['offer_id'],
+                'description' => $validatedData['description'],
+                'pricing_info' => $validatedData['pricing_info'],
+                'packge_include' => $validatedData['packge_include'],
+                'single_price' => $validatedData['single_price'],
+                'double_price' => $validatedData['double_price'],
+                'holiday_single_price' => $validatedData['holiday_single_price'],
+                'holiday_double_price' => $validatedData['holiday_double_price'],
+                'adult_three_price' => $validatedData['adult_three_price'],
+                'child_three_price' => $validatedData['child_three_price'],
+                'adult_four_price' => $validatedData['adult_four_price'],
+                'chile_four_price' => $validatedData['chile_four_price'],
+                'holiday_adult_three_price' => $validatedData['holiday_adult_three_price'],
+                'holiday_child_three_price' => $validatedData['holiday_child_three_price'],
+                'holiday_adult_four_price' => $validatedData['holiday_adult_four_price'],
+                'holiday_chile_four_price' => $validatedData['holiday_chile_four_price'],
+            ]);
+
+
+            // // Handle new image uploads selectively
+            // if ($request->hasFile('images')) {
+            //     foreach ($request->file('images') as $index => $image) {
+            //         if ($image) {
+            //             // Remove the specific old image being replaced
+            //             $oldImagePath = $request->old_images[$index];
+            //             if (Storage::exists($oldImagePath)) {
+            //                 Storage::delete($oldImagePath);
+            //             }
+
+            //             // Upload the new image
+            //             $uniqueId = Str::uuid()->toString();
+            //             $imagePath = fileUpload($image, 'trip/images', $uniqueId . '.' . $image->getClientOriginalExtension());
+
+            //             // Update or create the image record
+            //             $trip->images[$index]->update(['usr' => $imagePath]);
+            //         }
+            //     }
+            // }
+
+            // // Handle image deletion based on checkbox input
+            // if ($request->has('delete_images')) {
+            //     foreach ($request->delete_images as $index => $delete) {
+            //         if ($delete) {
+            //             // Get the old image path and delete it
+            //             $oldImagePath = $request->old_images[$index];
+            //             if (Storage::exists($oldImagePath)) {
+            //                 Storage::delete($oldImagePath);
+            //             }
+            //             // Delete the image record from the database
+            //             $trip->images[$index]->delete();
+            //         }
+            //     }
+            // }
+
+
+            // Handle new image uploads selectively
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $index => $image) {
+                    if ($image) {
+                        // Remove the specific old image being replaced if it's checked for deletion
+                        $oldImagePath = $request->old_images[$index] ?? null; // Ensure old_images can be null
+                        if ($oldImagePath && Storage::exists($oldImagePath)) {
+                            Storage::delete($oldImagePath);
+                        }
+
+                        // Upload the new image
+                        $uniqueId = Str::uuid()->toString();
+                        $imagePath = fileUpload($image, 'trip/images', $uniqueId . '.' . $image->getClientOriginalExtension());
+
+                        // Update or create the image record
+                        if (isset($trip->images[$index])) {
+                            // Update existing image record
+                            $trip->images[$index]->update(['usr' => $imagePath]);
+                        } else {
+                            // Create new image record if not already present
+                            $trip->images()->create(['usr' => $imagePath]);
+                        }
+                    }
+                }
+            }
+
+            // Handle image deletion based on checkbox input
+            if ($request->has('delete_images')) {
+                foreach ($request->delete_images as $index => $delete) {
+                    if ($delete) {
+                        // Ensure there's a corresponding old image path
+                        $oldImagePath = $request->old_images[$index] ?? null;
+
+                        if ($oldImagePath && Storage::exists($oldImagePath)) {
+                            // Delete the old image from storage
+                            Storage::delete($oldImagePath);
+                        }
+
+                        // Delete the image record from the database if it exists
+                        if (isset($trip->images[$index])) {
+                            $trip->images[$index]->delete();
+                        }
+                    }
+                }
+            }
+
+            // Syncing departure locations
+            $trip->locations()->detach(); // Clear existing relationships if necessary
+            foreach ($validatedData['departure'] as $departure) {
+                $trip->locations()->attach($departure, ['type' => 'departure']);
+            }
+
+            // Syncing arrival locations
+            foreach ($validatedData['arrival'] as $arrival) {
+                $trip->locations()->attach($arrival, ['type' => 'arrival']);
+            }
+
+            // Syncing categories
+            $trip->categories()->sync($validatedData['category']);
+
+            // Syncing transports
+            $trip->transports()->sync($validatedData['transport']);
+
+            // Syncing dates
+            $trip->dates()->sync($validatedData['dates']);
+
+            // Syncing meals
+            $trip->meals()->sync($validatedData['meals']);
+
+            // Syncing facilities
+            $trip->facilities()->sync($validatedData['facilities']);
+
+            // Syncing guides
+            $trip->guides()->sync($validatedData['guides']);
+
+            // Syncing hotels
+            $trip->hotels()->sync($validatedData['hotels']);
+
+            DB::commit();
+            return redirect()->route('admin.trips.index')->with('t-success', 'Trip has been updated');
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error("Trip Update Failed: " . $e->getMessage());
+            return redirect()->back()->with('t-error', 'Something went wrong..! Please try again.');
+        }
+    }
+
+    /**
+     * Toggle the status of the given offer.
+     *
+     * @param Offer $offer The offer whose status will be toggled.
+     * @return \Illuminate\Http\JsonResponse A JSON response indicating the success or failure of the operation.
+     */
+    public function status(Trip $trip)
+    {
+        try {
+            $trip->status = !$trip->status;
+            $trip->save();
+
+            // Return a success response
+            return response()->json([
+                'success' => true,
+                'message' => 'Status Update successfully',
+                'error' => null,
+            ], 200);
+        } catch (Exception $e) {
+            // Log the error message for debugging
+            Log::error('Trip Status Update Failed: ' . $e->getMessage());
+
+            // Return a failure response with the error message
+            return response()->json([
+                'success' => false,
+                'message' => 'Trip Status Update Failed..!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    /**
+     * Remove the specified trip from the database.
+     *
+     * This method attempts to delete the specified trip record.
+     * If the deletion is successful, it returns a JSON response
+     * indicating success. If an error occurs, it logs the error
+     * message and returns a JSON response indicating failure,
+     * along with the error message.
+     *
+     * @param Trip $trip The trip instance to be deleted.
+     * @return \Illuminate\Http\JsonResponse A JSON response with
+     * the result of the deletion attempt.
+     */
+    public function destroy(Trip $trip)
+    {
+        try {
+            $trip->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Trip deleted successfully',
+                'error' => null,
+            ], 200);
+        } catch (Exception $e) {
+            // Log the error message for debugging
+            Log::error('Trip Deletion Failed: ' . $e->getMessage());
+
+            // Return a failure response with the error message
+            return response()->json([
+                'success' => false,
+                'message' => 'Trip Deletion Failed...!',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+}
+
+
+---------------------------------------- blade/input -----------------------------------------------
+
+
+
+edit...................................................
+
+
+                                {{-- Thumbnail --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Thumbnail</label>
+                                    <input type="file"
+                                        class="form-control dropify @error('thumbnail') is-invalid @enderror" id="thumbnail"
+                                        name="thumbnail" data-default-file="{{ asset($trip->thumbnail) }}">
+                                    @error('thumbnail')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Multiple Images update and insert working --}}
+                                {{-- <div class="form-group mb-3" id="image-upload-container">
+                                    <label for="images[]">Images:</label>
+                                    @foreach ($trip->images as $index => $image)
+                                        <div class="image-upload-item">
+                                            <input type="file"
+                                                class="form-control dropify @error('images') is-invalid @enderror"
+                                                name="images[{{ $index }}]" id="images_{{ $index }}"
+                                                multiple accept="image/*" data-default-file="{{ asset($image->usr) }}">
+                                            <input type="hidden" name="old_images[{{ $index }}]"
+                                                value="{{ $image->usr }}">
+                                            <input type="checkbox" name="delete_images[{{ $index }}]"
+                                                id="delete_images_{{ $index }}" value="1">
+                                            <label for="delete_images_{{ $index }}">Delete</label>
+                                        </div>
+                                    @endforeach
+                                    <button type="button" id="add-image-btn" class="btn btn-primary">Add Image</button>
+                                </div> --}}
+
+
+                                {{-- Multiple Images update and insert working  --}}
+                                <div class="form-group mb-3" id="image-upload-container">
+                                    <label for="images[]">Images:</label>
+                                    @foreach ($trip->images as $index => $image)
+                                        <div class="image-upload-item mb-2">
+                                            <input type="file"
+                                                class="form-control dropify @error('images') is-invalid @enderror"
+                                                name="images[{{ $index }}]"
+                                                id="images_{{ $index }}"
+                                                accept="image/*"
+                                                data-default-file="{{ asset($image->usr) }}">
+
+                                            <input type="hidden" name="old_images[{{ $index }}]" value="{{ $image->usr }}">
+
+                                            <div class="form-check mt-2">
+                                                <input type="checkbox"
+                                                    class="form-check-input"
+                                                    name="delete_images[{{ $index }}]"
+                                                    id="delete_images_{{ $index }}"
+                                                    value="1">
+                                                <label class="form-check-label" for="delete_images_{{ $index }}">Delete</label>
+                                            </div>
+                                        </div>
+                                    @endforeach
+
+                                    <button type="button" id="add-image-btn" class="btn btn-primary mt-3">Add Image</button>
+                                </div>
+
+                                {{-- Display existing videos --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Existing Videos</label>
+                                    <div class="row">
+                                        @foreach ($trip->videos as $video)
+                                            <div class="col-md-3">
+                                                <div class="card">
+                                                    <video width="100%" controls>
+                                                        <source src="{{ asset($video->usr) }}" type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    <div class="card-body">
+                                                        {{-- Option to delete the video --}}
+                                                        <input type="checkbox" name="delete_videos[]"
+                                                            value="{{ $video->id }}"> Delete this video
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                {{-- Add new video uploads --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Upload New Videos</label>
+                                    <input type="file"
+                                        class="form-control dropify @error('videos') is-invalid @enderror" id="videos"
+                                        name="videos[]" multiple accept="video/*">
+                                    @error('videos')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+
+create...........................................
+
+{{-- thumbnail --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-lable">Thumbnail</label>
+                                    <input type="file"
+                                        class="form-control dropify @error('thumbnail') is-invalid @enderror" id="thumbnail"
+                                        name="thumbnail">
+                                    @error('thumbnail')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- Multiple image upload --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Images</label>
+                                    <input type="file"
+                                        class="form-control dropify @error('image') is-invalid @enderror" id="image"
+                                        name="images[]" multiple accept="image/*">
+                                    @error('image')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- video --}}
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Video</label>
+                                    <input type="file"
+                                        class="form-control dropify @error('video') is-invalid @enderror" id="video"
+                                        name="videos[]" multiple accept="video/*">
+                                    @error('video')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>

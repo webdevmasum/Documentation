@@ -1,0 +1,100 @@
+	*=*=*=*=*=* Laravel Commands *=*=*=*=*
+
+1. composer create-project Laravel/Laravel example-app
+ ( than fixe your DB in env file and run migrate command )
+--> php artisan migrate
+2. composer require Laravel/breeze --dev
+3. php artisan breeze: install -> blade -> 1
+--> php artisan serve
+php artisan serve --port=8080
+
+
+4. php artisan make:controller App/Http/Controllers/Web/Backend/Blog/BlogController -r
+
+*!* php artisan make:controller App/Http/Controllers/API/OrderController
+
+5. php artisan make:model Blog -m
+
+6. php artisan make:middleware Admin
+
+php artisan route:clear
+php artisan cache:clear
+php artisan config:cache
+php artisan optimize:clear
+
+php artisan queue:work ( for mail sending )
+
+
+composer dump-autoload [ this is recent version command ]
+
+
+php artisan migrate
+
+php artisan migrate:rollback
+php artisan migrate:reset (all database reset)
+
+php artisan migrate:refresh ( push update data and remove ex data)
+php artisan migrate:fresh --seed
+
+4242 4242 4242 4242
+
+php artisan storage:link { To create img path }
+
+
+git project run system..
+	1. npm i
+	2. npm run build
+	3. composer update
+	4. php artisan migrate
+	5. php artisan db:seed
+	6. php artisan storage:link
+	7. php artisan key:generate
+	8. php artisan config:cache
+
++**+ If destroy login page design...
+-->> postcss.config.js
++->
+module.exports = {
+    plugins: {
+        tailwindcss: {},
+        autoprefixer: {},
+    },
+};
+
+
+
+
+MySQL work bench for design a db.....
+
+
+
+-----===  ======  === DB Seeder create and Seed ===  ======  ===-----
+
+	1. php artisan make:seeder ExampleSeeder
+
+[ now copy db table Schema and go to ai (real data -->
+" create an array object and loop for seeding in Laravel " ]
+
+	2. [ go to DatabaseSeeder and add Seeder class like 
+" $this->call(ExampleSeeder::class); " ]
+
+	3. php artisan db:seed --class=BlogSeeder
+	4. php artisan db:seed
+
+
+	=== Done ===	=== Done ===	=== Done ===
+
+===>>> php artisan make:factory ExampleFactory (use for fake data)
+
+====>>>  if u want upload img... [ ishayned worked ]
+i have trip . i am going to find trip by id . now i want to create video upload based on trip using change function with in foreach loop 
+<<<===
+
+
+i want to delete button for image. when i update image if i want to delete specific image, press the delete button and delete the image
+
+
+
+[ ***** if you delete profile you have to give confirmation password.
+go to route, in destroy function, ->middleware(something. Password) *****]
+

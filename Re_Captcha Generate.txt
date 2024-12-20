@@ -1,0 +1,31 @@
+
+
+
+1. https://github.com/biscolab/laravel-recaptcha ( visit )
+2.   composer require biscolab/laravel-recaptcha ( then check json file )
+3.  https://www.google.com/recaptcha/admin/create ( level, version, domain, project -> submit )
+4. https://www.google.com/recaptcha/admin/site/710765238/setup ( Collect site key and secret key )
+5. .env ( add site and secret key )
+
+6.  php artisan vendor:publish --provider="Biscolab\ReCaptcha\ReCaptchaServiceProvider"
+7. recaptcha.php ( 'error_message_key' => 'Invalidation Recaptcha', and change something )
+8.  php artisan config:cache
+
+9. {!! htmlScriptTagJsApi() !!} [ app.blade.php ( in head tag )]
+10. login.blade.php --->> 
+ <div class="bi-login-input-wrapper save">
+         {!! htmlFormSnippet() !!}
+
+          @if ($errors->has('g-recaptcha-response'))
+             <div>
+                 <small class="text-danger">
+                    {{ $errors->first('g-recaptcha-response') }}
+                  </small>
+               </div>
+            @endif
+       </div>
+
+11. 'g-recaptcha-response' => 'recaptcha', [ loginController.php, its for validation, it will be in a function ]
+
+
+finally done. but if u want u can take more conditions.......

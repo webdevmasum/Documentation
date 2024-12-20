@@ -1,0 +1,112 @@
+JWT Token in Laravel 11 for API integration.
+
+
+1. Create a Project.
+2. .env for DB
+3. Install API 
+	-> php artisan make:api
+
+4. Install JWT from documentation
+	-> composer require tymon/jwt-auth
+
+5. Publish the config
+	-> php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+	=> config/jwt.php
+
+6. Generate secret key
+	-> php artisan jwt:secret
+	=> .env
+
+7. user.php (model) => follow the documentation
+	-> use Tymon\JWTAuth\Contracts\JWTSubject;
+	-> implements JWTSubject
+	-> public function getJWTIdentifier()
+	-> public function getJWTCustomClaims()
+
+8. Auth.php (config folder ) => follow the documentation
+	-> guards for api
+
+9. Route for api
+	----------------------------------> 
+
+Route::group(['prefix' => 'auth'], function ($router) {
+
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('me', [AuthController::class, 'me']);
+});
+
+	<----------------------------------
+
+9. Controller create
+	-> php artisan make:controller AuthController
+	-> Create register function....
+	---------------------------------->
+public function register(UserRegisterRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password'])
+        ]);
+        $token = auth('api')->login($user);
+
+        return $this->respondWithToken($token);
+    }
+	<----------------------------------
+
+10. Create Request class
+	->php artisan make:request UserRegisterRequest
+	-> authorize will true
+	-> rules - return - 'name, email, pass' . for validation
+
+11. Postman (Register)
+	-> url ( http://127.0.0.1:8000/api/auth/register )
+	-> Headers ( Accept + Application/json )
+	-> Body ( form-data, key and value )
+
+12.Postman (me)
+	-> Authorization ( Bearer Token, past token )
+	-> Headers ( Accept + Application/json )
+	-> Body ( form-data, key and value )
+
+13. Postman (login)
+	-> Headers ( Accept + Application/json )
+	-> Email | Password
+
+14. Postman (Refresh)
+	-> Authorization ( Bearer Token, past token )
+	-> Headers ( Accept + Application/json )
+	-> Body ( unchecked )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+1. git branch ( to show all git branch)	
+
+	--> git branch <branch name> ( create git branch )
+
+	--> git branch feature-a ( add git branch )
+
+	--> git checkout <branch name> ( switch git branch )
+
+	--> git checkout main ( switch git branch to main branch )
+
+	--> git merge <branch name> ( to marge branch to main )
+		-----> git add <conflicted file> (if conflict any file than solve it and again add and than commit )
+
+	--> git branch -d <branch name>  ( to delete git branch )
+
+
+2. git status ( to show how much file modified)
+
+3. git add . ( to add files)
+
+4. git commit -m "write your commit" ( to commit)
+
+*****5. git push ( to push your files on your branch)
+	--> git remote add origin <remote_repository_url> ( to add remote repository)
+	-->* git add . ( to add all files)
+	-->* git commit -m "write your commit" ( to commit )
+	-->* git push ( if you stay in your branch ) DONE.....
+	-->* git push origin <branch_name> ( it's depend to where are you saty in) /
+	
+	--> git push -u origin <branch_name> ( first time create local to remote branch)
+	-->
+
+*****6. git Clone/pull_____
+
+	must be run commands............
+	--- .env credentials setup
+	--- npm run dev
+	--- composer update
+	--- php artisan migrate
+	--- php artisan migrate:fresh --seed
+
+	--> git remote -v (to show url remote repository )
+	--> git remote add origin <remote_repository_url> ( if didn't add remote repo than to add)
+	--> git branch ( to show all git branch )
+	--> git checkout <branch name> ( to switch git branch )
+	--> git pull origin <branch_name> ( to pull update data )
+	--> git add <conflicted_file> ( if conflict files you have to solve manually than run command )
+	--> git commit ( after solve conflict than commit )
+	-->
+	-->
+
+
+	1. git push origin masum:dev (masum to dev)
+	2. git pull origin dev 
+	** :wq ( If no conflict ) 
+	3. git pull dev 
+	=> git branch -r (Show All Remote Branches Only)
+
+
+
+	* git push origin masum:dev 
+[The command git push origin masum:dev is used to push changes from a local branch named Masum to a remote branch named dev on the origin repository.]..............
+
+	* git pull origin dev 
+[ The command git pull origin dev is used to update your local branch with changes from the dev branch of the remote repository named origin ]..............
+
+	* git pull dev 
+[ The command git pull dev is used to update your current local branch with changes from the local branch named dev ]..............
+
+
+=====Iqbal======
+git branch
+--------------------------------
+1. git checkout -b masum
+
+0.  After create branch :
+	2.1: git push
+	2.2: git push --set-upstream origin masum 
+	(then it will set up git hub)
+.....................................................................
+
+1. git pull origin branch_name
+2. git push origin branch_name
+3. git merge branch_name
+4.git checkout main
+
+Example:
+1. git checkout masum            # Switch to masum branch
+
+2. git pull origin jb            # Pull changes from jb into masum
+
+# Resolve conflicts if any, then:
+
+3. git add .                     # Stage resolved changes
+
+4. git commit -m "Merged jb into masum"  # Commit merge
+
+5. git push origin masum         # Optional: Push masum branch (if needed)
+
+6. git checkout main             # Switch to main branch
+
+7. git push origin main          # Push main branch
+
+
+
+
+
+
+
+
