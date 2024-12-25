@@ -1,0 +1,293 @@
+*
+* stripe Install
+* stripe credientials
+* .env
+* route for checkout
+* checkout for Controller
+* route for stripe
+* payment for StripePaymentController
+*
+
+
+
+********-------
+step-1: Route | WEB
+********-------
+
+//! Cart Routes (web)
+//! Route for StripePaymentController added by Masum
+
+Route::get('checkout/success', [StripePaymentController::class, 'checkoutSuccess'])->name('checkout.success');
+Route::get('checkout/cancel', [StripePaymentController::class, 'checkoutCancel'])->name('checkout.cancel');
+
+********--------
+step-2: config/services.php
+********--------
+
+'stripe' => [
+        'model' => App\Models\User::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),        
+    ],
+
+
+********--------
+step-3: .env
+********--------
+
+# this code for Stripe
+STRIPE_KEY=pk_test_51QJoHQGEF1Q9fsWzBhRRj418NdfC361iMdLYC28AU5COfpKTJsoanbBeyBA58kiZHv33jSrW5rqfaaoyqLNIjEoe00nbv2V9Y2
+STRIPE_SECRET=sk_test_51QJoHQGEF1Q9fsWzYKExuOTG0Yn5qka0uK4tl0y34zZga1YQnPsJVxxj5REYUZjYD1NQu2xx2i9gOhImRRiAu9a100vwgGQTFt
+STRIPE_WEBHOOK_SECRET=whsec_GdrxFyE5HTid8NowguoPSlhCVZqli9TA
+
+# FRONTEND_ROUTE_URL=http://localhost:5173/payment-success
+FRONTEND_SUCCESS_URL=http://localhost:5173/payment-success
+FRONTEND_FAILED_URL=http://localhost:5173/payment-failed
+
+
+********-------
+step-4: Route | API
+********-------
+
+//!! Checkout Route with stripe payment by Masum
+    Route::post('/checkout/success', [CheckoutController::class, 'checkout']);
+
+
+
+********-------
+step-5: CheckoutController | API
+********-------
+
+
+//!!! added by masum
+    public function checkout(Request $request)
+    {
+
+        //!! for store address
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:500',
+            'town' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:20',
+        ]);
+
+
+        $user = auth('api')->user();
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'error' => 'User is not authenticated.',
+                'code' => 401,
+            ], 401);
+        }
+
+        $cart = Cart::with('cartItems.product')->where('user_id', $user->id)->first();
+        if (!$cart || $cart->cartItems->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No items in cart.',
+            ], 422);
+        }
+
+        $total = 0;
+        $product_ids = [];
+        foreach ($cart->cartItems as $cartItem) {
+            $productPrice = $cartItem->product->selling_price;
+            $total += $productPrice * $cartItem->quantity;
+            $product_ids[] = $cartItem->product->id;
+        }
+
+        // Apply any discount logic if required
+        // Assuming no discount for simplicity
+
+        // Ensure total is greater than 0
+        if ($total <= 0) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid total amount.',
+            ], 422);
+        }
+
+        try {
+            // Set Stripe API key
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            // Insert payment record
+            $payment = Payment::create([
+                'user_id' => $user->id,
+                'amount' => $total,
+                'product_id' => json_encode($product_ids),
+                'payment_method' => 'stripe',
+                'status' => 'pending',
+
+                //!! for store address
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'town' => $request->town,
+                'state' => $request->state,
+                'postal_code' => $request->postal_code
+            ]);
+
+            // Create Stripe Checkout session
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => $cart->cartItems->map(function ($item) {
+                    return [
+                        'price_data' => [
+                            'currency' => 'usd',
+                            'product_data' => [
+                                'name' => $item->product->name,
+                            ],
+                            'unit_amount' => (int) round($item->product->selling_price * 100), // price in cents
+                        ],
+                        'quantity' => $item->quantity,
+                    ];
+                })->toArray(),
+                'mode' => 'payment',
+                'success_url' => route('checkout.success') . '?session_id={CHECKOUT_SESSION_ID}&order=' . $payment->id,
+                'cancel_url' => route('checkout.cancel'),
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Stripe Session created. Redirect to this URL',
+                'url' => $session->url,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
+********-------
+step-6: StripePaymentController | API
+********-------
+
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\Payment;
+use App\Models\CartItem;
+use Stripe\StripeClient;
+use App\Models\OrderItem;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+
+class StripePaymentController extends Controller
+{
+    public function checkoutSuccess(Request $request)
+    {
+
+        // dd($request->all());
+        try {
+            // Set the Stripe API key
+            $stripe = new StripeClient(config('services.stripe.secret'));
+            $user = auth()->user();
+
+            // Retrieve the session from Stripe
+            $session = $stripe->checkout->sessions->retrieve($request->session_id);
+
+            // Check if the payment is successful
+            if ($session->payment_status == 'paid') {
+                DB::beginTransaction();
+                $payment = Payment::where('id', $request->order)->first();
+                $payment->status = 'succeeded';
+                $payment->save();
+
+
+                $cartItems = Cart::where('user_id', $payment->user_id)->with('cartItems')->first();
+
+                // Ensure that there are items in the cart before proceeding
+                if ($cartItems && $cartItems->cartItems->count() > 0) {
+                    // Create the order
+                    $order = Order::create([
+                        'user_id' => $payment->user_id,  // Use the correct user_id
+                        'payment_id' => $payment->id,
+                        'order_number' => Order::generateOrderNumber(),  // Generate unique order number
+                        'status' => 'pending',
+                        'total_amount' => $payment->amount,
+                        // 'receiver_name' => $payment->user->name,  // Use the correct user's name                        
+                        'receiver_name' => $payment->name,
+
+
+                    ]);
+
+                    // Add OrderItems for each product in the cart items
+                    foreach ($cartItems->cartItems as $cartItem) {
+                        OrderItem::create([
+                            'order_id' => $order->id,
+                            'product_id' => $cartItem->product_id,
+                            'variant_id' => $cartItem->variant_id,
+                            'color' => $cartItem->color,
+                            'color_code' => $cartItem->color_code,
+                            'quantity' => $cartItem->quantity,  // Assuming quantity is stored in CartItem table
+                            'price' => $cartItem->price,  // Price at the time of purchase
+
+                           
+                        ]);
+                        $cartItem->delete();
+                    }
+
+                    // Delete the user's cart items and the cart itself after successful payment                    
+                    Cart::where('user_id', $payment->user_id)->delete();
+                }
+                DB::commit();
+
+                // Redirect to frontend after successful payment
+                $FRONTEND_SUCCESS_URL = env('FRONTEND_SUCCESS_URL', route('login'));
+                return redirect($FRONTEND_SUCCESS_URL)->with('t-success', 'Purchase completed');
+            } else {
+                // Log and redirect on failure
+                Log::error('Payment failed for session ID: ' . $request->session_id);
+                $FRONTEND_FAILED_URL  = env('FRONTEND_FAILED_URL ', route('login'));
+                return redirect($FRONTEND_FAILED_URL )->with('t-error', 'Transaction Failed...');
+            }
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            DB::rollBack();
+            Log::error('Order completion failed: ' . $e->getMessage());
+            $FRONTEND_FAILED_URL  = env('FRONTEND_FAILED_URL ', route('login'));
+            return redirect($FRONTEND_FAILED_URL )->with('t-error', 'Order completion failed: ' . $e->getMessage());
+        }
+    }
+
+
+    public function checkoutCancel()
+    {
+        $FRONTEND_FAILED_URL  = env('FRONTEND_FAILED_URL ', route('home'));
+        return redirect($FRONTEND_FAILED_URL )->with('t-error', 'Transaction Failed...');
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

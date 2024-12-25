@@ -1,9 +1,9 @@
 
 ********
-step-1:
+step-1: Routes
 ********
 
-//! Cart Routes
+//! Cart Routes (API)
     Route::post('/cart/add', [CartController::class, 'addToCart']); //! need
     Route::post('/cart/update', [CartController::class, 'updateCart']); //! need
     Route::post('/cart/increase', [CartController::class, 'quantityUpdate']);
@@ -15,7 +15,7 @@ step-1:
 
 
 ********
-step-2:
+step-2: Controller
 ********
 
 
