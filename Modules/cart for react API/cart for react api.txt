@@ -1,0 +1,299 @@
+
+********
+step-1:
+********
+
+//! Cart Routes
+    Route::post('/cart/add', [CartController::class, 'addToCart']); //! need
+    Route::post('/cart/update', [CartController::class, 'updateCart']); //! need
+    Route::post('/cart/increase', [CartController::class, 'quantityUpdate']);
+    Route::post('/cart/decrease', [CartController::class, 'quantityMinus']);
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart']); //! need
+    Route::get('/cart/view', [CartController::class, 'viewCart']); //! need
+
+
+
+
+********
+step-2:
+********
+
+
+
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Cart;
+use App\Models\CartItem;
+use App\Models\Product;
+use App\Models\Variant;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
+class CartController extends Controller
+{
+    //! Add to cart
+    public function addToCart(Request $request)
+    {
+
+        // Check if the user is authenticated
+        if (!auth('api')->check()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized. Please logIn to add items to the cart.',
+                'code' => 401,
+            ], 401);
+        }
+
+
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+
+            'variant_id' => 'nullable|exists:variants,id',
+
+        ], [
+            'product_id.exists' => 'Product id is invalid',
+            'variant_id.exists' => 'Invalid variant ID.',
+            'quantity.min' => 'Quantity must be at least 1',
+            'required' => 'All fields are required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'error' => $validator->errors()->first(),
+                'code' => 422
+            ], 422);
+        }
+
+        $user = auth('api')->user();
+        // dd($user->id);
+
+        // Find or create the cart for the user
+        $cart = Cart::firstOrCreate(
+            ['user_id' => $user->id]
+        );
+
+
+
+        $product = Product::find($request->product_id);
+
+        // Check if the variant belongs to the product (optional validation)
+        $variant = null;
+        if ($request->variant_id) {
+            $variant = Variant::where('id', $request->variant_id)
+                ->where('product_id', $product->id)
+                ->first();
+
+            if (!$variant) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid variant for the selected product.',
+                    'code' => 422,
+                ], 422);
+            }
+        }
+
+
+
+
+
+
+
+        // Add or update the cart item
+        $cartItem = CartItem::updateOrCreate(
+            [
+                'cart_id' => $cart->id,
+                'product_id' => $request->product_id,
+                'variant_id' => $request->variant_id, // Store variant_id
+
+            ],
+            [
+                'quantity' => $request->quantity,
+                'price' => Product::find($request->product_id)->selling_price,
+                'total_price' => Product::find($request->product_id)->selling_price * $request->quantity,
+
+                'color' => $request->variant_id ? $variant->color : null, // Store color if variant is selected
+                // 'color_code' => $request->variant_id ? $variant->color_code : null, // Store color_code if variant is selected
+
+            ]
+        );
+
+        return response()->json([
+            'message' => 'Product added to cart',
+            'cart' => $cartItem,
+        ]);
+    }
+
+
+    //! cart item view 
+    public function viewCart(Request $request)
+    {
+        $user = auth('api')->user();
+
+        if ($user) {
+            // Retrieve cart and its items for authenticated user
+            $cart = Cart::with('cartItems.product')->where('user_id', $user->id)->first();
+        } else {
+            return response()->json([
+                'status' => false,
+                'error' => 'Invalid or expired token',
+                'code' => 401
+            ], 401);
+        }
+
+        // If no cart found
+        if (!$cart || $cart->cartItems->isEmpty()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Cart is empty',
+                'cart' => [],
+                'code' => 200
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => true,
+            'cart' => $cart,
+            'code' => 200
+        ], 200);
+    }
+
+
+
+    //! Cart Item's quantity update (increment/decrement)
+    public function updateCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|exists:products,id',
+            'action' => 'required|in:increment,decrement',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
+
+        $user = auth('api')->user();
+
+        // Find the cart item
+        $cartItem = CartItem::whereHas('cart', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->where('product_id', $request->product_id)->first();
+
+        if (!$cartItem) {
+            return response()->json(['status' => 'error', 'message' => 'Product not found in cart!'], 404);
+        }
+
+        // Perform action based on request
+        if ($request->action === 'increment') {
+            $cartItem->quantity += 1; // Increment by 1
+        } elseif ($request->action === 'decrement') {
+            if ($cartItem->quantity <= 1) {
+                $cartItem->delete();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Product removed from cart!',
+                ]);
+            } else {
+                $cartItem->quantity -= 1; // Decrement by 1
+            }
+        }
+
+        // Update total price and save changes
+        $cartItem->total_price = $cartItem->price * $cartItem->quantity;
+        $cartItem->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Cart updated successfully!',
+            'cart_item' => $cartItem
+        ]);
+    }
+
+
+    //! Cart Item's remove
+    public function removeFromCart(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'cart_id' => 'required|exists:carts,id',
+            'cart_item_id' => 'nullable|exists:cart_items,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'error' => $validator->errors()->first(),
+                'code' => 422
+            ], 422);
+        }
+
+        $cart = Cart::find($request->cart_id);
+
+        if (!$cart) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Cart not found',
+                'code' => 404
+            ], 404);
+        }
+
+        // Ensure the cart belongs to the authenticated user or guest token
+        $user = auth('api')->user();
+        $guestToken = $request->input('guest_token') ?? $request->cookie('guest_token');
+
+        if (($user && $cart->user_id !== $user->id) || (!$user && $cart->guest_token !== $guestToken)) {
+            return response()->json([
+                'status' => false,
+                'error' => 'Unauthorized',
+                'code' => 403,
+            ], 403);
+        }
+
+        // If cart_item_id is provided, remove the specific cart item
+        if ($request->has('cart_item_id')) {
+            $cartItem = $cart->cartItems()->find($request->cart_item_id);
+
+            if (!$cartItem) {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'Cart item not found',
+                    'code' => 404
+                ], 404);
+            }
+
+            $cartItem->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Cart item removed successfully',
+                'code' => 200
+            ]);
+        }
+
+        // If no cart_item_id is provided, delete the entire cart
+        $cart->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Cart removed successfully',
+            'code' => 200
+        ]);
+    }
+}
+
+
+
+
+
+
