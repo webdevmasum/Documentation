@@ -1,0 +1,165 @@
+
+
+
+********
+step-1: products
+********
+
+Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('brand_id');
+            $table->foreign('brand_id')->references('id')->on('brands')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('designer_id');
+            $table->foreign('designer_id')->references('id')->on('designers')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->string('name');
+            $table->integer('old_price')->nullable();
+            $table->integer('selling_price');
+
+            //!! 2nd time add
+            $table->string('product_code', 50);
+            $table->text('description');
+            $table->text('sub_description');
+
+            $table->string('image')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });
+
+
+
+********
+step-2: variants
+********
+
+
+Schema::create('variants', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->string('color')->nullable();
+            $table->string('color_code')->nullable();
+            $table->integer('quantity')->default(0);
+            $table->string('variant_image')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+********
+step-3: carts
+********
+
+Schema::create('carts', function (Blueprint $table) {
+            $table->id();            
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');             
+            $table->timestamps();
+        
+        });
+
+
+
+********
+step-4: cart_items
+********
+
+Schema::create('cart_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cart_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->integer('quantity')->default(1);
+            $table->integer('price');
+            $table->integer('total_price');
+
+            $table->foreignId('variant_id')->nullable()->constrained('variants')->onDelete('cascade');
+
+            $table->string('color')->nullable();
+            $table->string('color_code')->nullable();
+
+            $table->timestamps();
+        });
+
+
+********
+step-5: payments
+********
+
+
+Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('payment_method', ['stripe', 'paypal', 'credit_card'])->default('stripe');
+            $table->string('stripe_payment_id')->nullable();
+
+            // $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            // $table->text('order_items')->nullable()->change();
+
+            $table->string('stripe_charge_id')->nullable();
+            $table->decimal('amount', 10, 2);
+            $table->enum('status', ['pending', 'succeeded', 'failed'])->default('pending');
+
+            //! added for address
+
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone');
+            $table->text('address');
+            $table->string('town');
+            $table->string('state');
+            $table->string('postal_code');
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+********
+step-6: orders
+********
+
+Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            // $table->foreignId('payment_id')->nullable()->constrained()->onDelete('set null'); 
+
+            $table->integer('payment_id')->nullable();
+            $table->string('order_number')->unique();
+            $table->enum('status', ['pending', 'approved', 'cancelled'])->default('pending');
+            $table->decimal('total_amount', 10, 2);
+            $table->string('receiver_name', 150);            
+
+            $table->timestamps();
+        });
+
+
+
+********
+step-6: orders
+********
+
+Schema::create('order_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');   
+            $table->integer('variant_id')->nullable();  
+            $table->string('color')->nullable();
+            $table->string('color_code')->nullable();    
+
+            $table->integer('quantity');
+            $table->integer('price');            
+
+            $table->timestamps();            
+        });
+
+

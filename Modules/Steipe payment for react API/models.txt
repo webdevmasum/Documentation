@@ -1,0 +1,307 @@
+
+
+
+********
+step-1: Product
+********
+
+
+
+class Product extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'colour_code',
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function designer(): BelongsTo
+    {
+        return $this->belongsTo(Designer::class);
+    }
+
+    // Define the relationship with ProductDetail
+    public function productDetail()
+    {
+        return $this->hasOne(ProductDetail::class);
+    }
+
+    // A product has many variants  by Masum
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+    }
+
+    //! A product has many orders by Masum
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    //! A product has many cart items by Masum
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    // Define the relationship with the Review model
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class, 'product_id'); // Explicitly reference 'product_id'
+    }
+
+}
+
+
+********
+step-2: Variant
+********
+
+class Variant extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',        
+    ];
+
+    // A variant belongs to a product
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    //! A variant has many cart items
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+}
+
+
+********
+step-3: Cart
+********
+
+class Cart extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    // Relationship with User by Masum
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+}
+
+
+********
+step-4: CartItem
+********
+
+class CartItem extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    // Relationship with Product
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    // Relationship with Cart
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+
+    //! Relationship with Variant
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class);
+    }
+}
+
+********
+step-5: Payment
+********
+
+class Payment extends Model
+{
+    use SoftDeletes, HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'order_id',
+        'stripe_payment_id',
+        'amount',
+        'status',
+
+        //!! added for address
+        'name',
+        'email',
+        'phone',
+        'address',
+        'town',
+        'state',        
+        'postal_code',
+    ];
+
+    // Cast certain attributes to the correct data types
+    protected function casts(): array
+    {
+        return [
+            'user_id'           => 'integer',
+            'order_id'          => 'integer',
+            'stripe_payment_id' => 'string',
+            'amount'            => 'decimal:2',
+            'status'            => 'string',
+        ];
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'payment_product')->withPivot('quantity', 'price');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    //! ekta payment er ekta order hobe. by Masum
+    public function order()
+    {
+        return $this->hasOne(Order::class);
+    }
+}
+
+
+
+********
+step-6: orders
+********
+
+class Order extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+
+    // An order belongs to a user by Masum
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    //! An order has many order items by Masum
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
+    // Method to generate a unique order number , it is use for payment and checkout by Masum
+    public static function generateOrderNumber()
+    {
+        return 'ORD-' . strtoupper(uniqid());
+    }
+
+
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+}
+
+
+********
+step-7: OrderItem
+********
+
+
+class OrderItem extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+}
