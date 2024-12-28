@@ -13,12 +13,9 @@ step-1: Routes
 
 
 
-
 ********
 step-2: Controller
 ********
-
-
 
 
 <?php
@@ -291,8 +288,6 @@ class CartController extends Controller
         ]);
     }
 }
-
-
 
 
 
