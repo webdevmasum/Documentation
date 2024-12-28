@@ -1,0 +1,41 @@
+
+
+Ck Editor :
+________________________
+
+use system:  
+--------------------
+ <textarea id="body" name="body" class="ck-editor form-control">{{ old('body') }}</textarea>
+
+note: class wise globally all page a use kora jabe.
+------------------------------------
+
+
+____________________________________
+
+Layout er script.blade.php te thakbe : 
+____________________________________
+
+
+{{-- ck editor start --}}
+<script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/ckeditor.js"></script>
+
+<script>
+    document.querySelectorAll('.ck-editor').forEach(element => {
+        ClassicEditor
+            .create(element, {
+                removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption',
+                    'ImageStyle',
+                    'ImageToolbar', 'ImageUpload', 'MediaEmbed'
+                ],
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+
+{{-- ck editor end --}}
+
+
