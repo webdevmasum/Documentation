@@ -1,0 +1,21 @@
+
+* In model, using the code for get image url.
+* API development this code help to get image url\
+
+
+ //! using for image url (API - React)
+
+    public function getImageAttribute($value)
+    {
+        return $value ? url($value) : null;
+    }
+
+
+
+
+**********
+getImageAttribute
+**********
+
+Image ta hocce database table er column er nam.
+
