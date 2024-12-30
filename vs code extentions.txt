@@ -1,0 +1,41 @@
+vs code extentions
+01. Auto Rename Tag
+02. Code Spell Checker
+03. Codeium
+04. line Fold
+05. Laravel Blade Formatter
+06. Laravel Blade Spacer
+07. Laravel Extra Intellisense
+08. Laravel Goto View
+09. Laravel Goto Components
+10. Material Icon
+11. PHP Intelephense
+12. PHP IntelliSense
+13. PHP Namespace Resolver
+14. Prettier
+15. Thunder Client
+16. Git History
+17. Auto Import
+18. DevDb
+19. DotENV
+20. EditorConfig for code
+21. es7+React/Redux/React_Native snippets
+22. GitHub Action
+23. Gitlens-Git supercharged
+24. Laravel Artisan
+25. Larabel Blade formatter
+26. Laravel Blade Snippets
+27. Laravel Blade Weapper
+28. Laravel create view
+29. Laravel Extension pack
+30. Laravel extra intellisense
+31. Laravel goto view
+32. Laravel snippets
+33. Laravel-goto-components
+34. laravel-junp-controller
+35. learnwith sumit theme
+36. liveserver
+36. PHP Debug
+37. PHP Namespace Resolver
+
+
