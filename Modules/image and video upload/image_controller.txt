@@ -1,0 +1,71 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Str;
+use App\Traits\ApiResponseTrait;
+use Illuminate\Http\JsonResponse;
+use \Illuminate\Support\Facades\DB;
+use App\Models\Journal;
+use Illuminate\Support\Facades\Validator;
+
+
+public function updateProfile(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|min:2|max:255',
+            'last_name' => 'nullable|string|min:2|max:255',
+            'user_name' => 'unique:users,user_name,' . auth()->guard('api')->id() . '|string|min:2|max:255',
+            'email' => 'nullable|string|email|max:50|unique:users,email,' . auth()->guard('api')->id(),
+            'phone' => 'required|numeric|unique:users,phone,' . auth()->guard('api')->id(),
+            'avatar' => 'nullable|image|mimes:jpg,png,jpeg|max:10240',
+            'cover_photo' => 'nullable|image|mimes:jpg,png,jpeg|max:10240',
+            // 'dob' => 'nullable|date',
+            'country' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'designation' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors(), null, 422);
+        }
+
+        $user = auth()->guard('api')->user();
+
+        try {
+            // Update user data
+            $user->fill($request->only(['first_name', 'last_name', 'user_name', 'email', 'phone', 'country', 'gender', 'designation']));
+
+            // Handle profile image update
+            if ($request->hasFile('avatar')) {
+                if ($user->avatar) {
+                    deleteMedia($user->avatar);
+                }
+
+                $avatarPath = uploadImage($request->file('avatar'), 'user/', Str::random(10));
+                $user->avatar = $avatarPath;
+            }
+
+            // Handle cover_photo image update
+            if ($request->hasFile('cover_photo')) {
+                if ($user->cover_photo) {
+                    deleteMedia($user->cover_photo);
+                }
+
+                $cover_photoPath = uploadImage($request->file('cover_photo'), 'user/cover_photo/', Str::random(10));
+                $user->cover_photo = $cover_photoPath;
+            }
+
+            $user->save();
+
+            return $this->successResponse('User profile updated successfully', $user, 200);
+        } catch (Exception $e) {
+            return $this->errorResponse('Something went wrong.', null, 500);
+        }
+    }
+
+
+    
