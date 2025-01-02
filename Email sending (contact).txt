@@ -4,3 +4,5 @@
 4. controller [ create method and validation ]
 5. mail/contactmail.php [ create file and folder. write functions and view ]
 6. frontend.layout. email. contacta-form [ in this file, design a form daynamicly which is send as a mail ]
+
+
