@@ -5,7 +5,7 @@ JWT Token in Laravel 11 for API integration.
 1. Create a Project.
 2. .env for DB
 3. Install API 
-	-> php artisan make:api
+	-> php artisan install:api
 
 4. Install JWT from documentation
 	-> composer require tymon/jwt-auth
