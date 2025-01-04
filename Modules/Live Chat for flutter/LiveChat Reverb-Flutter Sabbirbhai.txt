@@ -1,0 +1,138 @@
+Work Flow ->>
+
+1. Install Reverb ( php artisan install:broadcasting )
+2. register channel to bootstrap/app.php
+3. Make DataTable
+4. Make Controller
+5. Make a Chennel into channel.php
+6. Make Event
+7. Make Route
+8. Make View 
+
+
+
+
+-----------
+| install |
+-----------
+1. php artisan install:broadcasting
+
+2. bootstrap/app.php
+->withRouting(
+  channels: __DIR__.'/../routes/channels.php',
+)
+
+
+-----------
+| private |
+-----------
+1.App/Event
+<?php
+
+namespace App\Events;
+
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class LoanAcceptAction  implements ShouldBroadcastNow
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $customer_id;
+    public $amount;
+    
+    public function __construct($data)
+    {
+        $this->customer_id = $data['customer_id'];
+        $this->amount = $data['amount'];
+    }
+    public function broadcastOn()
+    {
+        return new PrivateChannel("loan-accept.{$this->customer_id}");
+    }
+}
+
+2. view
+@vite(['resources/js/app.js'])
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if (Auth::check())
+        window.Echo.private('loan-accept.{{ Auth::user()->id }}').listen('LoanAcceptAction', (event) => {
+            console.log(event.amount);
+        });
+        @endif
+    });
+</script>
+
+3. channel
+Broadcast::channel('loan-accept.{customer_id}', function ($user, $customer_id) {
+    return $user->id === (int) $customer_id;
+});
+
+4. controller
+broadcast(new LoanAcceptAction(['customer_id' => $data->user_id, 'amount' => $data->accepted_amount]))->toOthers();
+
+
+----------
+| public |
+----------
+1.App/Event
+<?php
+
+namespace App\Events;
+
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class WebNotificationEvent implements ShouldBroadcastNow
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    public function broadcastOn()
+    {
+        return new Channel('web-notifications');
+    }
+    
+}
+
+2. view
+@vite(['resources/js/app.js'])
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  window.Echo.channel('web-notifications').listen('WebNotificationEvent', (event) => {
+    console.log(event.data.message);
+  });
+});
+</script>
+
+3. channel
+Broadcast::channel('notifications', function ($user) {
+    return true;
+});
+
+4. controller
+$users = User::where('role', 'admin')->get();
+$notiData = ['message' => "Schedule ID: {$schedule->id} has been rejected"];
+foreach ($users as $user) {
+  $user->notify(new WebNotification($notiData));
+}
+broadcast(new WebNotificationEvent($notiData))->toOthers();
