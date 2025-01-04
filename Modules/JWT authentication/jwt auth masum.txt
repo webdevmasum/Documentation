@@ -1,0 +1,179 @@
+
+
+************
+Step 1:
+************
+
+    => https://www.itsolutionstuff.com/post/laravel-11-breeze-multi-auth-tutorialexample.html
+
+	* composer create-project laravel/laravel example-app
+	* .env
+	* composer require laravel/breeze --dev
+	* php artisan breeze:install
+	* npm install
+	* npm run build
+
+-->> Follow the documentation to continue breeze multiauth  <<--
+
+
+
+************
+Step 2:
+************
+
+JWT Token in Laravel 11 for API integration.
+** https://jwt-auth.readthedocs.io/en/develop/quick-start
+
+
+1. Create a Project.
+2. .env for DB
+*3. Install API 
+	*-> php artisan make:api
+
+*4. Install JWT from documentation
+	*-> composer require tymon/jwt-auth
+
+=> config/auth.php
+
+ 'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+
+        'api' => [
+                'driver' => 'jwt',
+                'provider' => 'users',
+        ],
+
+    ],
+
+
+
+5. Publish the config
+	*-> php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+	=> config/jwt.php
+
+6. Generate secret key
+	*-> php artisan jwt:secret
+	=> .env
+	=> JWT_SECRET=gdZVr12AB (automaticly come like this)
+
+7. user.php (model) => follow the documentation
+	-> use Tymon\JWTAuth\Contracts\JWTSubject;
+	-> implements JWTSubject
+	-> public function getJWTIdentifier()
+	-> public function getJWTCustomClaims()
+
+
+User model:
+	use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
+
+class User extends Authenticatable implements JWTSubject
+{
+    use HasFactory, Notifiable;
+.......others............
+
+............new.......... :
+ public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+}
+
+
+9. Route for api
+	----------------------------------> 
+
+Route::group(['prefix' => 'auth'], function ($router) {
+
+    Route::post('login', [AuthController::class, 'login']);
+    Route::post('register', [AuthController::class, 'register']);
+
+});
+
+Route::middleware('auth:api')->group(function () {
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('me', [AuthController::class, 'me']);
+});
+
+	<----------------------------------
+
+9. Controller create
+	*-> php artisan make:controller AuthController
+	*-> php artisan make:request UserRegisterRequest
+
+
+app/http/controller/api/authcontroller....	
+	---------------------------------->
+public function register(UserRegisterRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        $user = User::create([
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password'])
+        ]);
+        $token = auth('api')->login($user);
+
+        return $this->respondWithToken($token);
+    }
+	<----------------------------------
+
+
+
+
+10. Create Request class
+	->php artisan make:request UserRegisterRequest
+
+app/http/request/UserRegisterRequest....
+
+
+public function authorize(): bool
+    {
+        return true;
+    }
+
+public function rules(): array
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+        ];
+    }
+
+
+
+11. Postman (Register)
+	-> url ( http://127.0.0.1:8000/api/auth/register )
+	-> Headers ( Accept + Application/json )
+	-> Body ( form-data, key and value )
+
+12.Postman (me)
+	-> Authorization ( Bearer Token, past token )
+	-> Headers ( Accept + Application/json )
+	-> Body ( form-data, key and value )
+
+13. Postman (login)
+	-> Headers ( Accept + Application/json )
+	-> Email | Password
+
+14. Postman (Refresh)
+	-> Authorization ( Bearer Token, past token )
+	-> Headers ( Accept + Application/json )
+	-> Body ( unchecked )
+
+
