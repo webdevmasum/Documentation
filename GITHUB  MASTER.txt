@@ -1,24 +1,65 @@
+***************
+Pull From Github
+***************
+
+	* Clone	
+	* Create Branch
+	--- git checkout -b masum
+	--- git push
+	--- git push --set-upstream origin masum 
+
+	--- .env credentials setup
+	--- npm run dev
+	--- composer update
+	--- php artisan migrate
+	--- php artisan migrate:fresh --seed
+
+	
+***************
+Git Pull and Push
+***************
+	--- git pull origin dev
+		** :wq ( If no conflict ) 
+	--- git push
+		** work
+	--- git add .
+	--- git commit -m"write commit"
+	--- git push
+	--- git push origin masum:dev
+
+
+***************
+Github
+***************
+	--- git status 						( to show how much file modified )
+	--- git add .		 				( to add files )
+	--- git commit -m "write commit"	( to commit )
+	--- git branch -r 					( Show All Remote Branches Only )
+	--- git merge branch_name			( To merge code anothe branch )
+	--- git checkout main 				( switch branch )
+
+
+
+
 1. git branch ( to show all git branch)	
 
-	--> git branch <branch name> ( create git branch )
+	--> git branch <branch name> 		( create git branch )
 
-	--> git branch feature-a ( add git branch )
+	--> git branch feature-a 			( add git branch )
 
-	--> git checkout <branch name> ( switch git branch )
+	--> git checkout <branch name> 		( switch git branch )
 
-	--> git checkout main ( switch git branch to main branch )
+	--> git checkout main 				( switch git branch to main branch )
 
-	--> git merge <branch name> ( to marge branch to main )
-		-----> git add <conflicted file> (if conflict any file than solve it and again add and than commit )
+	--> git merge <branch name> 		( to marge branch to main )
+	-----> git add <conflicted file> 	( if conflict any file than solve it and again add and than commit )
 
-	--> git branch -d <branch name>  ( to delete git branch )
+	--> git branch -d <branch name>  	( to delete git branch )
 
 
-2. git status ( to show how much file modified)
-
-3. git add . ( to add files)
-
-4. git commit -m "write your commit" ( to commit)
+2. git status 							( to show how much file modified )
+3. git add . 							( to add files )
+4. git commit -m "write your commit" 	( to commit )
 
 *****5. git push ( to push your files on your branch)
 	--> git remote add origin <remote_repository_url> ( to add remote repository)
@@ -46,16 +87,6 @@
 	--> git pull origin <branch_name> ( to pull update data )
 	--> git add <conflicted_file> ( if conflict files you have to solve manually than run command )
 	--> git commit ( after solve conflict than commit )
-	-->
-	-->
-
-
-	1. git push origin masum:dev (masum to dev)
-	2. git pull origin dev 
-	** :wq ( If no conflict ) 
-	3. git pull dev 
-	=> git branch -r (Show All Remote Branches Only)
-
 
 
 	* git push origin masum:dev 
@@ -82,7 +113,7 @@ git branch
 1. git pull origin branch_name
 2. git push origin branch_name
 3. git merge branch_name
-4.git checkout main
+4. git checkout main
 
 Example:
 1. git checkout masum            # Switch to masum branch
