@@ -1,5 +1,0 @@
-************
-Step 1:
-************
-
-	* composer require beyondcode/laravel-websockets
