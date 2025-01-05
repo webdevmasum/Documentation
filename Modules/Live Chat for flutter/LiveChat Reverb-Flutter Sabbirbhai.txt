@@ -5,9 +5,15 @@ Work Flow ->>
 3. Make DataTable
 4. Make Controller
 5. Make a Chennel into channel.php
+
+php artisan make:channel OrderChannel
+php artisan channel:list
+
 6. Make Event
 7. Make Route
 8. Make View 
+
+
 
 
 
