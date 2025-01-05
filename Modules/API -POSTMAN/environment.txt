@@ -1,0 +1,9 @@
+
+
+set environment variable dynamic variable->
+
+tests-> 
+
+var data = pm.response.json()
+pm.environment.set(ÄccessToken",data);
+

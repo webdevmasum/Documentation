@@ -1,0 +1,95 @@
+
+Laravel E-commerce.....
+
+* Node js
+* Composer
+* Laravel Install
+* cd App ( to go App directory )
+
+
+===>>** Laravel Jetstream Multi Authentication **<<==
+
+1. coposer require laravel/jetstream
+2. php artisan jetstream:install livewire
+3. npm install
+4. npm run dev
+5. changes in User table (add these line on user table)
+	 => $table->string('usertype')->defaule(0);
+	 => $table->string('phone')->nullable();
+	 => $table->string('address')->nullable();
+	 
+6. php artisan migrate
+
+7. register.blade.php 
+	=> Add Phone field (type='number')
+	=> address field (type='text')
+	
+8. Models/User.php
+	=> add 'phone' and 'address'
+	
+9. app/Actions/Fortify/ CreateNewUser.php
+	=> return User::create([
+		'phone'=>$input['phone'],
+		'address'=>$input['address']
+	])
+	
+10. config/fortify.php
+	=> 'home'=>'/redirect' (change url )
+	
+11. web.php
+	=> route::get('redirect',[HomeController::class, 'redirect']);
+	
+12. HomeController.php
+	=> 
+	public function redirect(){
+		$usertype=Auth::user()->usertype;
+		
+		if($usertype=='1'){
+			return view('admin.home');
+		}else{
+			return view ('dashboard');
+		}
+	}
+	
+13. view/admin/home.blade.php (create for admin dashboard)	
+	=> its for logout option
+	<x-app-layout>......</x-app-layout>
+	
+14. welcome.blade.php (need to change url)
+		=> @auth___ "{{url('/redirect')}}"
+		
+15. https://youtu.be/0pW8ANos7Tw?si=LZKiJRaTwvX3zdnm
+
+===>>** Laravel Jetstream Multi Authentication End **<<==	
+	
+	
+*1. tamplate download link here... https://themewagon.com/themes/famms-free-responsive-bootstrap-4-e-commerce-website-template/	
+	
+*2. mastering Frontend template (with login and registration)
+	
+*3. Admin Dashboard template (github & zip) https://github.com/yaminshakil/AdminTemplate/tree/master	
+	
+*4. Than create Sidebar, DB, Route, Model, Controller.  	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
