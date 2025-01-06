@@ -66,3 +66,4 @@ If an error occurs during the transaction, you can roll back the changes with DB
 
 6. Using try...catch for Error Handling
 Wrap the transaction logic inside a try...catch block to handle exceptions and ensure that you rollback in case of errors.
+
