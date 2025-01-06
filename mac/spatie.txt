@@ -56,8 +56,8 @@ Route::resource('users', UserController::class);
 | USES | https://spatie.be/docs/laravel-permission/v6/basic-usage/middleware
 --------
 Route:-
-Route::group(['middleware' => ['role:super-admin']], function(){}
-Route::group(['middleware' => ['role:super-admin|admin']], function(){}
+Route::group(['middleware' => ['role:super-admin']], function(){})
+Route::group(['middleware' => ['role:super-admin|admin']], function(){})
 
 Route::get('delete', [CategoryController::class, 'delete'])->middleware('permission:delete')
 Route::get('delete', [CategoryController::class, 'delete'])->middleware(['role:super-admin', 'permission:delete'])
@@ -66,8 +66,8 @@ Controller:-
 public function __construct()
 {
   $this->middleware(['role:manager','permission:publish articles|edit articles']);
-  $this->middleware(['permission:view, ['only' => ['index', 'show']]);
-  $this->middleware(['permission:create, ['only' => ['create', 'store']]);
+  $this->middleware(['permission:view, 'only' => ['index', 'show']]);
+  $this->middleware(['permission:create, 'only' => ['create', 'store']]);
 }
 
 Middleware:-
