@@ -1,0 +1,91 @@
+Step 1: Update System Packages
+sudo apt update
+sudo apt upgrade -y
+
+Step 2: Install Apache
+sudo apt install apache2 -y
+
+Start and enable Apache to start on boot:
+sudo systemctl start apache2
+sudo systemctl enable apache2
+sudo systemctl stop apache2
+sudo systemctl restart apache2
+
+hostname -I
+http://192.168.0.244/
+
+Step 3: Install PHP and Required Extensions
+sudo apt install php php-cli php-fpm php-mysql php-xml php-mbstring php-curl php-zip php-bcmath php-gd unzip -y
+sudo apt install php libapache2-mod-php php-mysql
+php -v
+
+Step 4: Install MySQL
+sudo apt install mysql-server -y
+sudo mysql_secure_installation
+
+Log in to MySQL and create a database and user for Laravel:
+sudo mysql -u root -p
+CREATE DATABASE app_db;
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY '12345678';
+GRANT ALL PRIVILEGES ON app_db.* TO 'app_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+Step 5: Install Composer
+curl -sS https://getcomposer.org/installer | php
+sudo mv composer.phar /usr/local/bin/composer
+
+Step 6: Install Laravel 11
+cd /var/www/html
+composer create-project laravel/laravel example-app
+
+Step 7: Configure Apache for Laravel
+sudo nano /etc/apache2/sites-available/chat.conf
+
+<VirtualHost *:80>
+    ServerName example.test
+    ServerAlias 192.168.224.135
+    DocumentRoot /var/www/html/example-app/public
+
+    <Directory /var/www/html/example-app/public>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/laravel-error.log
+    CustomLog ${APACHE_LOG_DIR}/laravel-access.log combined
+</VirtualHost>
+
+Enable the new site and the mod_rewrite module for Apache:
+sudo a2ensite laravel_app.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+
+sudo nano /etc/hosts
+127.0.0.1    example.test
+sudo systemctl restart apache2
+
+
+Step 8: Configure Laravel Environment
+Update the .env file in the Laravel project to configure the database connection:
+cp .env.example .env
+sudo nano /var/www/html/example_app/.env
+
+Modify the database settings:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=12345678
+
+Now, Migrate the database.
+cd /var/www/html/example_app
+php artisan migrate:fresh --seed
+
+Step 10: Test the Laravel Installation
+http://192.168.224.135/
+
+
+//! Installer
+https://getcomposer.org/installer
