@@ -10,6 +10,9 @@ php artisan make:channel OrderChannel
 php artisan channel:list
 
 6. Make Event
+
+php artisan make:event EventName
+
 7. Make Route
 8. Make View 
 

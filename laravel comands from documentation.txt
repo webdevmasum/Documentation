@@ -22,11 +22,10 @@ php artisan cache:clear
 php artisan config:cache
 php artisan optimize:clear
 
-php artisan queue:work ( for mail sending )
+php artisan about 			( show environment, cache, driver )
+php artisan queue:work 		( for mail sending )
 
-
-composer dump-autoload [ this is recent version command ]
-
+composer dump-autoload 		[ this is recent version command ]
 
 php artisan migrate
 
