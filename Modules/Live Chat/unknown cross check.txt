@@ -1,0 +1,173 @@
+
+
+composer create-project Laravel/Laravel example-app
+
+.env
+
+composer require Laravel/breeze --dev
+
+php artisan breeze:install
+
+php artisan migrate
+npm install
+npm run dev
+
+
+
+php artisan install:broadcasting
+(yes) (yes)
+[show .env , config/reverb.php, brodcasting.php, resourse/js/echo.js] 
+
+
+php artisan make:model Message -m
+php artisan migrate
+
+Schema::create('messages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('sender_id');
+            $table->foreignId('receiver_id');
+            $table->text('text');
+            $table->timestamps();
+        });
+
+
+
+//! Model
+class Message extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['sender_id', 'receiver_id', 'text' ];
+
+    public function sender()
+    {
+        return $this->belongsTo(User::class, 'sender_id');
+    }
+
+    public function receiver()
+    {
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
+}
+
+
+
+//! Create route in web.php under auth group function....
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/chat', [ChatController::class, 'show'])->name('chat');
+    Route::get('/messages/{user}', [ChatController::class, 'getMessages']);
+    Route::post('/messages/{user}', [ChatController::class, 'sendMessage']);
+
+
+//! ChatController
+class ChatController extends Controller
+{
+    
+    /**     
+     * - show: show the chat view
+     * - getMessages: get the messages for the given user
+     * - sendMessage: send a message to the given user
+     */
+    public function show(User $user)
+    {
+        return view('chat', compact('user'));
+    }
+
+
+    
+    /**
+     * get the messages for the given user
+     */
+    public function getMessages(User $user)
+    {
+        return Message::query()
+            ->where(function ($query) use ($user) {
+                $query->where('sender_id', auth()->id())
+                    ->where('receiver_id', $user->id);                
+            })
+            ->orWhere(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->where('receiver_id', auth()->id());
+            })
+            ->with(['sender', 'receiver'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+    }
+
+    
+    /**
+     * send a message to the given user
+     */
+    public function sendMessage(User $user)
+    {
+        $message = Message::create([
+            'sender_id' => auth()->id(),
+            'receiver_id' => $user->id,
+            'text' => request('message'),
+        ]);
+
+        broadcast(new MessageSend($message));
+
+        return response()->json($message);
+
+    }
+
+
+}
+
+
+
+
+//! Now create event & channel
+
+php artisan make:event EventName
+app/Events/MessageSend.php
+
+class MessageSend implements ShouldBroadcastNow
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(public Message $message)
+    {
+        //
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
+     */
+    public function broadcastOn(): array
+    {
+        return [
+            // new PrivateChannel('chat.'. $this->message->receiver_id),
+            new PrivateChannel("chat.{$this->message->receiver_id}"),
+        ];
+    }
+}
+
+
+
+//! Channels.php
+
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+
+Broadcast::channel('chat.{id}', function ($user, $id) {
+    return (int) $user->id === (int) $id;
+});
+
+
+Broadcast::channel('presense.{id}', function ($user) {
+    return [
+        'id' => $user->id,
+        'name' => $user->name,
+    ];
+});
