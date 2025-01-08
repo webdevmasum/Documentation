@@ -2,7 +2,10 @@
 
 1. composer create-project Laravel/Laravel example-app
  ( than fixe your DB in env file and run migrate command )
+
 --> php artisan migrate
+--> php artisan migrate:fresh --seed
+
 2. composer require Laravel/breeze --dev
 3. php artisan breeze: install -> blade -> 1
 --> php artisan serve
@@ -23,21 +26,21 @@ php artisan config:cache
 php artisan optimize:clear
 
 php artisan about 			( show environment, cache, driver )
-php artisan queue:work 		( for mail sending )
+php artisan queue:work 			( for mail sending )
 
-composer dump-autoload 		[ this is recent version command ]
+composer dump-autoload 			[ this is recent version command ]
 
 php artisan migrate
 
 php artisan migrate:rollback
-php artisan migrate:reset (all database reset)
+php artisan migrate:reset 		(all database reset)
 
-php artisan migrate:refresh ( push update data and remove ex data)
+php artisan migrate:refresh 		( push update data and remove ex data)
 php artisan migrate:fresh --seed
 
 4242 4242 4242 4242
 
-php artisan storage:link { To create img path }
+php artisan storage:link 		{ To create image path }
 
 
 git project run system..
@@ -71,7 +74,7 @@ MySQL work bench for design a db.....
 
 	1. php artisan make:seeder ExampleSeeder
 
-[ now copy db table Schema and go to ai (real data -->
+[ now copy db. table Schema and go to ai (real data -->
 " create an array object and loop for seeding in Laravel " ]
 
 	2. [ go to DatabaseSeeder and add Seeder class like 
@@ -85,7 +88,7 @@ MySQL work bench for design a db.....
 
 ===>>> php artisan make:factory ExampleFactory (use for fake data)
 
-====>>>  if u want upload img... [ ishayned worked ]
+====>>>  if u want upload image... [ ishayned worked ]
 i have trip . i am going to find trip by id . now i want to create video upload based on trip using change function with in foreach loop 
 <<<===
 
