@@ -8,7 +8,7 @@
 
 
 ** /c/Users/HP/.config/herd/bin/php83/php.ini
-( php ini {php - Configuration setting(type)}
+( php ini {php - Configuration setting(type)})
 
 -> zip
 -> max_execution_time
