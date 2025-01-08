@@ -1,1 +1,6 @@
-This PC->properties->advanced_system_seetings->Envirnment_variable->Path->edit->C:\xampp\php->okay
+* This PC->properties->advanced_system_seetings->Envirnment_variable->Path->edit->C:\xampp\php->okay
+[ After this it will work on cmd and powershell ]
+
+
+** export PATH=$PATH:/c/Users/HP/.config/herd/bin/php83
+[ In git bash or vscode bash don't get php -v, You have to run the command on git bash shell ]
