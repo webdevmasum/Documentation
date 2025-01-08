@@ -37,5 +37,6 @@ vs code extentions
 36. liveserver
 36. PHP Debug
 37. PHP Namespace Resolver
+38. Vue Official
 
 
