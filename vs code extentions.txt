@@ -14,11 +14,11 @@ vs code extentions
 13. PHP Namespace Resolver
 14. Prettier
 15. Thunder Client
-16. Git History
+16. Git History / gitlens 
 17. Auto Import
 18. DevDb
 19. DotENV
-20. EditorConfig for code
+20. EditorConfig for vs code
 21. es7+React/Redux/React_Native snippets
 22. GitHub Action
 23. Gitlens-Git supercharged
@@ -32,7 +32,7 @@ vs code extentions
 31. Laravel goto view
 32. Laravel snippets
 33. Laravel-goto-components
-34. laravel-junp-controller
+34. laravel-jump-controller
 35. learnwith sumit theme
 36. liveserver
 36. PHP Debug
