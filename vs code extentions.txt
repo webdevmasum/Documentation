@@ -38,5 +38,7 @@ vs code extentions
 36. PHP Debug
 37. PHP Namespace Resolver
 38. Vue Official
+39. Power Mode
+
 
 
