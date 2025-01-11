@@ -37,6 +37,7 @@ authorization
     create.blade.php
     edit.blade.php
 
+
 # Route
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class);
