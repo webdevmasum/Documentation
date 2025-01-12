@@ -1,0 +1,12 @@
+
+
+
+Windows/Linux:
+
+    Single-line comment: Ctrl + /
+    Multi-line comment: Shift + Alt + A
+
+Mac:
+
+    Single-line comment: Cmd + /
+    Multi-line comment: Shift + Option + A
