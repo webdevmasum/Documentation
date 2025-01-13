@@ -5,8 +5,8 @@ Pull From Github
 	* Clone	
 	* Create Branch
 	--- git checkout -b masum
-	--- git push
 	--- git push --set-upstream origin masum 
+	--- git push
 
 	--- .env credentials setup
 	--- npm run dev
