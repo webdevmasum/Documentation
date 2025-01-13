@@ -184,19 +184,147 @@ class MessageSent implements ShouldBroadcastNow {
 
 
 ***********
-Step-7: Make a Event
+Step-7: Route - API
 ***********
 
+    [user can send message any user, get message between tow user (sender-receiver), get all message which user loged in, loged in user's conversation with diffrent user's with last message ]
+
+    -->> routes/api.php
+
+    //! Route for Chat Controller added by masum
+    Route::post('/send-message', [ChatController::class, 'sendMessage']);
+    // Route::get('/get-messages/{conversation_id}', [ChatController::class, 'getMessages']);
+
+    Route::get('/get-messages/{sender_id}/{receiver_id}', [ChatController::class, 'getMessages']);
+    Route::get('/messages/all', [ChatController::class, 'index']);
+    Route::get('/messages/history', [ChatController::class, 'history']);
+
+
+***********
+Step-8: Controller - API 
+***********
+
+    -->> app/http/controllers/api/chatcontroller.php 
+
+public function index(): JsonResponse
+    {
+        // Fetch users with the last message for each user
+        $users = User::with([
+            'senders' => function ($query) {
+                $query->where('receiver_id', Auth::id())
+                    ->latest()
+                    ->limit(1); // Fetch only the latest message
+            },
+            'receivers' => function ($query) {
+                $query->where('sender_id', Auth::id())
+                    ->latest()
+                    ->limit(1); // Fetch only the latest message
+            },
+        ])->where('id', '!=', Auth::id())->get();
+
+        // Map users with their last message
+        $usersWithMessages = $users->map(function ($user) {
+            // Check for the last message from either sender or receiver
+            $lastMessage = $user->senders->first() ?: $user->receivers->first();
+
+            return [
+                'user' => $user,
+                'last_message' => $lastMessage,
+            ];
+        })->filter(function ($item) {
+            return $item['last_message'] !== null;
+        });
+
+        // Sort users by the last message's created_at timestamp in descending order
+        $sortedUsersWithMessages = $usersWithMessages->sortByDesc(function ($item) {
+            return $item['last_message']->created_at;
+        })->values();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Users retrieved successfully',
+            'data' => $sortedUsersWithMessages,
+        ], 200);
+    }
+
+
+    //! this function will send message working perfectly
+      public function sendMessage(Request $request)
+    {
+        $message = ChatMessage::create([
+            'sender_id' => $request->sender_id,
+            'receiver_id' => $request->receiver_id,
+            'text' => $request->message,
+
+            //! in database conversation_id will no need if it's not use
+            // 'conversation_id' => $request->conversation_id
+
+        ]);
+
+        broadcast(new MessageSent($message))->toOthers();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message sent successfully',
+            'data'    => $message,
+        ], 200);
+    }    
+
+    //!! this function is write with error message to get messages with sender_id and receiver_id
+    public function getMessages($sender_id, $receiver_id)
+    {
+        try {
+            // Get the messages where the sender and receiver match
+            $messages = ChatMessage::where(function ($query) use ($sender_id, $receiver_id) {
+                $query->where('sender_id', $sender_id)
+                    ->where('receiver_id', $receiver_id);
+            })->orWhere(function ($query) use ($sender_id, $receiver_id) {
+                $query->where('sender_id', $receiver_id)
+                    ->where('receiver_id', $sender_id);
+            })
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Messages retrieved successfully',
+                'data'    => $messages,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve messages',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+    //!! One user conversation with multiple users history
+    public function history(): \Illuminate\Http\JsonResponse
+    {
+        $authUser = auth('api')->user();
+
+        $senders = ChatMessage::where('receiver_id', $authUser->id)->distinct()->pluck('sender_id');
+        $receivers = ChatMessage::where('sender_id', $authUser->id)->distinct()->pluck('receiver_id');
+
+        $users = User::whereIn('id', $senders->merge($receivers))->get();
+
+        return response()->json([
+            'success' => true,
+            'code' => 200,
+            'message' => 'Chat users retrieved successfully',
+            'data' => $users,
+        ], 200);
+
+    }
 
 
 
 
-
-
-
-
-
-
+    ---------->>>>>>>>>>>>> For Flutter The Chatting System API Complete <<<<<<<<------------
 
 
 
