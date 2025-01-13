@@ -21,9 +21,6 @@ Step-1: Work Flow >>>>
     7. Make Route
     8. Make View 
 
-    --> Project Install
-    --> Breeze Install
-
 
 ***********
 Step-2: Project Setup
@@ -104,7 +101,7 @@ Step-4: Model - Relationship
     }
 
 
------->>>>> User Model Relationship <<<<<<-------
+    ------>>>>> User Model Relationship <<<<<<-------
 
     public function senders()
     {
@@ -118,14 +115,77 @@ Step-4: Model - Relationship
 
 
 ***********
-Step-4: Event
+Step-5: Make a Chennel
 ***********
 
-app/Event
+    //!! channel.php automatically created 
+    //!! If need create channel 
+    php artisan make:channel OrderChannel (channel name)
+    php artisan channel:list
 
 
+    -->> routes/channels.php
+
+    //! live chat channel added by rasel bhai last time
+    Broadcast::channel('chat.{receiver_id}', function ($user, $receiver_id) {
+        return (int) $user->id === (int) $receiver_id;
+    });
 
 
+***********
+Step-6: Make a Event
+***********
+
+    -->> app/Event/MessageSent
+
+
+<?php
+
+namespace App\Events;
+
+use App\Models\ChatMessage;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class MessageSent implements ShouldBroadcastNow {
+
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+    public ChatMessage $message;
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(ChatMessage $message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
+     */
+    public function broadcastOn(): array
+    {
+        return [
+            new PrivateChannel("chat.{$this->message->receiver_id}"),
+        ];
+    }
+
+    public function broadcastWith()
+    {
+        return ['message' => $this->message];
+    }
+}
+
+
+***********
+Step-7: Make a Event
+***********
 
 
 
