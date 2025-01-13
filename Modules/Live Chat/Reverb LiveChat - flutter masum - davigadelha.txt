@@ -1,0 +1,78 @@
+
+***********
+Step-1: Work Flow >>>>
+***********
+
+    1. Install Reverb ( php artisan install:broadcasting )
+    2. register channel to bootstrap/app.php
+    3. Make DataTable
+    4. Make Controller
+    5. Make a Chennel into channel.php
+
+    php artisan make:channel OrderChannel
+    php artisan channel:list
+
+    6. Make Event
+
+    php artisan make:event EventName
+
+    7. Make Route
+    8. Make View 
+
+    --> Project Install
+    --> Breeze Install
+
+
+***********
+Step-2: Project Setup
+***********
+
+    1. composer create-project Laravel/Laravel example-app
+    2. .env             (database)
+    3. composer require Laravel/breeze --dev
+    4. php artisan breeze:install
+    5. php artisan migrate
+    6. npm install
+    7. npm run dev
+
+
+
+
+
+
+***********
+Step-3:
+***********
+
+
+
+
+***********
+Step-4:
+***********
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
