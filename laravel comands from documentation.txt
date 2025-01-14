@@ -30,9 +30,9 @@ php artisan queue:work 			( for mail sending )
 
 composer dump-autoload 			[ this is recent version command ]
 
-php artisan reverb:start 		*( Run the reverb server for livechat )
+php artisan reverb:start 		*( Run the reverb server for live chat )
 
-php artisan reverb:start --debug 	*( for debug)
+php artisan reverb:start --debug 	*( for debug )
 
 php artisan migrate
 

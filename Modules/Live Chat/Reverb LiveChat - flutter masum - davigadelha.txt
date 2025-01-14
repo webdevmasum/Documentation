@@ -206,6 +206,17 @@ Step-8: Controller - API
 
     -->> app/http/controllers/api/chatcontroller.php 
 
+
+namespace App\Http\Controllers\API;
+
+use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
+use App\Models\ChatMessage;
+use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 public function index(): JsonResponse
     {
         // Fetch users with the last message for each user
