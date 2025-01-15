@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\Payment;
+use Illuminate\Http\Request;
+use Stripe\Checkout\Session;
+use Stripe\Stripe;
+
+class PurchaseController extends Controller
+{
+
+    public function checkout(Request $request, $courseId)
+    {
+        // Get course and user data
+        $course = Course::findOrFail($courseId);
+        $user = $request->user();
+
+        // Check if user is authenticated
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User is not authenticated.',
+            ], 401);
+        }
+
+        $total = $course->price;
+
+        try {
+            // Set Stripe API key
+            Stripe::setApiKey(config('services.stripe.secret'));
+
+            // Step 1: Insert a record into course_purchases table
+            $coursePurchase = \App\Models\CoursePurchase::create([
+                'user_id' => $user->id,
+                'course_id' => $course->id,
+                'amount' => $total,
+            ]);
+
+            // Step 2: Create a payment record and associate it with the course purchase
+            $payment = Payment::create([
+                'user_id' => $user->id,
+                'amount' => $total,
+                'payment_method' => 'stripe',
+                'status' => 'pending',
+                'course_purchase_id' => $coursePurchase->id,  // Associate with course purchase
+            ]);
+
+            // Create Stripe session
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'product_data' => [
+                            'name' => $course->title,
+                        ],
+                        'unit_amount' => $total * 100,
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => route('checkout.success', ['payment_id' => $payment->id, 'course_id' => $course->id]),
+                'cancel_url' => route('checkout.cancel'),
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'url' => $session->url,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+}
