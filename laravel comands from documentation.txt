@@ -14,7 +14,7 @@ php artisan serve --port=8080
 
 4. php artisan make:controller App/Http/Controllers/Web/Backend/Blog/BlogController -r
 
-*!* php artisan make:controller App/Http/Controllers/API/OrderController
+*!* php artisan make:controller App/Http/Controllers/Api/OrderController
 
 5. php artisan make:model Blog -m
 

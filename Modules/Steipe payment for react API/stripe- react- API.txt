@@ -1,5 +1,7 @@
 *
 * stripe Install
+-->> composer require stripe/stripe-php
+
 * stripe credientials
 * .env
 * route for checkout
