@@ -1,37 +1,37 @@
-public function handleWebhook(Request $request)
-    {
-        Stripe::setApiKey(config('services.stripe.secret'));
+    public function handleWebhook(Request $request)
+        {
+            Stripe::setApiKey(config('services.stripe.secret'));
 
-        $payload        = $request->getContent();
-        $sigHeader      = $request->header('Stripe-Signature');
-        $endpointSecret = config('services.stripe.webhook_secret');
+            $payload        = $request->getContent();
+            $sigHeader      = $request->header('Stripe-Signature');
+            $endpointSecret = config('services.stripe.webhook_secret');
 
-        try {
-            $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
+            try {
+                $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
 
-            // Handle the event
-            switch ($event->type) {
-                case 'payment_intent.succeeded':
-                    $paymentIntent = $event->data->object;
-                    $this->handleSuccessTable($paymentIntent);
-                    return response()->json([
-                        'message' => $paymentIntent->metadata->type . ' payment success.'
-                    ]);
-                    break;
+                // Handle the event
+                switch ($event->type) {
+                    case 'payment_intent.succeeded':
+                        $paymentIntent = $event->data->object;
+                        $this->handleSuccessTable($paymentIntent);
+                        return response()->json([
+                            'message' => $paymentIntent->metadata->type . ' payment success.'
+                        ]);
+                        break;
 
-                case 'payment_intent.payment_failed':
-                    $paymentIntent = $event->data->object;
-                    $this->handleFailedTable($paymentIntent);
-                    return response()->json([
-                        'message' => $paymentIntent->metadata->type . ' payment fail.'
-                    ]);
-                    break;
+                    case 'payment_intent.payment_failed':
+                        $paymentIntent = $event->data->object;
+                        $this->handleFailedTable($paymentIntent);
+                        return response()->json([
+                            'message' => $paymentIntent->metadata->type . ' payment fail.'
+                        ]);
+                        break;
+                }
+                return response()->json(['status' => 'success'], 200);
+            } catch (\Exception $e) {
+                return response()->json(['error' => 'Webhook signature verification failed: ' . $e->getMessage()], 400);
             }
-            return response()->json(['status' => 'success'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Webhook signature verification failed: ' . $e->getMessage()], 400);
         }
-    }
 
 
 
@@ -203,4 +203,3 @@ public function handleWebhook(Request $request)
     }
 
 
-    
