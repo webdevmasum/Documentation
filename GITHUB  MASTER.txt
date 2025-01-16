@@ -26,6 +26,7 @@ Git Pull and Push
 	--- git commit -m"write commit"
 	--- git push
 	--- git push origin masum:dev
+	--- git push origin masum:main
 
 
 ***************
