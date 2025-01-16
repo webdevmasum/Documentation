@@ -1,3 +1,46 @@
+
+
+
+********
+step-: Setup
+********
+
+Install Stripe 
+-->> composer require stripe/stripe-php
+
+.env
+-->> Publishable key: 
+-->> Secret key: 
+-->> STRIPE_WEBHOOK_SECRET=
+
+
+config/services.php
+
+'stripe' => [
+        'model' => App\Models\User::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
+
+
+
+********
+step-1: Route Web
+********
+
+use App\Http\Controllers\API\StripePaymentController;
+
+//! Route for StripePaymentController added by Masum
+Route::get('checkout/success', [StripePaymentController::class, 'checkoutSuccess'])->name('checkout.success');
+Route::get('checkout/cancel', [StripePaymentController::class, 'checkoutCancel'])->name('checkout.cancel');
+
+
+
+********
+step-2: Controller API
+********
+
 <?php
 
 namespace App\Http\Controllers\API;
@@ -78,3 +121,6 @@ class PurchaseController extends Controller
         }
     }
 }
+
+
+

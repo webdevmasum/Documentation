@@ -1,7 +1,8 @@
-
+********
+step-1: Stripe setup
+********
 stripe.com
 * Test Mode
-
 * Home: [setup .env]
 
 -->> Publishable key: pk_test_51QJoHQGEF1Q9fsWzBhRRj418NdfC361iMdLYC28AU5COfpKTJsoanbBeyBA58kiZHv33jSrW5rqfaaoyqLNIjEoe00nbv2V9Y2
@@ -11,19 +12,21 @@ stripe.com
 -->> STRIPE_WEBHOOK_SECRET=whsec_pTFPc5i0G5VWsGb1DuHntAExDtolFFxo
 
 For webhooks to integrate Payment
-1. https://dashboard.stripe.com
-2. Developers
-3. Add destination
-4. Select all events [select check box]
-5. continue and continue
-6. Endpoint URL [ https://davigadelha.softvencefsd.xyz/api/webhook/stripe ]
-7. Signing secret -->> whsec_pTFPc5i0G5VWsGb1DuHntAExDtolFFxo [setup .env]
+    1. https://dashboard.stripe.com
+    2. Developers
+    3. Add destination
+    4. Select all events [select check box]
+    5. continue and continue
+    6. Endpoint URL [ https://davigadelha.softvencefsd.xyz/api/webhook/stripe ]
+    7. Signing secret -->> whsec_pTFPc5i0G5VWsGb1DuHntAExDtolFFxo [setup .env]
 
 Done....!!
 
 Result: https://davigadelha.softvencefsd.xyz/api/webhook/stripe
 
-
+********
+step-1: Setup
+********
 # config/services.php
 
 'stripe' => [
