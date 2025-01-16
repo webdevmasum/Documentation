@@ -1,0 +1,206 @@
+public function handleWebhook(Request $request)
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $payload        = $request->getContent();
+        $sigHeader      = $request->header('Stripe-Signature');
+        $endpointSecret = config('services.stripe.webhook_secret');
+
+        try {
+            $event = Webhook::constructEvent($payload, $sigHeader, $endpointSecret);
+
+            // Handle the event
+            switch ($event->type) {
+                case 'payment_intent.succeeded':
+                    $paymentIntent = $event->data->object;
+                    $this->handleSuccessTable($paymentIntent);
+                    return response()->json([
+                        'message' => $paymentIntent->metadata->type . ' payment success.'
+                    ]);
+                    break;
+
+                case 'payment_intent.payment_failed':
+                    $paymentIntent = $event->data->object;
+                    $this->handleFailedTable($paymentIntent);
+                    return response()->json([
+                        'message' => $paymentIntent->metadata->type . ' payment fail.'
+                    ]);
+                    break;
+            }
+            return response()->json(['status' => 'success'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Webhook signature verification failed: ' . $e->getMessage()], 400);
+        }
+    }
+
+
+
+    /**
+     * handle payment table only  payment intent succeeded
+     */
+    private function handleSuccessTable($paymentIntent)
+    {
+        switch ($paymentIntent->metadata->type) {
+            case 'advart':
+                $advartData = Advert::find($paymentIntent->metadata->advert_id);
+                $advartData->type = 'pending';
+                $advartData->save();
+                AdvertPayment::create([
+                    'advert_id'          => $paymentIntent->metadata->advert_id,
+                    'amount'             => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'stripe_payment_id'  => $paymentIntent->id,
+                    'status'             => 'succeeded',
+                ]);
+                //log
+                Log::info($paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata);
+                break;
+
+            case 'donation':
+                DonationPayment::create([
+                    'user_id'           => $paymentIntent->metadata->user_id,
+                    'masjid_id'         => $paymentIntent->metadata->masjid_id,
+                    'name'              => $paymentIntent->metadata->name,
+                    'phone'             => $paymentIntent->metadata->phone,
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'quantity'          => $paymentIntent->metadata->quantity,
+                    'sub_total'         => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'transaction_fee'   => $paymentIntent->metadata->fee,
+                    'total_amount'      => $paymentIntent->metadata->total / 100, // Convert cents to dollars
+                    'recurrent'         => $paymentIntent->metadata->recurrent,
+                    'type'              => $paymentIntent->metadata->type_of_donation,
+                    'status'            => 'succeeded',
+                ]);
+                //log
+                Log::info($paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata);
+                break;
+
+            case 'event':
+                EventPayment::create([
+                    'user_id'            => $paymentIntent->metadata->user_id,
+                    'event_id'           => $paymentIntent->metadata->event_id,
+                    'name'               => $paymentIntent->metadata->name,
+                    'email'              => $paymentIntent->metadata->email,
+                    'phone'              => $paymentIntent->metadata->phone,
+                    'age'                => $paymentIntent->metadata->age,
+                    'gender'             => $paymentIntent->metadata->gender,
+                    'note'               => $paymentIntent->metadata->note,
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'quantity'           => $paymentIntent->metadata->quantity,
+                    'total_amount'       => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'status'             => 'succeeded',
+                ]);
+                //log
+                Log::info($paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata);
+                break;
+
+            case 'program':
+                ProgramPayment::create([
+                    'user_id'            => $paymentIntent->metadata->user_id,
+                    'program_id'         => $paymentIntent->metadata->program_id,
+                    'name'               => $paymentIntent->metadata->name,
+                    'email'              => $paymentIntent->metadata->email,
+                    'phone'              => $paymentIntent->metadata->phone,
+                    'age'                => $paymentIntent->metadata->age,
+                    'gender'             => $paymentIntent->metadata->gender,
+                    'note'               => $paymentIntent->metadata->note,
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'quantity'           => $paymentIntent->metadata->quantity,
+                    'total_amount'       => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'status'             => 'succeeded',
+                ]);
+                //log
+                Log::info($paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata);
+                break;
+
+            default:
+                return;
+                break;
+        }
+    }
+
+
+    /**
+     * handle payment table only  payment intent failed
+     */
+    private function handleFailedTable($paymentIntent)
+    {
+        switch ($paymentIntent->metadata->type) {
+            case 'advart':
+                $advartData = Advert::find($paymentIntent->metadata->advert_id);
+                $advartData->type = 'cancel';
+                $advartData->save();
+                AdvertPayment::create([
+                    'advert_id'          => $paymentIntent->metadata->advert_id,
+                    'amount'             => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'stripe_payment_id'  => $paymentIntent->id,
+                    'status'             => 'failed',
+                ]);
+                //log
+                Log::error("$paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata");
+                break;
+
+            case 'donation':
+                DonationPayment::create([
+                    'user_id'           => $paymentIntent->metadata->user_id,
+                    'masjid_id'         => $paymentIntent->metadata->masjid_id,
+                    'name'              => $paymentIntent->metadata->name,
+                    'phone'             => $paymentIntent->metadata->phone,
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'quantity'          => $paymentIntent->metadata->quantity,
+                    'sub_total'         => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'transaction_fee'   => $paymentIntent->metadata->fee,
+                    'total_amount'      => $paymentIntent->metadata->total / 100, // Convert cents to dollars
+                    'recurrent'         => $paymentIntent->metadata->recurrent,
+                    'type'              => $paymentIntent->metadata->type_of_donation,
+                    'status'            => 'failed',
+                ]);
+                //log
+                Log::error("$paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata");
+                break;
+
+            case 'event':
+                EventPayment::create([
+                    'user_id'            => $paymentIntent->metadata->user_id,
+                    'event_id'           => $paymentIntent->metadata->event_id,
+                    'name'               => $paymentIntent->metadata->name,
+                    'email'              => $paymentIntent->metadata->email,
+                    'phone'              => $paymentIntent->metadata->phone,
+                    'age'                => $paymentIntent->metadata->age,
+                    'gender'             => $paymentIntent->metadata->gender,
+                    'note'               => $paymentIntent->metadata->note,
+                    'stripe_payment_id' => $paymentIntent->id,
+                    'quantity'           => $paymentIntent->metadata->quantity,
+                    'total_amount'       => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'status'             => 'failed',
+                ]);
+                //log
+                Log::error("$paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata");
+                break;
+
+            case 'program':
+                EventPayment::create([
+                    'user_id'            => $paymentIntent->metadata->user_id,
+                    'program_id'         => $paymentIntent->metadata->program_id,
+                    'name'               => $paymentIntent->metadata->name,
+                    'email'              => $paymentIntent->metadata->email,
+                    'phone'              => $paymentIntent->metadata->phone,
+                    'age'                => $paymentIntent->metadata->age,
+                    'gender'             => $paymentIntent->metadata->gender,
+                    'note'               => $paymentIntent->metadata->note,
+                    'stripe_payment_id'  => $paymentIntent->id,
+                    'quantity'           => $paymentIntent->metadata->quantity,
+                    'total_amount'       => $paymentIntent->metadata->sub_total / 100, // Convert cents to dollars
+                    'status'             => 'failed',
+                ]);
+                //log
+                Log::error("$paymentIntent->metadata->type . 'payment succeeded' . $paymentIntent->metadata");
+                break;
+
+            default:
+                return;
+                break;
+        }
+    }
+
+
+    
