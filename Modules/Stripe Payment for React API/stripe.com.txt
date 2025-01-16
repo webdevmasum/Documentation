@@ -8,6 +8,8 @@ stripe.com
 
 -->> Secret key: sk_test_51QJoHQGEF1Q9fsWzYKExuOTG0Yn5qka0uK4tl0y34zZga1YQnPsJVxxj5REYUZjYD1NQu2xx2i9gOhImRRiAu9a100vwgGQTFt
 
+-->> STRIPE_WEBHOOK_SECRET=whsec_pTFPc5i0G5VWsGb1DuHntAExDtolFFxo
+
 For webhooks to integrate Payment
 1. https://dashboard.stripe.com
 2. Developers
@@ -20,3 +22,14 @@ For webhooks to integrate Payment
 Done....!!
 
 Result: https://davigadelha.softvencefsd.xyz/api/webhook/stripe
+
+
+# config/services.php
+
+'stripe' => [
+        'model' => App\Models\User::class,
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+    ],
+
