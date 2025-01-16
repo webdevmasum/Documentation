@@ -72,3 +72,82 @@ Status code	Meaning
 508	Loop Detected
 510	Not Extended
 511	Network Authentication Required
+
+
+*************
+Codes explain
+*************
+
+100     Continue:                Client can continue with the request.
+101     Switching Protocols:     Server switches protocols (e.g., HTTP to WebSockets).
+102     Processing:              Server is processing the request, no response yet.
+103     Early Hints:             Server provides hints before the final response.
+
+
+200     OK:                      Request successful, response contains requested data.
+201     Created:                 Request successful, new resource created.
+202     Accepted:                Request accepted, but not yet processed.
+203     Non-Authoritative Information:   Request successful, but returned data may be from a third-party.
+204     No Content:              Request successful, no content in the response.
+205     Reset Content:           Request successful, client should reset the document view.
+206     Partial Content:         Request successful, partial data returned (e.g., for range requests).
+207     Multi-Status:            Multiple status codes returned (e.g., in WebDAV).
+208     Already Reported:        Resource already reported in a previous response (used in WebDAV).
+226     IM Used:                 Request successful, response used an instance manipulation (e.g., partial content).
+
+
+300     Multiple Choices:        Multiple options for the resource, user must choose.
+301     Moved Permanently:       Resource permanently moved to a new URL.
+302     Found:                   Resource temporarily moved to a different URL.
+303     See Other:               Redirect to another URL for the response.
+304     Not Modified:            Resource not modified, use cached version.
+305     Use Proxy:               Resource should be accessed through a proxy.
+306     Switch Proxy:            No longer in use, previously meant to switch proxy.
+307     Temporary Redirect:      Resource temporarily moved, same method should be used for future requests.
+308     Permanent Redirect:      Resource permanently moved, same method should be used for future requests.
+
+
+400     Bad Request:             Invalid syntax in the request.
+401     Unauthorized:            Authentication required.
+402     Payment Required:        Reserved for future use (payment).
+403     Forbidden:               Access denied, permission issues.
+404     Not Found:               Resource not found.
+405     Method Not Allowed:      HTTP method not allowed for this resource.
+406     Not Acceptable:          Requested resource not acceptable.
+407     Proxy Authentication Required:   Proxy needs authentication.
+408     Request Timeout:         Request timed out.
+409     Conflict:                Conflict with current resource state.
+410     Gone:                    Resource no longer available, permanently.
+411     Length Required:         Content-Length header missing.
+412     Precondition Failed:     Precondition in request not met.
+413     Payload Too Large:       Request too large to process.
+414     URI Too Long:            URI is too long for the server to handle.
+415     Unsupported Media Type:  Media type not supported.
+416     Range Not Satisfiable:   Requested range not valid.
+417     Expectation Failed:      Expectation in request can't be met.
+418     I'm a Teapot:            A humorous, non-standard code (from an April Fools' joke).
+421     Misdirected Request:     Request sent to the wrong server.
+422     Unprocessable Entity:    Invalid request, can't be processed.
+423     Locked:                  Resource is locked.
+424     Failed Dependency:       Dependency request failed.
+425     Too Early:               Request too early, needs to wait.
+426     Upgrade Required:        Upgrade to a newer protocol version needed.
+428     Precondition Required:   Precondition required for the request.
+429     Too Many Requests:       Rate limit exceeded.
+431     Request Header Fields Too Large:     Headers too large to process.
+451     Unavailable For Legal Reasons:       Resource unavailable due to legal restrictions.
+
+
+500     Internal Server Error:   Generic server error, something went wrong.
+501     Not Implemented:         Server does not support the functionality.
+502     Bad Gateway:             Server received invalid response from upstream server.
+503     Service Unavailable:     Server temporarily unavailable (e.g., overloading or maintenance).
+504     Gateway Timeout:         Server did not receive a timely response from an upstream server.
+505     HTTP Version Not Supported:      Server does not support the HTTP version used in the request.
+506     Variant Also Negotiates: Server has a configuration error related to content negotiation.
+507     Insufficient Storage:    Server can't store the representation needed to complete the request.
+508     Loop Detected:          Infinite loop detected while processing the request.
+510     Not Extended:           Server requires further extensions to fulfill the request.
+511     Network Authentication Required:     Authentication required to access the network.
+
+
