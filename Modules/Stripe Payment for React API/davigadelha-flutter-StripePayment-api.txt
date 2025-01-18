@@ -110,28 +110,30 @@ class StripeWebhookController extends Controller
         if ($event->type == 'payment_intent.succeeded') {
             $paymentIntent = $event->data->object;
 
-            // Fetch related Course Purchase
-            $coursePurchase = CoursePurchase::find($paymentIntent->metadata->course_purchase_id);
+            // Save Course Purchase
+            $coursePurchase = CoursePurchase::create([
+                'course_id'             => $paymentIntent->metadata->course_id,
+                'user_id'               => $paymentIntent->metadata->user_id,
+                'amount'                => $paymentIntent->amount / 100,
+                'payment_method'        => 'stripe',
+                'stripe_payment_id'     => $paymentIntent->id,
+                'status'                => 'succeeded',
+            ]);
 
-            if ($coursePurchase) {
-                // Save Payment
-                $payment = Payment::create([
-                    'course_purchase_id' => $coursePurchase->id,
-                    'user_id' => $coursePurchase->user_id,
-                    'amount' => $paymentIntent->amount / 100,
-                    'payment_method' => 'stripe',
-                    'stripe_payment_id' => $paymentIntent->id,
-                    'status' => 'succeeded',
-                ]);
 
-                // Update Course Purchase
-                $coursePurchase->update([
-                    'amount' => $paymentIntent->amount / 100,
-                    'purchase_date' => now(),
-                ]);
+            // Save Payment
+            $payment = Payment::create([
+                'user_id'               => $paymentIntent->metadata->user_id,
+                'course_purchase_id'    => $coursePurchase->id,
+                'amount'                => $paymentIntent->amount / 100,
+                'payment_method'        => 'stripe',
+                'stripe_payment_id'     => $paymentIntent->id,
+                'status'                => 'succeeded',
+            ]);
 
-                return response()->json(['message' => 'Payment successful'], 200);
-            }
+
+
+            return response()->json(['message' => 'Payment successful'], 200);
         }
 
         return response()->json(['error' => 'Payment failed'], 400);
