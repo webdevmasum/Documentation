@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+
+class MyCustomCommand extends Command
+{
+    // Command er name define kora
+    protected $signature = 'custom:run';
+
+    // Command er description define kora
+    protected $description = 'Run a custom command in the live application';
+
+    // Command execution er logic
+    public function handle()
+    {
+        $this->info('Custom command executed successfully!');
+        // Apnar custom logic ekhane add korun
+    }
+}
