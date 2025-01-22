@@ -1,0 +1,105 @@
+************
+Step 1: Database
+************
+
+
+
+************
+Step 2: Sidebar
+************
+
+
+    {{-- <li><a class="{{ Request::routeIs('cms.service-page.section') ? 'active' : ' ' }}"
+                href="{{ route('cms.service-page.section') }}">Our Service</a></li> --}}
+
+
+     <li>
+        <a class="{{ Request::routeIs('cms.service-page.section') ? 'active' : '' }}"
+        href="{{ route('cms.service-page.section', ['section' => 'ServiceSectionOne']) }}">
+            Our Service </a>
+    </li>
+
+
+************
+Step 3: Route
+************
+
+    Route::controller(ServicePageController::class)->group(function () {
+        Route::get('/cms/service-page/{section}', 'serviceSection')->name('cms.service-page.section');
+        Route::patch('/cms/service-page/{section}', 'storeServiceSection')->name('cms.service-page.section.update');
+    });
+
+
+
+************
+Step 4: Controller
+************
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\CMS\ServicePage;
+
+use App\Enums\Page;
+use App\Enums\Section;
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Models\CMS;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
+
+class ServicePageController extends Controller
+{
+
+
+    public function serviceSection($section)
+    {
+        $data = CMS::where('page', Page::ServicePage)->where('section', $section)->first();
+        return view('backend.layouts.cms.service-page.service-section', compact('data', 'section'));
+    }
+
+    public function storeServiceSection(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable',
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+            'section' => 'required|string',
+        ]);
+
+        $section = $request->input('section');
+        $data = CMS::where('page', Page::ServicePage)->where('section', $section)->first();
+
+        if ($request->hasFile('image')) {
+            if ($data) {
+                $oldImagePath = $data->image;
+                if ($oldImagePath && File::exists(public_path($oldImagePath))) {
+                    File::delete(public_path($oldImagePath));
+                }
+            }
+            $featuredImage = Helper::fileUpload($request->file('image'), 'cms-image' . $section, $request->image);
+        } else {
+            $featuredImage = $data ? $data->image : null;
+        }
+
+        CMS::updateOrCreate(
+            ['page' => Page::ServicePage, 'section' => $section],
+            ['title' => $request->title, 'description' => $request->description, 'image' => $featuredImage]
+        );
+
+        return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+    }
+
+}
+
+
+
+
+
+
+
+
+************
+Step 5: Blade
+************
