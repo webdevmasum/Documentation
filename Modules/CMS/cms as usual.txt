@@ -1,0 +1,526 @@
+************
+Step 1: Database
+************
+
+
+************
+Step 2: Enums
+************
+
+//!! app/Enums/Page.php
+
+<?php declare(strict_types=1);
+
+namespace App\Enums;
+use BenSampo\Enum\Enum;
+
+final class Page extends Enum
+{
+    const HomePage      = 'home_page';
+    const ServicePage   = 'service_page';
+    const BlogPage      = 'blog_page';
+}
+
+
+
+//!! app/Enums/Section.php
+
+<?php declare(strict_types=1);
+
+namespace App\Enums;
+use BenSampo\Enum\Enum;
+
+final class Section extends Enum
+{
+    //Home-page
+    const HomeSection           = 'home_section';
+
+    //! Service page
+    const ServiceSectionOne     = 'service_section_one';
+    const ServiceSectionTwo     = 'service_section_two';
+    const ServiceSectionThree   = 'service_section_three';
+    const ServiceSectionFour    = 'service_section_four';
+    const ServiceSectionFive    = 'service_section_five';
+
+
+    //!! Blog page
+    const BlogSection           = 'blog_section';
+
+}
+
+
+
+
+************
+Step 2: Sidebar
+************
+
+                        {{-- Blog Page --}}
+                            <li><a class="submenu-title {{ Request::routeIs('cms.blog-page.*') ? 'active open' : '' }}"
+                                href="javascript:void(0)">Blog Page<span class="sub-arrow"><i
+                                        class="fa fa-angle-right"></i></span></a>
+                                <ul class="nav-sub-childmenu submenu-content">
+                                    <li>
+                                        <a class="{{ Request::routeIs('cms.blog-page.section') ? 'active' : '' }}"
+                                            href="{{ route('cms.blog-page.section', ['section' => 'Blog Section']) }}">
+                                                Our Blogs
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+************
+Step 3: Route
+************
+
+
+//! Route for BlogPageController CMS
+    Route::controller(BlogPageController::class)->group(function () {
+
+        Route::get('/cms/blog-page/blog-feature', 'blogFeature')->name('cms.blog-page.section');
+        Route::patch('/cms/blog-page/blog-feature', 'storeblogFeature')->name('cms.blog-page.section.update');
+        Route::patch('/cms/blog-page/blog-feature/one', 'storeblogFeatureItemOne')->name('cms.blog-page.section.item-one.update');
+        Route::patch('/cms/blog-page/blog-feature/two', 'storeblogFeatureItemTwo')->name('cms.blog-page.section.item-two.update');
+
+    });
+
+
+************
+Step 4: Controller
+************
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\CMS\BlogPage;
+
+use App\Enums\Page;
+use App\Enums\Section;
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Models\CMS;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+
+class BlogPageController extends Controller
+{
+
+    public function blogFeature()
+    {
+
+        $data[0] = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->first();
+        $data[1] = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->skip(1)->first();
+        $data[2] = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->skip(2)->first();
+        $data[3] = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->skip(3)->first();
+        $data[4] = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->skip(4)->first();
+
+        return view('backend.layouts.cms.blog-page.blog-section', compact('data'));
+    }
+
+
+    public function storeblogFeature(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable',
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+
+
+
+        $data = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->first();
+
+        // Check Image Update
+        // Handle image upload and replacement if a new image is provided
+
+        if ($request->hasFile('image')) {
+            // Remove old image if it exists
+            if ($data) {
+                $oldImagePath = $data->image;
+                if ($oldImagePath && File::exists(public_path($oldImagePath))) {
+                    File::delete(public_path($oldImagePath));
+                }
+            }
+
+            // Generate a random string and store new image
+            $featuredImage = Helper::fileUpload( $request->file( 'image' ), 'cms-image', $request->image);
+        }else{
+            $featuredImage = $data ? $data->image : null;
+        }
+
+        // Update or create record
+        $data = CMS::updateOrCreate(
+            [
+                'page' => Page::BlogPage,
+                'section' => Section::BlogSection,
+            ],
+            [
+                'title' => $request->title,
+                'description' => strip_tags($request->description),
+                'image' => $featuredImage,
+            ]
+        );
+
+        if ($data)
+        {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        }
+        else
+        {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
+
+
+
+    public function storeblogFeatureItemOne(Request $request)
+    {
+        $request->validate([
+            'title' => 'nullable',
+            'sub_title' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+        $getData = CMS::where('page', Page::BlogPage)->where('section', Section::BlogSection)->skip(1)->first();
+
+        // Check Image Update
+        // Handle image upload and replacement if a new image is provided
+
+        if ($request->hasFile('image')) {
+            // Remove old image if it exists
+            if ($getData) {
+                $oldImagePath = $getData->image;
+                if ($oldImagePath && File::exists(public_path($oldImagePath))) {
+                    File::delete(public_path($oldImagePath));
+                }
+            }
+
+            $featuredImage = Helper::fileUpload( $request->file( 'image' ), 'cms-image', $request->image);
+        }else{
+
+            $featuredImage = $getData ? $getData->image : null;
+        }
+
+        if ($getData){
+            $data = $getData->update(
+                [
+                    'title' => $request->title,
+                    'description' => strip_tags($request->description),
+                    'image' => $featuredImage,
+                ]
+            );
+        }else{
+            $data = CMS::create(
+                [
+                    'page' => Page::BlogPage,
+                    'section' => Section::BlogSection,
+                    'title' => $request->title,
+                    'description' => strip_tags($request->description),
+                    'image' => $featuredImage,
+
+                ],
+            );
+        }
+
+        if ($data)
+        {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        }
+        else
+        {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
+
+}
+
+
+
+************
+Step 5: Blade
+************
+
+
+@extends('backend.app')
+
+@section('title', 'Blog Page')
+
+@push('styles')
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            min-height: 150px;
+        }
+
+        select[name="section"] {
+            background-color: #f0f4f8;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            width: 100%;
+        }
+
+        select[name="section"] option {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        select[name="section"] option:selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        select[name="section"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+@endpush
+
+@section('content')
+
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Blog Feature</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="blog"></i></a></li>
+                        <li class="breadcrumb-item"> Form Layout</li>
+                        <li class="breadcrumb-item active">Blog Feature</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Blog Feature</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.blog-page.section.update') }}" method="post"
+                                    enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[0]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[0]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[0]->image) ? asset($data[0]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.blog-page.section') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Blog Two</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.blog-page.section.item-one.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[1]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[1]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[1]->image) ? asset($data[1]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.blog-page.section') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Blog Three</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.blog-page.section.item-two.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[2]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[2]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[2]->image) ? asset($data[2]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.blog-page.section') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Container-fluid Ends-->
+
+
+@endsection
+
+
+@push('scripts')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#description'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        ClassicEditor
+            .create(document.querySelector('#description1'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
+        $('.dropify').dropify();
+
+
+
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush
+
+
+
+
+
+
+
