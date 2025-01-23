@@ -3,6 +3,54 @@ Step 1: Database
 ************
 
 
+************
+Step 2: Enums
+************
+
+//!! app/Enums/Page.php
+
+<?php declare(strict_types=1);
+
+namespace App\Enums;
+use BenSampo\Enum\Enum;
+
+final class Page extends Enum
+{
+    const HomePage      = 'home_page';
+    const ServicePage   = 'service_page';
+    const BlogPage      = 'blog_page';
+}
+
+
+
+//!! app/Enums/Section.php
+
+<?php declare(strict_types=1);
+
+namespace App\Enums;
+use BenSampo\Enum\Enum;
+
+final class Section extends Enum
+{
+    //Home-page
+    const HomeSection           = 'home_section';
+
+    //! Service page
+    const ServiceSectionOne     = 'service_section_one';
+    const ServiceSectionTwo     = 'service_section_two';
+    const ServiceSectionThree   = 'service_section_three';
+    const ServiceSectionFour    = 'service_section_four';
+    const ServiceSectionFive    = 'service_section_five';
+
+
+    //!! Blog page
+    const BlogSection           = 'blog_section';
+
+   
+}
+
+
+
 
 ************
 Step 2: Sidebar
