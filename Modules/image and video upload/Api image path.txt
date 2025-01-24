@@ -1,0 +1,7 @@
+
+*jodi kono img er path live na hoy tahole model e ata set kore dete hoy*
+
+public function getImageAttribute($value)
+    {
+        return $value ? url($value) : null;
+    }
