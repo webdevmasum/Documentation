@@ -7,7 +7,7 @@
 --> php artisan migrate:fresh --seed
 
 2. composer require Laravel/breeze --dev
-3. php artisan breeze: install -> blade -> 1
+3. php artisan breeze:install -> blade -> 1
 --> php artisan serve
 php artisan serve --port=8080
 
@@ -15,6 +15,7 @@ php artisan serve --port=8080
 4. php artisan make:controller App/Http/Controllers/Web/Backend/Blog/BlogController -r
 
 *!* php artisan make:controller App/Http/Controllers/Api/OrderController
+*!* php artisan make:controller App/Http/Controllers/API/Cms/AboutPageController
 
 5. php artisan make:model Blog -m
 
@@ -24,6 +25,7 @@ php artisan route:clear
 php artisan cache:clear
 php artisan config:cache
 php artisan optimize:clear
+composer update
 
 php artisan about 			( show environment, cache, driver )
 php artisan queue:work 			( for mail sending )
