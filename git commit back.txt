@@ -1,0 +1,28 @@
+Step 1: Commit History Check Koro
+
+git log --oneline
+
+
+
+Step 2: Reset Commit
+
+git reset --hard abc123
+
+
+
+Step 3: Changes Push Koro (Optional)
+
+git push origin branch-name --force
+
+Note: Force push korle remote repository er porer commit gula chole jabe. So, eta cautiously koro.
+
+
+Important Note:
+
+Jodi tumi kono file save korte chao tar aage, tahole git stash use koro, na hole changes chole jabe.
+
+git stash
+
+Erapor reset korar por, stash kora files abar back ante:
+
+git stash pop
