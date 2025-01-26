@@ -40,6 +40,27 @@ Github
 	--- git checkout main 				( switch branch )
 
 
+***************
+Github Commit back
+***************
+
+	-->> On mac............
+	touch dayq.txt [create a file]
+	open dayq.txt  [open file]
+
+	-->>
+	git add . && git commit -m"message" [add and commit ek sathe hobe]
+	git log 							[ show commit history ]
+	:q 									[back or quite from git log]
+
+	git reset --soft HEAD^ 				[local repo to stagging area with resent commit undo ]
+	git reset HEAD^ 					[local repo to working directory with resent commit uncommit and remove from stagging area ]
+	git reset --hard HEAD^ 				[local repo to old commit with delete commit and back last situation ]
+
+	git reset -soft HEAD~2 				[reset last 3 commit at a time]
+
+
+
 
 
 1. git branch ( to show all git branch)	
