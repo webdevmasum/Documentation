@@ -1,0 +1,42 @@
+
+
+
+
+Laravel project-e CORS setup:
+
+Step 1: Prothome barryvdh/laravel-cors package install korte hobe. Ekhon Laravel 10+ use korle, CORS handle korte Laravel er built-in \Illuminate\Http\Middleware\HandleCors middleware use kora hoy. Jodi purono version thake, tahole barryvdh/laravel-cors package use korte hobe.
+
+
+    -->> barryvdh/laravel-cors
+    -->> \Illuminate\Http\Middleware\HandleCors 
+
+Laravel 10+ jodi use kora hoy, tahole step 2 theke suru korte paren.
+
+Step 2: CORS middleware Laravel e already thake. Apnar config/cors.php file e giye CORS configuration check korun.
+
+    // config/cors.php
+    return [
+        'paths' => ['api/*'], // API path specify kora
+        'allowed_methods' => ['*'], // All methods allow korbe
+        'allowed_origins' => ['*'], // Specific URL theke request allow korte chaile, URL specify korte hobe
+        'allowed_headers' => ['*'], // All headers allow korbe
+        'exposed_headers' => [],
+        'max_age' => 0,
+        'supports_credentials' => false,
+    ];
+
+Step 3: Ekhon, app/Http/Kernel.php file e giye \Laravel\Cors\HandleCors::class middleware add korte hobe:
+
+    protected $middleware = [
+        \Illuminate\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\LoadEnvironmentVariables::class,
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        \Laravel\Cors\HandleCors::class, // Add this line
+    ];
+
+
+
+
+Other wise "composer require fruitcake/laravel-cors" ai package deye kaj korte hobe.
