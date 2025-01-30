@@ -99,10 +99,9 @@ Step 3: Route
 Step 4: Controller
 ************
 
-
 <?php
 
-namespace App\Http\Controllers\Web\Backend\CMS\ServicePage;
+namespace App\Http\Controllers\Web\Backend\CMS\AboutPage;
 
 use App\Enums\Page;
 use App\Enums\Section;
@@ -112,29 +111,33 @@ use App\Models\CMS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
-
-class ServicePageController extends Controller
+class AboutController extends Controller
 {
 
-
-    //! One function for all section
-    /*  public function serviceSection($section)
+    /**
+     * Class to handle About Page CMS
+     */
+    public function abouthero()
     {
-        $data = CMS::where('page', Page::ServicePage)->where('section', $section)->first();
-        return view('backend.layouts.cms.service-page.service-section', compact('data', 'section'));
+        $data = CMS::where('page', Page::AboutPage)->where('section', Section::AboutHeroSection)->first();
+        return view('backend.layouts.cms.about-page.about-page', compact('data'));
     }
 
-    public function storeServiceSection(Request $request)
+    /**
+     * Function to store data for About Hero Section
+     */
+    public function storeabouthero(Request $request)
     {
         $request->validate([
-            'title'         => 'nullable',
-            'description'   => 'nullable',
-            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
-            'section'       => 'required|string',
+            'title' => 'nullable',
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
 
-        $section = $request->input('section');
-        $data = CMS::where('page', Page::ServicePage)->where('section', $section)->first();
+        $data = CMS::where('page', Page::AboutPage)->where('section', Section::AboutHeroSection)->first();
+
+        // Check Image Update
+        // Handle image upload and replacement if a new image is provided
 
         if ($request->hasFile('image')) {
             if ($data) {
@@ -143,36 +146,56 @@ class ServicePageController extends Controller
                     File::delete(public_path($oldImagePath));
                 }
             }
-            $featuredImage = Helper::fileUpload($request->file('image'), 'cms-image' . $section, $request->image);
-        } else {
+
+            $featuredImage = Helper::fileUpload( $request->file( 'image' ), 'cms-image', $request->image);
+        }else{
             $featuredImage = $data ? $data->image : null;
         }
 
-        CMS::updateOrCreate(
-            ['page'     => Page::ServicePage, 'section' => $section],
-            ['title'    => $request->title, 'description' => $request->description, 'image' => $featuredImage]
+        // Update or create record
+        $data = CMS::updateOrCreate(
+            [
+                'page' => Page::AboutPage,
+                'section' => Section::AboutHeroSection,
+            ],
+            [
+                'title' => $request->title,
+                'description' => strip_tags($request->description),
+                'image' => $featuredImage,
+            ]
         );
 
-        return redirect()->back()->with('notify-success', 'Data Updated Successfully');
-    } */
+        if ($data)
+        {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        }
+        else
+        {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
 
-
-
-
-    public function serviceFeature()
+    /**
+     * Function to store data for About Card Section
+     */
+    public function storeaboutCard()
     {
+        $data[0] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->first();
+        $data[1] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(1)->first();
+        $data[2] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(2)->first();
+        $data[3] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(3)->first();
+        $data[4] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(4)->first();
+        $data[5] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(5)->first();
+        $data[6] = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(6)->first();
 
-        $data[0] = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->first();
-        $data[1] = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(1)->first();
-        $data[2] = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(2)->first();
-        $data[3] = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(3)->first();
-        $data[4] = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(4)->first();
-
-        return view('backend.layouts.cms.service-page.service-section', compact('data'));
+        return view('backend.layouts.cms.about-page.card-section', compact('data'));
     }
 
 
-    public function storeserviceFeature(Request $request)
+    /**
+    * Function to store data for About Card Section One
+    */
+    public function storeaboutCardOne(Request $request)
     {
         $request->validate([
             'title'         => 'nullable',
@@ -180,9 +203,7 @@ class ServicePageController extends Controller
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
 
-
-
-        $data = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->first();
+        $data = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->first();
 
         // Check Image Update
         // Handle image upload and replacement if a new image is provided
@@ -205,8 +226,8 @@ class ServicePageController extends Controller
         // Update or create record
         $data = CMS::updateOrCreate(
             [
-                'page'      => Page::ServicePage,
-                'section'   => Section::ServiceSection,
+                'page'      => Page::AboutPage,
+                'section'   => Section::AboutCardSection,
             ],
             [
                 'title'         => $request->title,
@@ -223,15 +244,18 @@ class ServicePageController extends Controller
     }
 
 
-
-    public function storeserviceFeatureItemOne(Request $request)
+    /**
+    * Function to store data for About Card Section Two
+    */
+    public function storeaboutCardTwo(Request $request)
     {
         $request->validate([
-            'title'     => 'nullable',
-            'sub_title' => 'nullable',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+            'title'         => 'nullable',
+            'description'   => 'nullable',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
-        $getData = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(1)->first();
+
+        $getData = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(1)->first();
 
         // Check Image Update
         // Handle image upload and replacement if a new image is provided
@@ -262,12 +286,11 @@ class ServicePageController extends Controller
         } else {
             $data = CMS::create(
                 [
-                    'page'          => Page::ServicePage,
-                    'section'       => Section::ServiceSection,
+                    'page'          => Page::AboutPage,
+                    'section'       => Section::AboutCardSection,
                     'title'         => $request->title,
                     'description'   => strip_tags($request->description),
                     'image'         => $featuredImage,
-
                 ],
             );
         }
@@ -280,14 +303,18 @@ class ServicePageController extends Controller
     }
 
 
-    public function storeserviceFeatureItemTwo(Request $request)
+    /**
+    * Function to store data for About Card Section Three
+    */
+    public function storeaboutCardThree(Request $request)
     {
         $request->validate([
-            'title'     => 'nullable',
-            'sub_title' => 'nullable',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+            'title'         => 'nullable',
+            'description'   => 'nullable',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
-        $getData = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(2)->first();
+
+        $getData = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(2)->first();
 
         // Check Image Update
         // Handle image upload and replacement if a new image is provided
@@ -318,12 +345,11 @@ class ServicePageController extends Controller
         } else {
             $data = CMS::create(
                 [
-                    'page'          => Page::ServicePage,
-                    'section'       => Section::ServiceSection,
+                    'page'          => Page::AboutPage,
+                    'section'       => Section::AboutCardSection,
                     'title'         => $request->title,
                     'description'   => strip_tags($request->description),
                     'image'         => $featuredImage,
-
                 ],
             );
         }
@@ -336,14 +362,137 @@ class ServicePageController extends Controller
     }
 
 
-    public function storeserviceFeatureItemThree(Request $request)
+    /**
+    * Function to store data for About Card Section Four
+    */
+    public function storeaboutCardFour(Request $request)
+    {
+        $request->validate([
+            'title'         => 'nullable',
+            'description'   => 'nullable',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+
+        $getData = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(3)->first();
+
+        // Check Image Update
+        // Handle image upload and replacement if a new image is provided
+
+        if ($request->hasFile('image')) {
+            // Remove old image if it exists
+            if ($getData) {
+                $oldImagePath = $getData->image;
+                if ($oldImagePath && File::exists(public_path($oldImagePath))) {
+                    File::delete(public_path($oldImagePath));
+                }
+            }
+
+            $featuredImage = Helper::fileUpload($request->file('image'), 'cms-image', $request->image);
+        } else {
+
+            $featuredImage = $getData ? $getData->image : null;
+        }
+
+        if ($getData) {
+            $data = $getData->update(
+                [
+                    'title'         => $request->title,
+                    'description'   => strip_tags($request->description),
+                    'image'         => $featuredImage,
+                ]
+            );
+        } else {
+            $data = CMS::create(
+                [
+                    'page'          => Page::AboutPage,
+                    'section'       => Section::AboutCardSection,
+                    'title'         => $request->title,
+                    'description'   => strip_tags($request->description),
+                    'image'         => $featuredImage,
+                ],
+            );
+        }
+
+        if ($data) {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        } else {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
+
+
+    /**
+    * Function to store data for About Card Section Five
+    */
+    public function storeaboutCardFive(Request $request)
+    {
+        $request->validate([
+            'title'         => 'nullable',
+            'description'   => 'nullable',
+            'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+
+        $getData = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(4)->first();
+
+        // Check Image Update
+        // Handle image upload and replacement if a new image is provided
+
+        if ($request->hasFile('image')) {
+            // Remove old image if it exists
+            if ($getData) {
+                $oldImagePath = $getData->image;
+                if ($oldImagePath && File::exists(public_path($oldImagePath))) {
+                    File::delete(public_path($oldImagePath));
+                }
+            }
+
+            $featuredImage = Helper::fileUpload($request->file('image'), 'cms-image', $request->image);
+        } else {
+
+            $featuredImage = $getData ? $getData->image : null;
+        }
+
+        if ($getData) {
+            $data = $getData->update(
+                [
+                    'title'         => $request->title,
+                    'description'   => strip_tags($request->description),
+                    'image'         => $featuredImage,
+                ]
+            );
+        } else {
+            $data = CMS::create(
+                [
+                    'page'          => Page::AboutPage,
+                    'section'       => Section::AboutCardSection,
+                    'title'         => $request->title,
+                    'description'   => strip_tags($request->description),
+                    'image'         => $featuredImage,
+                ],
+            );
+        }
+
+        if ($data) {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        } else {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
+
+
+    /**
+    * Function to store data for About Card Section Six
+    */
+    public function storeaboutCardSix(Request $request)
     {
         $request->validate([
             'title'         => 'nullable',
             'sub_title'     => 'nullable',
+            'description'   => 'nullable',
             'image'         => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
         ]);
-        $getData = CMS::where('page', Page::ServicePage)->where('section', Section::ServiceSection)->skip(3)->first();
+
+        $getData = CMS::where('page', Page::AboutPage)->where('section', Section::AboutCardSection)->skip(5)->first();
 
         // Check Image Update
         // Handle image upload and replacement if a new image is provided
@@ -367,6 +516,7 @@ class ServicePageController extends Controller
             $data = $getData->update(
                 [
                     'title'         => $request->title,
+                    'sub_title'     => $request->sub_title,
                     'description'   => strip_tags($request->description),
                     'image'         => $featuredImage,
                 ]
@@ -374,12 +524,12 @@ class ServicePageController extends Controller
         } else {
             $data = CMS::create(
                 [
-                    'page'          => Page::ServicePage,
-                    'section'       => Section::ServiceSection,
+                    'page'          => Page::AboutPage,
+                    'section'       => Section::AboutCardSection,
                     'title'         => $request->title,
+                    'sub_title'     => $request->sub_title,
                     'description'   => strip_tags($request->description),
                     'image'         => $featuredImage,
-
                 ],
             );
         }
@@ -400,9 +550,11 @@ class ServicePageController extends Controller
 Step 5: Blade
 ************
 
+
+
 @extends('backend.app')
 
-@section('title', 'Service Page')
+@section('title', 'About Page')
 
 @push('styles')
     <style>
@@ -444,13 +596,13 @@ Step 5: Blade
         <div class="page-title">
             <div class="row">
                 <div class="col-sm-6">
-                    <h3>Service Feature</h3>
+                    <h3>About Page</h3>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="service"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="about"></i></a></li>
                         <li class="breadcrumb-item"> Form Layout</li>
-                        <li class="breadcrumb-item active">Service Feature</li>
+                        <li class="breadcrumb-item active"> Hero Section </li>
                     </ol>
                 </div>
             </div>
@@ -464,82 +616,19 @@ Step 5: Blade
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-header pb-0">
-                                <h4>Service Feature</h4>
+                                <h4>Hero Section</h4>
                             </div>
                             <div class="card-body">
-                                <form class="theme-form" action="{{ route('cms.service-page.section.update') }}" method="post"
-                                    enctype="multipart/form-data">
-                                    @csrf
-
-                                    @method('PATCH')
-
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="title">Title :</label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            placeholder="Title" name="title" value="{{ $data[0]->title ?? '' }}">
-                                        @error('title')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="description">Description :</label>
-                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                            placeholder="description" cols="30" rows="10">
-                                            {{ old('description', $data[0]->description ?? '') }}
-                                        </textarea>
-                                        @error('description')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0">Image:</label>
-                                        <input class="form-control dropify @error('image') is-invalid @enderror"
-                                            type="file"
-                                            data-default-file="{{ !empty($data[0]->image) ? asset($data[0]->image) : '' }}"
-                                            name="image">
-
-                                        @error('image')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="card-footer text-end">
-                                        <button class="btn btn-primary">Submit</button>
-                                        <a href="{{ route('cms.service-page.section') }}" class="btn btn-warning">Cancel</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-header pb-0">
-                                <h4>Service Two</h4>
-                            </div>
-                            <div class="card-body">
-                                <form class="theme-form" action="{{ route('cms.service-page.section.item-one.update') }}"
+                                <form class="theme-form" action="{{ route('cms.about-page.about-hero.update') }}"
                                     method="post" enctype="multipart/form-data">
                                     @csrf
-
                                     @method('PATCH')
-
 
                                     <div class="mb-3">
                                         <label class="col-form-label pt-0" for="title">Title :</label>
                                         <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            placeholder="Title" name="title" value="{{ $data[1]->title ?? '' }}">
+                                            placeholder="Title" name="title"
+                                            value="{{ old('title', $data->title ?? '') }}">
                                         @error('title')
                                             <div style="color: red;">{{ $message }}</div>
                                         @enderror
@@ -548,72 +637,7 @@ Step 5: Blade
                                     <div class="mb-3">
                                         <label class="col-form-label pt-0" for="description">Description :</label>
                                         <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                            placeholder="description" cols="30" rows="10">
-                                            {{ old('description', $data[1]->description ?? '') }}
-                                        </textarea>
-                                        @error('description')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0">Image:</label>
-                                        <input class="form-control dropify @error('image') is-invalid @enderror"
-                                            type="file"
-                                            data-default-file="{{ !empty($data[1]->image) ? asset($data[1]->image) : '' }}"
-                                            name="image">
-
-                                        @error('image')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="card-footer text-end">
-                                        <button class="btn btn-primary">Submit</button>
-                                        <a href="{{ route('cms.service-page.section') }}" class="btn btn-warning">Cancel</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-header pb-0">
-                                <h4>Service Three</h4>
-                            </div>
-                            <div class="card-body">
-                                <form class="theme-form" action="{{ route('cms.service-page.section.item-two.update') }}"
-                                    method="post" enctype="multipart/form-data">
-                                    @csrf
-
-                                    @method('PATCH')
-
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="title">Title :</label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            placeholder="Title" name="title" value="{{ $data[2]->title ?? '' }}">
-                                        @error('title')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="description">Description :</label>
-                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                            placeholder="description" cols="30" rows="10">
-                                            {{ old('description', $data[2]->description ?? '') }}
-                                        </textarea>
+                                            placeholder="description" cols="30" rows="10">{{ old('description', $data->description ?? '') }}</textarea>
                                         @error('description')
                                             <div style="color: red;">{{ $message }}</div>
                                         @enderror
@@ -623,79 +647,17 @@ Step 5: Blade
                                         <label class="col-form-label pt-0">Image:</label>
                                         <input class="form-control dropify @error('image') is-invalid @enderror"
                                             type="file"
-                                            data-default-file="{{ !empty($data[2]->image) ? asset($data[2]->image) : '' }}"
+                                            data-default-file="{{ !empty($data->image) ? asset($data->image) : '' }}"
                                             name="image">
-
                                         @error('image')
                                             <div style="color: red;">{{ $message }}</div>
                                         @enderror
                                     </div>
 
-                                    <div class="card-footer text-end">
-                                        <button class="btn btn-primary">Submit</button>
-                                        <a href="{{ route('cms.service-page.section') }}" class="btn btn-warning">Cancel</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-header pb-0">
-                                <h4>Service Four</h4>
-                            </div>
-                            <div class="card-body">
-                                <form class="theme-form" action="{{ route('cms.service-page.section.item-three.update') }}"
-                                    method="post" enctype="multipart/form-data">
-                                    @csrf
-
-                                    @method('PATCH')
-
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="title">Title :</label>
-                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                            placeholder="Title" name="title" value="{{ $data[4]->title ?? '' }}">
-                                        @error('title')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0" for="description">Description :</label>
-                                        <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror"
-                                            placeholder="description" cols="30" rows="10">
-                                            {{ old('description', $data[3]->description ?? '') }}
-                                        </textarea>
-                                        @error('description')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="col-form-label pt-0">Image:</label>
-                                        <input class="form-control dropify @error('image') is-invalid @enderror"
-                                            type="file"
-                                            data-default-file="{{ !empty($data[3]->image) ? asset($data[3]->image) : '' }}"
-                                            name="image">
-
-                                        @error('image')
-                                            <div style="color: red;">{{ $message }}</div>
-                                        @enderror
-                                    </div>
 
                                     <div class="card-footer text-end">
                                         <button class="btn btn-primary">Submit</button>
-                                        <a href="{{ route('cms.service-page.section') }}" class="btn btn-warning">Cancel</a>
+                                        <a href="{{ route('cms.about-page.about-hero') }}" class="btn btn-warning">Cancel</a>
                                     </div>
                                 </form>
                             </div>
@@ -721,6 +683,479 @@ Step 5: Blade
             .catch(error => {
                 console.error(error);
             });
+
+        $('.dropify').dropify();
+
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+@endpush
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@extends('backend.app')
+
+@section('title', 'About Page')
+
+@push('styles')
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            min-height: 150px;
+        }
+
+        select[name="section"] {
+            background-color: #f0f4f8;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 8px;
+            font-size: 14px;
+            color: #333;
+            width: 100%;
+        }
+
+        select[name="section"] option {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        select[name="section"] option:selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        select[name="section"]:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+@endpush
+
+@section('content')
+
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>About Page</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="about"></i></a></li>
+                        <li class="breadcrumb-item"> Form Layout</li>
+                        <li class="breadcrumb-item active">Card Section</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section One</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.one.update') }}" method="post"
+                                    enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[0]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description1" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[0]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[0]->image) ? asset($data[0]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section Two</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.two.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[1]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description2" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[1]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[1]->image) ? asset($data[1]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section Three</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.three.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[2]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description3" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[2]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[2]->image) ? asset($data[2]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section Four</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.four.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[3]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description4" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[3]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[3]->image) ? asset($data[3]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section Five</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.five.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[4]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description5" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[4]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[4]->image) ? asset($data[4]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Card Section Six</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form" action="{{ route('cms.about-page.about-card.six.update') }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+
+                                    @method('PATCH')
+
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="title">Title :</label>
+                                        <input type="text" class="form-control @error('title') is-invalid @enderror"
+                                            placeholder="Title" name="title" value="{{ $data[5]->title ?? '' }}">
+                                        @error('title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="sub_title">Sub Title :</label>
+                                        <input type="text" class="form-control @error('sub_title') is-invalid @enderror"
+                                            placeholder="Sub Title" name="sub_title" value="{{ $data[5]->sub_title ?? '' }}">
+                                        @error('sub_title')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0" for="description">Description :</label>
+                                        <textarea name="description" id="description6" class="form-control @error('description') is-invalid @enderror"
+                                            placeholder="description" cols="30" rows="10">
+                                            {{ old('description', $data[5]->description ?? '') }}
+                                        </textarea>
+                                        @error('description')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="col-form-label pt-0">Image:</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file"
+                                            data-default-file="{{ !empty($data[5]->image) ? asset($data[5]->image) : '' }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.about-page.about-card') }}" class="btn btn-warning">Cancel</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- Container-fluid Ends-->
+
+
+@endsection
+
+
+@push('scripts')
+    <script>
+
         ClassicEditor
             .create(document.querySelector('#description1'), {
                 height: '500px'
@@ -736,6 +1171,7 @@ Step 5: Blade
             .catch(error => {
                 console.error(error);
             });
+
         ClassicEditor
             .create(document.querySelector('#description3'), {
                 height: '500px'
@@ -743,8 +1179,25 @@ Step 5: Blade
             .catch(error => {
                 console.error(error);
             });
+
         ClassicEditor
             .create(document.querySelector('#description4'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#description5'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#description6'), {
                 height: '500px'
             })
             .catch(error => {
