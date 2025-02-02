@@ -280,6 +280,12 @@ Index Page
 
 
 
+
+
+****************
+Route
+****************
+
 //chat
     Route::controller(ChatController::class)->prefix('chat')->name('chat.')->group(function () {
         Route::get('/', 'index')->name('index');
@@ -288,8 +294,143 @@ Index Page
         Route::get('/response/{id}', 'getMessages')->name('response');
     });
 
-    
+
 
 ****************
 Controller
 ****************
+
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Chat;
+
+use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
+use App\Models\ChatGroup;
+use App\Models\ChatMessage;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
+use Exception;
+
+
+
+class ChatController extends Controller
+{
+
+
+    public function index()
+    {
+        $users = User::whereHas('senders', function ($query) {
+            $query->where('receiver_id', Auth::id());
+        })->orWhereHas('receivers', function ($query) {
+            $query->where('sender_id', Auth::id());
+        })->where('id', '!=', Auth::user()->id)->get();
+        return view('backend.layouts.chat.index', compact('users'));
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->get('keyword');
+        $users = User::where('id', '!=', Auth::user()->id)->where('name', 'like', '%' . $keyword . '%')->get();
+        return view('backend.layouts.chat.index', compact('users'));
+    }
+
+    public function sendMessage(Request $request, $receiver_id): JsonResponse
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        try {
+
+            $conversation = ChatGroup::where(function ($query) use ($receiver_id) {
+                $query->where('user_one_id', $receiver_id)->where('user_two_id', Auth::id());
+            })->orWhere(function ($query) use ($receiver_id) {
+                $query->where('user_one_id', Auth::id())->where('user_two_id', $receiver_id);
+            })->first();
+
+            if (!$conversation) {
+                $conversation = ChatGroup::create([
+                    'user_one_id' => Auth::id(),
+                    'user_two_id' => $receiver_id,
+                ]);
+            }
+
+            $message = ChatMessage::create([
+                'sender_id'   => Auth::id(),
+                'receiver_id' => $receiver_id,
+                'text'        => $request->message,
+                'conversation_id' => $conversation->id
+            ]);
+
+            //* Load the sender's information
+            $message->load(['sender:id,name,avatar', 'receiver:id,name,avatar']);
+
+            broadcast(new MessageSent($message))->toOthers();
+
+            return response()->json([
+                'success'       => true,
+                'message'       => 'Message sent successfully',
+                'receiver'      => User::find($receiver_id),
+                'sender'        => User::find(Auth::id()),
+                'data'          => $message,
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error sending message',
+            ], 422);
+        }
+    }
+
+    public function getMessages($receiver_id): JsonResponse
+    {
+        $messages = ChatMessage::query()
+            ->where(function ($query) use ($receiver_id) {
+                $query->where('sender_id', Auth::id())
+                    ->where('receiver_id', $receiver_id);
+            })
+            ->orWhere(function ($query) use ($receiver_id) {
+                $query->where('sender_id', $receiver_id)
+                    ->where('receiver_id', Auth::id());
+            })
+            ->with([
+                'sender:id,name,avatar',
+                'receiver:id,name,avatar',
+            ])
+            ->orderBy('id', 'asc')
+            ->limit(100)
+            ->get();
+
+        $conversation = ChatGroup::where(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', $receiver_id)->where('user_two_id', Auth::id());
+        })->orWhere(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', Auth::id())->where('user_two_id', $receiver_id);
+        })->first();
+
+        if (!$conversation) {
+            $conversation = ChatGroup::create([
+                'user_one_id' => Auth::id(),
+                'user_two_id' => $receiver_id,
+            ]);
+        }
+
+        return response()->json([
+            'success'       => true,
+            'message'       => 'Messages retrieved successfully',
+            'receiver'      => User::find($receiver_id),
+            'sender'        => User::find(Auth::id()),
+            'group'         => $conversation,
+            'data'          => $messages
+        ]);
+    }
+
+
+}
+
+
+
