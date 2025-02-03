@@ -11,6 +11,10 @@
 --> php artisan serve
 php artisan serve --port=8080
 
+course category
+
+php artisan reverb:start --debug  **[chat in local must run reverb]**
+
 
 4. php artisan make:controller App/Http/Controllers/Web/Backend/Blog/BlogController -r
 
