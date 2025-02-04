@@ -74,6 +74,8 @@ module.exports = {
 };
 
 
+ctrl+shift+i 	=> inspect
+F12		=> browser console
 
 
 MySQL work bench for design a db.....
