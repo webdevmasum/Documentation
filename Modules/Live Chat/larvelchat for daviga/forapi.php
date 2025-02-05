@@ -178,9 +178,9 @@ class ChatMessage extends Model {
 
     protected function casts(): array {
         return [
-            'sender_id'   => 'integer',
-            'receiver_id' => 'integer',
-            'text'        => 'string',
+            'sender_id'         => 'integer',
+            'receiver_id'       => 'integer',
+            'text'              => 'string',
         ];
     }
 
@@ -347,8 +347,8 @@ class ChatController extends Controller
             })->latest()->first();
 
             return [
-                'user' => $user,
-                'last_message' => $lastMessage,
+                'user'              => $user,
+                'last_message'      => $lastMessage,
             ];
         });
 
@@ -358,10 +358,10 @@ class ChatController extends Controller
         })->values(); // Reset keys after sorting
 
         return response()->json([
-            'success' => true,
-            'code' => 200,
-            'message' => 'Trainers retrieved successfully',
-            'data' => $sortedUsersWithMessages,
+            'success'               => true,
+            'code'                  => 200,
+            'message'               => 'Trainers retrieved successfully',
+            'data'                  => $sortedUsersWithMessages,
         ], 200);
     }
 
@@ -427,9 +427,9 @@ class ChatController extends Controller
             ->get();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Messages retrieved successfully',
-            'data'    => $messages,
+            'success'           => true,
+            'message'           => 'Messages retrieved successfully',
+            'data'              => $messages,
         ]);
     }
 
@@ -443,7 +443,7 @@ class ChatController extends Controller
     public function sendMessage(User $user, Request $request): JsonResponse
     {
         $request->validate([
-            'message' => 'required|string',
+            'message'         => 'required|string',
         ]);
 
         $receiver_id = $user->id;
@@ -455,17 +455,17 @@ class ChatController extends Controller
 
         if (!$conversation) {
             $conversation = ChatGroup::create([
-                'user_one_id' => Auth::id(),
-                'user_two_id' => $receiver_id,
+                'user_one_id'   => Auth::id(),
+                'user_two_id'   => $receiver_id,
             ]);
         }
 
         $message = ChatMessage::create([
-            'sender_id'   => $request->user()->id,
-            'receiver_id' => $receiver_id,
-            'text'        => $request->message,
-            'conversation_id' => $conversation->id,
-            'status'      => 'sent',
+            'sender_id'         => $request->user()->id,
+            'receiver_id'       => $receiver_id,
+            'text'              => $request->message,
+            'conversation_id'   => $conversation->id,
+            'status'            => 'sent',
         ]);
 
         //* Load the sender's information
@@ -474,9 +474,9 @@ class ChatController extends Controller
         broadcast(new MessageSent($message))->toOthers();
 
         return response()->json([
-            'success' => true,
-            'message' => 'Message sent successfully',
-            'data'    => $message,
+            'success'           => true,
+            'message'           => 'Message sent successfully',
+            'data'              => $message,
         ]);
     }
 
@@ -484,9 +484,9 @@ class ChatController extends Controller
     {
         $message = ChatMessage::where('receiver_id', $request->user()->id)->update(['status' => true]);
         return response()->json([
-            'success' => true,
-            'message' => 'Message seen successfully',
-            'data'    => $message,
+            'success'           => true,
+            'message'           => 'Message seen successfully',
+            'data'              => $message,
         ]);
     } */
 
@@ -502,15 +502,15 @@ class ChatController extends Controller
 
         if (!$conversation) {
             $conversation = ChatGroup::create([
-                'user_one_id' => Auth::id(),
-                'user_two_id' => $receiver_id,
+                'user_one_id'   => Auth::id(),
+                'user_two_id'   => $receiver_id,
             ]);
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Group retrieved successfully',
-            'data'    => $conversation,
+            'success'           => true,
+            'message'           => 'Group retrieved successfully',
+            'data'              => $conversation,
         ]);
     }
 }
