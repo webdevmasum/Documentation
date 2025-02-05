@@ -134,10 +134,15 @@ class ChatGroup extends Model
 {
     protected $fillable = ['user_one_id','user_two_id'];
 }
+?>
+
+
+
 
     
     ------>>>>> User Model Relationship <<<<<<-------
 
+<?php
     public function senders()
     {
         return $this->hasMany(ChatMessage::class, 'sender_id');
@@ -148,9 +153,6 @@ class ChatGroup extends Model
         return $this->hasMany(ChatMessage::class, 'receiver_id');
     }
 ?>
-
-
-
 
 
 
@@ -222,8 +224,15 @@ Step-5: Make a Chennel
     -->> routes/channels.php
 
     //! live chat channel added by rasel bhai last time
-    Broadcast::channel('chat.{receiver_id}', function ($user, $receiver_id) {
-        return (int) $user->id === (int) $receiver_id;
+
+    /*
+    * The user who is logged in to the website is the $user here.
+    * reciver_id is the $id which receives the message
+    */
+    Broadcast::channel('chat.{conversation_id}', function ($user, $conversation_id) {
+        $conversation = ChatGroup::find($conversation_id);
+
+        return (int) $user->id === (int) $conversation?->user_one_id || (int) $user->id === (int) $conversation?->user_two_id;
     });
 
 
@@ -234,7 +243,7 @@ Step-6: Make a Event
     -->> app/Event/MessageSent
 
 
-<?php
+    <?php
 
 namespace App\Events;
 
@@ -246,36 +255,21 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
 class MessageSent implements ShouldBroadcastNow {
-
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public ChatMessage $message;
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(ChatMessage $message)
-    {
+    public function __construct(ChatMessage $message) {
         $this->message = $message;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
-     */
-    public function broadcastOn(): array
-    {
+    public function broadcastOn(): array {
         return [
-            new PrivateChannel("chat.{$this->message->receiver_id}"),
+            new PrivateChannel("chat.{$this->message->conversation_id}")
         ];
     }
-
-    public function broadcastWith()
-    {
-        return ['message' => $this->message];
-    }
 }
+
 ?>
 
 ***********
@@ -287,12 +281,14 @@ Step-7: Route - API
     -->> routes/api.php
 
     //! Route for Chat Controller added by masum
-    Route::post('/send-message', [ChatController::class, 'sendMessage']);
-    // Route::get('/get-messages/{conversation_id}', [ChatController::class, 'getMessages']);
-
-    Route::get('/get-messages/{sender_id}/{receiver_id}', [ChatController::class, 'getMessages']);
+    Route::get('/messages/receive/{user}', [ChatController::class, 'getMessages']);
+    Route::post('/messages/send/{user}', [ChatController::class, 'sendMessage']);
+    Route::get('/messages/group/{user}', [ChatController::class, 'getGroup']);
     Route::get('/messages/all', [ChatController::class, 'index']);
+    Route::get('/messages/search', [ChatController::class, 'search']);
     Route::get('/messages/history', [ChatController::class, 'history']);
+    Route::post('/messages/seen/{user}', [ChatController::class, 'seenMessage']);
+
 
 
 ***********
@@ -301,115 +297,93 @@ Step-8: Controller - API
 
     -->> app/http/controllers/api/chatcontroller.php 
 
+    <?php
 
 namespace App\Http\Controllers\API;
 
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\ChatGroup;
 use App\Models\ChatMessage;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use App\Models\Service;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-public function index(): JsonResponse
-    {
-        // Fetch users with the last message for each user
-        $users = User::with([
-            'senders' => function ($query) {
-                $query->where('receiver_id', Auth::id())
-                    ->latest()
-                    ->limit(1); // Fetch only the latest message
-            },
-            'receivers' => function ($query) {
-                $query->where('sender_id', Auth::id())
-                    ->latest()
-                    ->limit(1); // Fetch only the latest message
-            },
-        ])->where('id', '!=', Auth::id())->get();
+class ChatController extends Controller
+{
 
-        // Map users with their last message
+    public function index(): JsonResponse
+    {
+
+        //! (write 2-2-25)
+        $authUserId = Auth::id();
+        $adminId = 1;
+
+        // Fetch users who are connected as senders or receivers with the authenticated user
+        $users = User::whereHas('senders', function ($query) {
+            $query->where('receiver_id', Auth::id());
+        })->orWhereHas('receivers', function ($query) {
+            $query->where('sender_id', Auth::id());
+        })->where('id', '!=', Auth::user()->id)->get();
+
+
+        //! Ensure Admin is always included in the list (write 2-2-25)
+        $adminUser = User::find($adminId);
+        if ($adminUser && !$users->contains('id', $adminId)) {
+            $users->push($adminUser);
+        }
+
+        // Append the last message for each user
         $usersWithMessages = $users->map(function ($user) {
-            // Check for the last message from either sender or receiver
-            $lastMessage = $user->senders->first() ?: $user->receivers->first();
+            $lastMessage = ChatMessage::where(function ($query) use ($user) {
+                $query->where('sender_id', Auth::id())
+                    ->where('receiver_id', $user->id);
+            })->orWhere(function ($query) use ($user) {
+                $query->where('sender_id', $user->id)
+                    ->where('receiver_id', Auth::id());
+            })->latest()->first();
 
             return [
                 'user' => $user,
                 'last_message' => $lastMessage,
             ];
-        })->filter(function ($item) {
-            return $item['last_message'] !== null;
         });
 
         // Sort users by the last message's created_at timestamp in descending order
         $sortedUsersWithMessages = $usersWithMessages->sortByDesc(function ($item) {
-            return $item['last_message']->created_at;
-        })->values();
+            return optional($item['last_message'])->created_at;
+        })->values(); // Reset keys after sorting
 
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'Users retrieved successfully',
+            'message' => 'Trainers retrieved successfully',
             'data' => $sortedUsersWithMessages,
         ], 200);
     }
 
 
-    //! this function will send message working perfectly
-      public function sendMessage(Request $request)
+
+    public function search(Request $request): JsonResponse
     {
-        $message = ChatMessage::create([
-            'sender_id' => $request->sender_id,
-            'receiver_id' => $request->receiver_id,
-            'text' => $request->message,
-
-            //! in database conversation_id will no need if it's not use
-            // 'conversation_id' => $request->conversation_id
-
-        ]);
-
-        broadcast(new MessageSent($message))->toOthers();
+        $search = $request->get('search');
+        $users = User::where('id', '!=', auth('api')->user()->id)->where(function ($query) use ($search) {
+            $query->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%");
+        })->get();
 
         return response()->json([
             'success' => true,
-            'message' => 'Message sent successfully',
-            'data'    => $message,
+            'code' => 200,
+            'message' => 'Trainers retrieved successfully',
+            'data'    => $users,
         ], 200);
-    }    
-
-    //!! this function is write with error message to get messages with sender_id and receiver_id
-    public function getMessages($sender_id, $receiver_id)
-    {
-        try {
-            // Get the messages where the sender and receiver match
-            $messages = ChatMessage::where(function ($query) use ($sender_id, $receiver_id) {
-                $query->where('sender_id', $sender_id)
-                    ->where('receiver_id', $receiver_id);
-            })->orWhere(function ($query) use ($sender_id, $receiver_id) {
-                $query->where('sender_id', $receiver_id)
-                    ->where('receiver_id', $sender_id);
-            })
-                ->orderBy('created_at', 'asc')
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Messages retrieved successfully',
-                'data'    => $messages,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to retrieve messages',
-                'error'   => $e->getMessage(),
-            ], 500);
-        }
     }
 
-
-
-    //!! One user conversation with multiple users history
-    public function history(): \Illuminate\Http\JsonResponse
+    /* public function history(): JsonResponse
     {
         $authUser = auth('api')->user();
 
@@ -421,12 +395,126 @@ public function index(): JsonResponse
         return response()->json([
             'success' => true,
             'code' => 200,
-            'message' => 'Chat users retrieved successfully',
+            'message' => 'Chat messages retrieved successfully',
             'data' => $users,
         ], 200);
 
+    } */
+
+    /**
+     ** Get messages between the authenticated user and another user
+     *
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getMessages(User $user, Request $request): JsonResponse
+    {
+        $messages = ChatMessage::query()
+            ->where(function ($query) use ($user, $request) {
+                $query->where('sender_id', $request->user()->id)
+                    ->where('receiver_id', $user->id);
+            })
+            ->orWhere(function ($query) use ($user, $request) {
+                $query->where('sender_id', $user->id)
+                    ->where('receiver_id', $request->user()->id);
+            })
+            ->with([
+                'sender:id,name,avatar',
+                'receiver:id,name,avatar',
+            ])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Messages retrieved successfully',
+            'data'    => $messages,
+        ]);
     }
 
+    /**
+     *! Send a message to another user
+     *
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function sendMessage(User $user, Request $request): JsonResponse
+    {
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+        $receiver_id = $user->id;
+        $conversation = ChatGroup::where(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', $receiver_id)->where('user_two_id', Auth::id());
+        })->orWhere(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', Auth::id())->where('user_two_id', $receiver_id);
+        })->first();
+
+        if (!$conversation) {
+            $conversation = ChatGroup::create([
+                'user_one_id' => Auth::id(),
+                'user_two_id' => $receiver_id,
+            ]);
+        }
+
+        $message = ChatMessage::create([
+            'sender_id'   => $request->user()->id,
+            'receiver_id' => $receiver_id,
+            'text'        => $request->message,
+            'conversation_id' => $conversation->id,
+            'status'      => 'sent',
+        ]);
+
+        //* Load the sender's information
+        $message->load(['sender:id,name,avatar', 'receiver:id,name,avatar']);
+
+        broadcast(new MessageSent($message))->toOthers();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Message sent successfully',
+            'data'    => $message,
+        ]);
+    }
+
+    /* public function seenMessage(User $user, Request $request): JsonResponse
+    {
+        $message = ChatMessage::where('receiver_id', $request->user()->id)->update(['status' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Message seen successfully',
+            'data'    => $message,
+        ]);
+    } */
+
+    public function getGroup(User $user)
+    {
+        $receiver_id = $user->id;
+
+        $conversation = ChatGroup::where(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', $receiver_id)->where('user_two_id', Auth::id());
+        })->orWhere(function ($query) use ($receiver_id) {
+            $query->where('user_one_id', Auth::id())->where('user_two_id', $receiver_id);
+        })->first();
+
+        if (!$conversation) {
+            $conversation = ChatGroup::create([
+                'user_one_id' => Auth::id(),
+                'user_two_id' => $receiver_id,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Group retrieved successfully',
+            'data'    => $conversation,
+        ]);
+    }
+}
+?>
 
 
 
