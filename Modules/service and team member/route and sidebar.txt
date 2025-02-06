@@ -1,0 +1,47 @@
+
+****************
+Sidebar
+****************
+
+
+
+    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+            class="sidebar-link sidebar-title {{ Request::routeIs('team.*') ? 'active open' : ' ' }}"
+            href="javascript:void(0)"><i data-feather="box"></i><span>Team</span></a>
+        <ul class="sidebar-submenu">
+            <l><a class="{{ Request::routeIs('service.index') ? 'active' : ' ' }}"
+                    href="{{ route('service.index') }}"> Industries Serve</a></l
+            <li><a class="{{ Request::routeIs('team.index') ? 'active' : ' ' }}"
+                    href="{{ route('team.index') }}">Team Members</a></li>
+        </ul>
+    </li>
+
+
+
+****************
+Route
+****************
+
+
+    //! Route for Industry Serve ServiceController
+    Route::get('/service', [ServiceController::class, 'index'])->name('service.index');
+    Route::get('/service/create', [ServiceController::class, 'create'])->name('service.create');
+    Route::post('/service/store', [ServiceController::class, 'store'])->name('service.store');
+    Route::get('/service/show/{id}', [ServiceController::class, 'show'])->name('service.show');
+    Route::get('/service/edit/{id}', [ServiceController::class, 'edit'])->name('service.edit');
+    Route::post('/service/update/{id}', [ServiceController::class, 'update'])->name('service.update');
+    Route::get('/service/status/{id}', [ServiceController::class, 'status'])->name('service.status');
+    Route::delete('/service/destroy/{id}', [ServiceController::class, 'destroy'])->name('service.destroy');
+
+
+    //! Route for TeamController
+    Route::get('/team', [TeamController::class, 'index'])->name('team.index');
+    Route::get('/team/create', [TeamController::class, 'create'])->name('team.create');
+    Route::post('/team/store', [TeamController::class, 'store'])->name('team.store');
+    Route::get('/team/show/{id}', [TeamController::class, 'show'])->name('team.show');
+    Route::get('/team/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
+    Route::put('/team/update/{id}', [TeamController::class, 'update'])->name('team.update');
+    Route::get('/team/status/{id}', [TeamController::class, 'status'])->name('team.status');
+    Route::delete('/team/destroy/{id}', [TeamController::class, 'destroy'])->name('team.destroy');
+
+
