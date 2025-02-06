@@ -1,0 +1,116 @@
+
+*****************
+Step:1-> Database
+*****************
+
+    Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('sub_title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+    Schema::create('team_members', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('designation')->nullable();
+            $table->string('image')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('fax')->nullable();
+            $table->string('email')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->text('description')->nullable();
+            $table->text('specialization')->nullable();
+            $table->text('education')->nullable();
+            $table->string('designation_details')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+    Schema::create('team_member_services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('service_id')->constrained('services')->onDelete('cascade');
+            $table->foreignId('team_member_id')->constrained('team_members')->onDelete('cascade');
+            $table->timestamps();
+        });
+
+
+
+*****************
+Step:2-> Model
+*****************
+
+
+
+class Service extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    /**
+     * Get the team members for the service.
+     */
+    public function teamMembers()
+    {
+        return $this->belongsToMany(TeamMember::class, 'team_member_services', 'service_id', 'team_member_id');
+    }
+}
+
+
+
+class TeamMember extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    /**
+     * Get the services for the team member.
+     */
+    public function service()
+    {
+        return $this->belongsToMany(Service::class, 'team_member_services', 'team_member_id', 'service_id');
+    }
+}
+
+
+
+class TeamMemberService extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    /**
+     * Get the service associated with the team member service.
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    /**
+     * Get the team member associated with the team member service.
+     */
+    public function teamMember()
+    {
+        return $this->belongsTo(TeamMember::class);
+    }
+}
+
+
+
+
+
+
+
+
+
