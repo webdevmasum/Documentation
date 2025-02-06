@@ -1,0 +1,510 @@
+
+*********************
+Service Controller
+*********************
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Service;
+
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Models\Service;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
+
+class ServiceController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+
+
+        $data = Service::latest();
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('status', function ($data) {
+                    $status = '';
+                    $status .= '<div class="switch-sm icon-state">';
+                    $status .= '<label class="switch">';
+                    $status .= '<input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+
+                    // Check if the status is active
+                    if ($data->status == "active") {
+                        $status .= ' checked';
+                    }
+
+                    $status .= '>';
+                    $status .= '<span class="switch-state"></span>'; // This is the visual switch
+                    $status .= '</label>';
+                    $status .= '</div>';
+                    $status .= '</div>';
+
+                    return $status;
+                })
+
+                ->addColumn('action', function ($data) {
+
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="' . route('service.edit',  $data->id) . '" type="button" class="action edit text-success" title="Edit">
+                                  <i class="icon-pencil-alt"></i>
+                                  </a>&nbsp;
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="action delete text-danger" title="Delete">
+                                  <i class="icon-trash"></i>
+                                </a>
+                                </div>';
+                })
+
+                ->addColumn('image', function ($data) {
+                    $url = asset($data->image);
+                    return '<img src="' . $url . '" alt="image" width="80px" height="50px" style="margin-left:20px;">';
+                })
+
+                ->rawColumns(['status', 'action', 'image'])
+
+                ->make(true);
+        }
+
+
+        return view('backend.layouts.industries-service.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('backend.layouts.industries-service.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+
+    public function store(Request $request)
+    {
+        // Validate incoming data
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'sub_title' => 'nullable|string|max:255',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        try {
+            // Create the service post
+            $service = new Service();
+            $service->title = $validated['title'];
+            $service->sub_title = $validated['sub_title'];
+            $service->description = strip_tags($validated['description']);
+
+            // Check if a new image is uploaded
+            if ($request->hasFile('image')) {
+                if ($service->image && File::exists(public_path($service->image))) {
+                    File::delete(public_path($service->image));
+                }
+
+                // Upload and store new image using Helper
+                $service->image = Helper::fileUpload($request->file('image'), 'service-image', $validated['title']);
+            }
+
+            $service->save();
+
+            // Redirect or return a response
+            return redirect()->route('service.index')->with('notify-success', 'Service created successfully');
+        } catch (\Exception $e) {
+            // Handle any exception
+            return redirect()->route('service.index')->with('notify-error', 'Failed to create service. Please try again.');
+        }
+    }
+
+
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $data = Service::findOrFail($id);
+        return view('backend.layouts.industries-service.edit', compact('data'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            $service = Service::findOrFail($id);
+            $service->title = $request->title;
+            $service->sub_title = $request->sub_title;
+            $service->description = strip_tags($request->description);
+
+            // Check if a new image is uploaded
+            if ($request->hasFile('image')) {
+                if ($service->image && File::exists(public_path($service->image))) {
+                    File::delete(public_path($service->image));
+                }
+
+                // Upload and store new image using Helper
+                $service->image = Helper::fileUpload($request->file('image'), 'service-image', $request->title);
+            }
+
+            $service->save();
+
+            return redirect()->route('service.index')->with('notify-success', 'Service updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('service.index')->with('notify-error', 'Failed to update service. Please try again.');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $data = Service::findOrFail($id);
+
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deleted successfully.',
+        ]);
+    }
+
+
+    /**
+     * Update the status of a brandlogo.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status($id)
+    {
+        $data = Service::findOrFail($id);
+
+        if ($data->status == 'active') {
+            $data->status = 'inactive';
+            $data->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Unpublished Successfully.',
+                'data' => $data,
+            ]);
+        } else {
+            $data->status = 'active';
+            $data->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Published Successfully.',
+                'data' => $data,
+            ]);
+        }
+    }
+}
+
+
+
+*********************
+Team Controller
+*********************
+
+
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Team;
+
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Models\Service;
+use App\Models\TeamMember;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
+
+class TeamController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = TeamMember::with('service')->get();
+
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                ->addColumn('status', function ($data) {
+                    $status = '';
+                    $status .= '<div class="switch-sm icon-state">';
+                    $status .= '<label class="switch">';
+                    $status .= '<input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+
+                    // Check if the status is active
+                    if ($data->status == "active") {
+                        $status .= ' checked';
+                    }
+
+                    $status .= '>';
+                    $status .= '<span class="switch-state"></span>';
+                    $status .= '</label>';
+                    $status .= '</div>';
+                    $status .= '</div>';
+
+                    return $status;
+                })
+
+                ->addColumn('action', function ($data) {
+
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="' . route('team.edit',  $data->id) . '" type="button" class="action edit text-success" title="Edit">
+                                  <i class="icon-pencil-alt"></i>
+                                  </a>&nbsp;
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="action delete text-danger" title="Delete">
+                                  <i class="icon-trash"></i>
+                                </a>
+                                </div>';
+                })
+
+                ->addColumn('image', function ($data) {
+                    $url = asset($data->image);
+                    return '<img src="' . $url . '" alt="image" width="80px" height="50px" style="margin-left:20px;">';
+                })
+
+                ->rawColumns(['status', 'action',  'image'])
+
+                ->make(true);
+        }
+
+        return view('backend.layouts.team-member.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $services = Service::all();
+        return view('backend.layouts.team-member.create', compact('services'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+            // Validate the input
+            $request->validate([
+                'name'                  => 'required|string|max:255',
+                'designation'           => 'required|string|max:255',
+                'image'                 => 'nullable|image|mimes:jpg,png,jpeg,gif',
+                'phone'                 => 'nullable|string|max:20',
+                'fax'                   => 'nullable|string|max:50',
+                'email'                 => 'nullable|email|max:255',
+                'linkedin'              => 'nullable|string|max:255',
+                'description'           => 'nullable|string',
+                'specialization'        => 'nullable|string',
+                'education'             => 'nullable|string',
+                'designation_details'   => 'nullable|string',
+                'services'              => 'nullable|array',
+                'services.*'            => 'exists:services,id', // Ensure valid service IDs
+            ]);
+
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                // Store the image in 'team_members' folder
+                $imagePath = $request->file('image')->store('team_members', 'public');
+            }
+
+            // Create a new team member record
+            $teamMember = TeamMember::create([
+                'name'                  => $request->name,
+                'designation'           => $request->designation,
+                'image'                 => $imagePath,
+                'phone'                 => $request->phone,
+                'fax'                   => $request->fax,
+                'email'                 => $request->email,
+                'linkedin'              => $request->linkedin,
+                'description'           => $request->description,
+                'specialization'        => $request->specialization,
+                'education'             => $request->education,
+                'designation_details'   => $request->designation_details,
+            ]);
+
+            //! Assign services to the team member
+            if ($request->has('services')) {
+                // Attach the selected services to the team member
+                $teamMember->service()->attach($request->services);
+            }
+
+            return redirect()->route('team.index')->with('success', 'Team Member created successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'failed to create team member' . $e->getMessage());
+        }
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $teamMember = TeamMember::findOrFail($id);
+        $services   = Service::select('id', 'title')->get();
+        return view('backend.layouts.team-member.edit', compact('teamMember', 'services'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try {
+            //! Validate the input
+            $request->validate([
+                'name'                  => 'required|string|max:255',
+                'designation'           => 'required|string|max:255',
+                'image'                 => 'nullable|image|mimes:jpg,png,jpeg,gif',
+                'phone'                 => 'nullable|string|max:20',
+                'fax'                   => 'nullable|string|max:50',
+                'email'                 => 'nullable|email|max:255',
+                'linkedin'              => 'nullable|string|max:255',
+                'description'           => 'nullable|string',
+                'specialization'        => 'nullable|string',
+                'education'             => 'nullable|string',
+                'designation_details'   => 'nullable|string',
+                'services'              => 'nullable|array',
+                'services.*'            => 'exists:services,id',
+            ]);
+
+            $teamMember = TeamMember::findOrFail($id);
+
+            //! Handle image update (store in public path)
+            $imagePath = $teamMember->image;
+            if ($request->hasFile('image')) {
+                if ($teamMember->image && file_exists(public_path($teamMember->image))) {
+                    unlink(public_path($teamMember->image));
+                }
+
+                $image      = $request->file('image');
+                $imageName  = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('team_members'), $imageName);
+                $imagePath  = 'team_members/' . $imageName;
+            }
+
+            //! Update the team member details
+            $teamMember->update([
+                'name'                  => $request->name,
+                'designation'           => $request->designation,
+                'image'                 => $imagePath,
+                'phone'                 => $request->phone,
+                'fax'                   => $request->fax,
+                'email'                 => $request->email,
+                'linkedin'              => $request->linkedin,
+                'description'           => $request->description,
+                'specialization'        => $request->specialization,
+                'education'             => $request->education,
+                'designation_details'   => $request->designation_details,
+            ]);
+
+            // Update services relation
+            if ($request->has('services')) {
+                // Sync services (removes old ones and adds new ones)
+                $teamMember->service()->sync($request->services);
+            }
+
+            return redirect()->route('team.index')->with('success', 'Team Member updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Something went wrong! ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $data = TeamMember::find($id);
+
+        $data->service()->detach();
+
+        if (!$data) {
+            return response()->json(['t-success' => false, 'message' => 'Data not found.']);
+        }
+        $data->delete();
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Deleted successfully.',
+        ]);
+    }
+
+
+    /**
+     * Update the status of a blog.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status($id)
+    {
+        $data = TeamMember::findOrFail($id);
+
+        if ($data->status == 'active') {
+            $data->status = 'inactive';
+            $data->save();
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Unpublished Successfully.',
+                'data'      => $data,
+            ]);
+        } else {
+            $data->status = 'active';
+            $data->save();
+            return response()->json([
+                'success'   => true,
+                'message'   => 'Published Successfully.',
+                'data'      => $data,
+            ]);
+        }
+    }
+
+}
+
+
+
+
+
+
+
+
