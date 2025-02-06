@@ -1,0 +1,836 @@
+
+************
+Index:
+************
+
+@extends('backend.app')
+
+@section('title', 'Team Member Information')
+
+@section('content')
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Team Member Page</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="home"></i></a></li>
+                        <li class="breadcrumb-item">Data Table</li>
+                        <li class="breadcrumb-item active">Team Member </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Zero Configuration  Starts-->
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <h4>Team Member List</h4>
+                    </div>
+                    <div class="card-header pb-0" style="display: flex;justify-content: end;">
+                        <a href="{{ route('team.create') }}" class="btn btn-primary">
+                            Create
+                        </a>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="table-responsive theme-scrollbar">
+                            <table class="display" id="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Designation</th>
+                                        <th>Image</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Zero Configuration  Ends-->
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                }
+            });
+
+            if (!$.fn.DataTable.isDataTable('#data-table')) {
+                let dTable = $('#data-table').DataTable({
+                    // DataTable options
+                    order: [],
+                    lengthMenu: [
+                        [25, 50, 100, 200, 500, -1],
+                        [25, 50, 100, 200, 500, "All"]
+                    ],
+                    processing: true,
+                    responsive: true,
+                    serverSide: true,
+                    language: {
+                        processing: `Loading data...`
+                    },
+                    pagingType: "full_numbers",
+                    dom: "<'row justify-content-between table-topbar'<'col-md-2 col-sm-4 px-0'l><'col-md-2 col-sm-4 px-0'f>>tipr",
+                    ajax: {
+                        url: "{{ route('team.index') }}",
+                        type: "GET"
+                    },
+                    columns: [{
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            orderable: false,
+                            searchable: false
+                        },
+                        {
+                            data: 'name',
+                            name: 'name',
+                            orderable: true,
+                            searchable: true
+                        },
+                        {
+                            data: 'designation',
+                            name: 'designation',
+                            orderable: true,
+                            searchable: true
+                        },
+                        {
+                            data: 'image',
+                            name: 'image',
+                            orderable: true,
+                            searchable: true
+                        },
+                        {
+                            data: 'status',
+                            name: 'status',
+                            orderable: true,
+                            searchable: true
+                        },
+                        {
+                            data: 'action',
+                            name: 'action',
+                            orderable: false,
+                            searchable: false
+                        }
+                    ]
+                });
+            }
+        });
+
+        //! Status Change Confirm Alert
+        function showStatusChangeAlert(id) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to update the status?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    statusChange(id);
+                }
+            });
+        }
+        // Status Change
+        function statusChange(id) {
+            let url = '{{ route('team.status', ':id') }}';
+            $.ajax({
+                type: "GET",
+                url: url.replace(':id', id),
+                success: function(resp) {
+                    console.log(resp);
+                    // Reloade DataTable
+                    $('#data-table').DataTable().ajax.reload();
+                    if (resp.success === true) {
+                        // show toast message
+                        //toastr.success(resp.message);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Published Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } else if (resp.errors) {
+                        //toastr.error(resp.errors[0]);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: `${resp.errors[0]}`
+                        });
+                    } else {
+                        //toastr.error(resp.message);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Unpublished Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                },
+                error: function(error) {
+                    // location.reload();
+                }
+            });
+        }
+
+        //! delete Confirm
+        function showDeleteConfirm(id) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Are you sure you want to delete this record?',
+                text: 'If you delete this, it will be gone forever.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(id);
+                }
+            });
+        }
+
+        //! Delete Button
+        function deleteItem(id) {
+            let url = '{{ route('team.destroy', ':id') }}';
+            let csrfToken = '{{ csrf_token() }}';
+            $.ajax({
+                type: "DELETE",
+                url: url.replace(':id', id),
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                success: function(resp) {
+                    console.log(resp);
+                    // Reloade DataTable
+                    $('#data-table').DataTable().ajax.reload();
+                    if (resp.success === true) {
+                        // show toast message
+                        // toastr.success(resp.message);
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Deleted Successfully",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+
+                    } else if (resp.errors) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: `${resp.errors[0]}`
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                            footer: `${resp.message}`
+                        });
+                        // toastr.error(resp.message);
+                    }
+                },
+                error: function(error) {
+                    // location.reload();
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Something went wrong!",
+                    });
+                }
+            })
+        }
+    </script>
+@endpush
+
+
+
+
+************
+Create:
+************
+
+
+
+@extends('backend.app')
+
+@section('title', 'Team Member Create')
+
+@push('styles')
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            min-height: 150px;
+        }
+    </style>
+
+    <!-- Include Select2 JS. it's using for custom select -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+@endpush
+
+@section('content')
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Team Member Create Page</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('team.index') }}"><i data-feather="skip-back"></i></a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="home"></i></a></li>
+                        <li class="breadcrumb-item">Users</li>
+                        <li class="breadcrumb-item active"> Team Member Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid">
+        <div class="edit-profile">
+            <div class="row">
+                <div class="col-xl-12 col-lg-7">
+                    <form class="card" method="POST" action="{{ route('team.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-0">Team Member Create</h4>
+                            <div class="card-options"><a class="card-options-collapse" href="#"
+                                    data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a
+                                    class="card-options-remove" href="#" data-bs-toggle="card-remove"><i
+                                        class="fe fe-x"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Industrial Services -->
+                                <div class="form-group">
+                                    <label for="services">Services<span class="text-danger">*</span></label>
+                                    <select class="form-control SelectBox @error('services') is-invalid @enderror"
+                                        name="services[]" id="services" multiple>
+                                        <option value="">Select Service(s)</option>
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service->id }}"
+                                                {{ in_array($service->id, old('services', [])) ? 'selected' : '' }}>
+                                                {{ $service->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('services')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Name -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label f-w-500">Name:</label>
+                                        <input class="form-control @error('name') is-invalid @enderror" type="text"
+                                            name="name" value="{{ old('name') }}" placeholder="Enter Name">
+                                        @error('name')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Designation -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="designation" class="form-label f-w-500">Designation:</label>
+                                        <input class="form-control @error('designation') is-invalid @enderror"
+                                            type="text" name="designation" value="{{ old('designation') }}"
+                                            placeholder="Enter Designation">
+                                        @error('designation')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label f-w-500">Phone:</label>
+                                        <input class="form-control @error('phone') is-invalid @enderror" type="text"
+                                            name="phone" value="{{ old('phone') }}" placeholder="Enter Phone Number">
+                                        @error('phone')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Fax -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="fax" class="form-label f-w-500">Fax:</label>
+                                        <input class="form-control @error('fax') is-invalid @enderror" type="text"
+                                            name="fax" value="{{ old('fax') }}" placeholder="Enter Fax Number">
+                                        @error('fax')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label f-w-500">Email:</label>
+                                        <input class="form-control @error('email') is-invalid @enderror" type="email"
+                                            name="email" value="{{ old('email') }}" placeholder="Enter Email">
+                                        @error('email')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- LinkedIn -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="linkedin" class="form-label f-w-500">LinkedIn:</label>
+                                        <input class="form-control @error('linkedin') is-invalid @enderror" type="text"
+                                            name="linkedin" value="{{ old('linkedin') }}"
+                                            placeholder="Enter LinkedIn URL">
+                                        @error('linkedin')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Image -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label f-w-500">Image :</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file" name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label f-w-500">Description :</label>
+                                        <textarea class="form-control @error('description') is-invalid @enderror" placeholder="Description"
+                                            name="description" id="description">{{ old('description') }}</textarea>
+                                        @error('description')
+                                            <div style="color: red">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Specialization -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="specialization" class="form-label f-w-500">Specialization:</label>
+                                        <textarea class="form-control @error('specialization') is-invalid @enderror" name="specialization"
+                                            id="specialization" placeholder="Specialization">{{ old('specialization') }}</textarea>
+                                        @error('specialization')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Education -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="education" class="form-label f-w-500">Education:</label>
+                                        <textarea class="form-control @error('education') is-invalid @enderror" name="education" id="education"
+                                            placeholder="Education Details">{{ old('education') }}</textarea>
+                                        @error('education')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Designation Details -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="designation_details" class="form-label f-w-500">Designation
+                                            Details:</label>
+                                        <textarea class="form-control @error('designation_details') is-invalid @enderror" name="designation_details"
+                                            id="designation_details" placeholder="Designation Details">{{ old('designation_details') }}</textarea>
+                                        @error('designation_details')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary" type="submit">Create</button>
+                            <a href="{{ route('team.create') }}" class="btn btn-warning">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Container-fluid Ends-->
+
+@endsection
+
+@push('scripts')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#description'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#specialization'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#education'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#designation_details'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        $('.dropify').dropify();
+
+        $(document).ready(function() {
+            $('.select2').select2();
+        });
+    </script>
+
+    <!-- Include Select2 JS. it's using for custom select -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#services').select2({
+                placeholder: "Select Service(s)",
+                allowClear: true
+            });
+        });
+    </script>
+@endpush
+
+
+
+
+************
+Edit:
+************
+
+
+
+
+@extends('backend.app')
+
+@section('title', 'Team Member Edit')
+
+@push('styles')
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            min-height: 150px;
+        }
+    </style>
+    
+    <!-- Include Select2 JS. it's using for custom select -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+@endpush
+
+@section('content')
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Team Member Edit Page</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('team.index') }}"><i data-feather="skip-back"></i></a>
+                        </li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i data-feather="home"></i></a></li>
+                        <li class="breadcrumb-item">Users</li>
+                        <li class="breadcrumb-item active">Team Member Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="edit-profile">
+            <div class="row">
+                <div class="col-xl-12 col-lg-7">
+                    <form class="card" method="POST" action="{{ route('team.update', $teamMember->id) }}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-0">Team Member Edit</h4>
+                            <div class="card-options">
+                                <a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i
+                                        class="fe fe-chevron-up"></i></a>
+                                <a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i
+                                        class="fe fe-x"></i></a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Industrial Services -->
+                                <div class="form-group mb-3">
+                                    <label>Services:</label>
+                                    <select name="services[]" id="services" class="form-control select2" multiple>
+                                        @foreach ($services as $service)
+                                            <option value="{{ $service->id }}"
+                                                {{ $teamMember->service->contains($service->id) ? 'selected' : '' }}>
+                                                {{ $service->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('services')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Name -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label f-w-500">Name:</label>
+                                        <input class="form-control @error('name') is-invalid @enderror" type="text"
+                                            name="name" value="{{ old('name', $teamMember->name) }}"
+                                            placeholder="Enter Name">
+                                        @error('name')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Designation -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="designation" class="form-label f-w-500">Designation:</label>
+                                        <input class="form-control @error('designation') is-invalid @enderror"
+                                            type="text" name="designation"
+                                            value="{{ old('designation', $teamMember->designation) }}"
+                                            placeholder="Enter Designation">
+                                        @error('designation')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label f-w-500">Phone:</label>
+                                        <input class="form-control @error('phone') is-invalid @enderror" type="text"
+                                            name="phone" value="{{ old('phone', $teamMember->phone) }}"
+                                            placeholder="Enter Phone Number">
+                                        @error('phone')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label f-w-500">Email:</label>
+                                        <input class="form-control @error('email') is-invalid @enderror" type="email"
+                                            name="email" value="{{ old('email', $teamMember->email) }}"
+                                            placeholder="Enter Email">
+                                        @error('email')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Image -->
+                                {{-- <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label f-w-500">Image :</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file" name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div> --}}
+
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="image" class="form-label f-w-500">Image :</label>
+                                        <input class="form-control dropify @error('image') is-invalid @enderror"
+                                            type="file" data-default-file="{{ asset('/' . $teamMember->image) }}"
+                                            name="image">
+
+                                        @error('image')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="description" class="form-label f-w-500">Description :</label>
+                                        <textarea class="form-control @error('description') is-invalid @enderror" placeholder="Description" name="description"
+                                            id="description">{{ old('description', $teamMember->description) }}</textarea>
+                                        @error('description')
+                                            <div style="color: red">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Specialization -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="specialization" class="form-label f-w-500">Specialization:</label>
+                                        <textarea class="form-control @error('specialization') is-invalid @enderror" name="specialization"
+                                            id="specialization" placeholder="Specialization">{{ old('specialization', $teamMember->specialization) }}</textarea>
+                                        @error('specialization')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Education -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="education" class="form-label f-w-500">Education:</label>
+                                        <textarea class="form-control @error('education') is-invalid @enderror" name="education" id="education"
+                                            placeholder="Education Details">{{ old('education', $teamMember->education) }}</textarea>
+                                        @error('education')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <!-- Designation Details -->
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label for="designation_details" class="form-label f-w-500">Designation
+                                            Details:</label>
+                                        <textarea class="form-control @error('designation_details') is-invalid @enderror" name="designation_details"
+                                            id="designation_details" placeholder="Designation Details">{{ old('designation_details', $teamMember->designation_details) }}</textarea>
+                                        @error('designation_details')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary" type="submit">Update</button>
+                            <a href="{{ route('team.index') }}" class="btn btn-warning">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@push('scripts')
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#description'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#specialization'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#education'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        ClassicEditor
+            .create(document.querySelector('#designation_details'), {
+                height: '500px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        $('.dropify').dropify();
+    </script>
+
+    <!-- Include Select2 JS. it's using for custom select -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#services').select2({
+                placeholder: "Select Service(s)",
+                allowClear: true
+            });
+        });
+    </script>
+@endpush
+
+
+
+
