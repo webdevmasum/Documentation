@@ -185,7 +185,7 @@
                                     <div class="mb-3">
                                         <label>Video Link:</label>
                                         <input type="text" name="workout_videos[0][video_link]"
-                                            placeholder="Youtube Video Link" class="form-control">
+                                            placeholder="https://youtube.com/something..." class="form-control">
                                         @error('workout_videos.0.video_link')
                                             <div style="color: red">{{ $message }}</div>
                                         @enderror
@@ -231,20 +231,20 @@
                     const mealPlansDiv = document.getElementById('meal_plans');
                     const mealPlanCount = mealPlansDiv.querySelectorAll('.meal-plan').length;
                     const newMealPlan = `
-            <div class="meal-plan">
-                <label>Meal Type:</label>
-                <select name="meal_plans[${mealPlanCount}][meal_type]" class="form-control">
-                    <option value="breakfast">Breakfast</option>
-                    <option value="lunch">Lunch</option>
-                    <option value="dinner">Dinner</option>
-                    <option value="snacks">Snacks</option>
-                    <option value="another">Another</option>
-                </select>
-                <label>Meal Details:</label>
-                <textarea name="meal_plans[${mealPlanCount}][meal_details]" class="form-control"></textarea>
-                <button type="button" class="btn btn-dark text-danger mb-5 mt-2" onclick="removeMealPlan(this)">Remove</button>
-            </div>
-            `;
+    <div class="meal-plan">
+        <label>Meal Type:</label>
+        <select name="meal_plans[${mealPlanCount}][meal_type]" class="form-control">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snacks">Snacks</option>
+            <option value="another">Another</option>
+        </select>
+        <label>Meal Details:</label>
+        <textarea name="meal_plans[${mealPlanCount}][meal_details]" class="form-control"></textarea>
+        <button type="button" class="btn btn-dark text-danger mb-5 mt-2" onclick="removeMealPlan(this)">Remove</button>
+    </div>
+    `;
                     // Append the new meal plan at the top instead of the bottom
                     mealPlansDiv.insertAdjacentHTML('afterbegin', newMealPlan);
                 }
@@ -278,12 +278,12 @@
                 <div style="color: red" class="error-message" placeholder="Title for Video" id="error-sub_title-${workoutVideoCount}"></div>
 
                 <label>Video Link:</label>
-                <input type="text" name="workout_videos[${workoutVideoCount}][video_link]" placeholder="Youtube Video Link" class="form-control">
+                <input type="text" name="workout_videos[${workoutVideoCount}][video_link]" placeholder="https://youtube.com/something..." class="form-control">
                 <div style="color: red" class="error-message" id="error-link-${workoutVideoCount}"></div>
                 <button type="button" class="btn btn-dark text-danger mb-5 mt-2" onclick="removeWorkoutVideo(this)">Remove</button>
             </div>
         `;
-            workoutVideosDiv.insertAdjacentHTML('afterbegin', newWorkoutVideo);
+            workoutVideosDiv.insertAdjacentHTML('beforeend', newWorkoutVideo);
         }
 
         // Remove workout video section
@@ -293,7 +293,7 @@
         }
     </script>
 
-    //!! for ck editor
+    {{-- //!! for ck editor --}}
     <script>
         ClassicEditor
             .create(document.querySelector('#body'))
@@ -308,7 +308,7 @@
             });
     </script>
 
-    //!! for ck editor and meal plan
+    {{-- //!! for ck editor and meal plan --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Initialize CKEditor for the first (default) textarea
