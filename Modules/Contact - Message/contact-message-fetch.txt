@@ -1,0 +1,35 @@
+
+
+********
+step-1: sidebar
+********
+
+    <!-- contact message -->
+    <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a
+            class="sidebar-link sidebar-title {{ Request::routeIs('contact.message.*') ? 'active open' : ' ' }}"
+            href="javascript:void(0)"><i data-feather="box"></i><span>Contact Message</span></a>
+        <ul class="sidebar-submenu">
+            <li><a class="{{ Request::routeIs('contact-message.index') ? 'active' : ' ' }}"
+                href="{{ route('contact-message.index') }}">Message Lists</a></li>
+        </ul>        
+    </li>
+
+********
+step-2: route
+********
+
+    //!! Route for ContactMeassageController to fetch messages
+    Route::get('/contact-message', [ContactMeassageController::class, 'index'])->name('contact-message.index');
+    Route::delete('/contact-message/{id}', [ContactMeassageController::class, 'destroy'])->name('contact-message.destroy');
+
+
+
+********
+step-13: controller
+********
+
+
+
+********
+step-4: blade
+********
