@@ -310,3 +310,55 @@ class ContactMessageController extends Controller
 }
 
 
+
+
+********
+step-7: Web Controller to send message
+********
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\EmailContact;
+
+use App\Http\Controllers\Controller;
+use App\Mail\ContactFormMail;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+class EmailContactController extends Controller
+{
+    public function index()
+    {
+        return view('backend.layouts.email-contact.contact-form');
+    }
+
+    public function send(Request $request)
+    {
+        // Validate data
+        $data = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:255',
+            'company' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+
+        // Full Name Generate Kora
+        $data['full_name'] = $data['first_name'] . ' ' . $data['last_name'];
+
+
+        // Store data in database
+        $contact = Contact::create($data);
+
+        // Send email
+        Mail::to('admin@gmail.com')->send(new ContactFormMail($data));
+
+        return redirect()->back()->with('t-success', 'Your message has been sent successfully!');
+    }
+}
+
+
