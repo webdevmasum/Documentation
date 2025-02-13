@@ -2,13 +2,143 @@
 step-1: database
 ********
 
-********
-step-1: Model
-********
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('contacts', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('full_name');
+            $table->string('email');
+            $table->string('phone');
+            $table->string('company');
+            $table->text('message');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('contacts');
+    }
+};
+
 
 ********
-step-1: app/Mail/contactmail
+step-2: Model
 ********
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Contact extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+}
+
+
+
+
+********
+step-3: app/Mail/contactmail
+********
+
+----->>>> php artisan make:mail ContactMail
+
+
+
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class ContactFormMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $data;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct( $data)
+    {
+        $this->data = $data;
+    }
+
+
+    /**
+     * Build the message.
+     */
+    public function build()
+    {
+        return $this->subject('New Contact Message')
+                    ->view('backend.layouts.email-contact.contact-form')
+                    ->with('data', $this->data);
+    }
+
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Contact Form Mail',
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    // public function content(): Content
+    // {
+    //     return new Content(
+    //         view: 'view.name',
+    //     );
+    // }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
+    }
+}
+
+
+
+
 
 ********
 step-1: blade
