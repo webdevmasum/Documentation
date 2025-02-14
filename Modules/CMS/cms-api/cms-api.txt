@@ -1,0 +1,94 @@
+
+************
+Step 1: Route
+************
+
+    //!! Route for AboutPageController Hero Section
+    Route::get('/cms/aboutpage/hero', [AboutPageController::class, 'getAboutPageHero']);
+    Route::get('/cms/about-body', [AboutPageController::class, 'getAboutBody']);
+
+
+************
+Step 2: Controller
+************
+
+
+
+<?php
+
+namespace App\Http\Controllers\API\Cms\AboutPage;
+
+use App\Enums\Page;
+use App\Enums\Section;
+use App\Http\Controllers\Controller;
+use App\Models\CMS;
+use Illuminate\Http\Request;
+
+class AboutPageController extends Controller
+{
+    /**
+     * Get About Hero Section Data
+     */
+    public function getAboutPageHero()
+    {
+        $data = CMS::where('page', Page::AboutPage)
+            ->where('section', Section::AboutHeroSection)
+            ->first();
+
+        if ($data) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Data fetched successfully',
+                'data'    => [
+                    'id'            => $data->id,
+                    'page'          => $data->page,
+                    'section'       => $data->section,
+                    'title'         => $data->title,
+                    'description'   => $data->description,
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                'status'            => 'success',
+                'message'           => 'No data found',
+                'data'              => []
+            ], 200);
+        }
+    }
+
+
+    /**
+     * Get About Page Body Section Data
+     */
+    public function getAboutBody()
+    {
+        $data = CMS::where('page', Page::AboutPage)
+            ->where('section', Section::AboutBodySection)
+            ->first();
+
+        if ($data) {
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Data fetched successfully',
+                'data'    => [
+                    'id'            => $data->id,
+                    'page'          => $data->page,
+                    'section'       => $data->section,
+                    'about'         => $data->about,
+                    'mission'       => $data->mission,
+                    'value'         => $data->value,
+                    'leadership'    => $data->leadership
+                ]
+            ], 200);
+        } else {
+            return response()->json([
+                'status'            => 'success',
+                'message'           => 'No data found',
+                'data'              => []
+            ], 200);
+        }
+    }
+}
+
+
+
