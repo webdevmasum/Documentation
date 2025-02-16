@@ -1,0 +1,186 @@
+<?php
+
+namespace App\Helpers;
+
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
+class Helper
+{
+
+***important***
+
+    //! File or Image Upload by Masum
+    public static function fileUpload($file, $folder, $name)
+    {
+        // Check if file is not null
+        if ($file) {
+            $imageName = Str::slug($name) . '-' . uniqid() . '.' . $file->extension();
+
+            $file->move(public_path('uploads/' . $folder), $imageName);
+
+            $path = 'uploads/' . $folder . '/' . $imageName;
+            return $path;
+        }
+
+        return null;
+    }
+    
+***important***
+
+    public static function videoUpload($file, $folder, $name)
+    {
+        // Check if file is not null
+        if ($file) {
+            $videoName = Str::slug($name) . '.' . $file->extension();
+            $file->move(public_path('uploads/' . $folder), $videoName);
+            $path = 'uploads/' . $folder . '/' . $videoName;
+            return $path;
+        }
+        return null; // Or handle this case as needed
+    }
+
+    /**
+     * Upload a file and return the public path.
+     */
+    public static function uploadFile($file, $directory)
+    {
+        try {
+            $fileName = uniqid('media_') . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs($directory, $fileName, 'public');
+            return 'storage/' . $filePath;
+        } catch (Exception $e) {
+            return redirect()->back()->with('t-error', 'Failed to upload the file');
+        }
+    }
+
+    /**
+     * Delete an image and return a boolean.
+     */
+    public static function deleteFile($imageUrl)
+    {
+        try {
+            if (is_string($imageUrl) && !empty($imageUrl)) {
+                $parsedUrl = parse_url($imageUrl);
+                $relativePath = $parsedUrl['path'] ?? '';
+                $relativePath = preg_replace('/^\/?storage\//', '', $relativePath);
+
+                if (Storage::disk('public')->exists($relativePath)) {
+                    Storage::disk('public')->delete($relativePath);
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+
+
+
+    //! JSON Response
+    public static function jsonResponse(bool $status, string $message, int $code, $data = null): JsonResponse
+    {
+        $response = [
+            'status'  => $status,
+            'message' => $message,
+            'code'    => $code,
+        ];
+
+        if ($data !== null) {
+            $response['data'] = $data;
+        }
+        return response()->json($response, $code);
+    }
+}
+
+
+/**
+ * Upload an files and return its URL.
+ *
+ * @param  \Illuminate\Http\UploadedFile $file
+ * @param  string  $directory
+ * @return string
+ */
+function uploadFile($file, $directory)
+{
+    try {
+        // Generate a unique file name using the original file extension
+        $fileName = uniqid('media_') . '.' . $file->getClientOriginalExtension();
+
+        // Store the file in the specified directory using the public disk
+        $file->storeAs($directory, $fileName, 'public');
+
+        // Return the path to the stored file
+        return $directory . '/' . $fileName;
+    } catch (Exception $e) {
+        // Redirect back with an error message if something goes wrong
+        return redirect()->back()->with('t-error', 'Failed to upload the file');
+    }
+}
+
+
+/**
+ * Delete an image and return a boolean.
+ *
+ * @param  string  $imageUrl
+ * @return bool
+ */
+function deleteFile($imageUrl)
+{
+    try {
+        // Check if $imageUrl is a valid string
+        if (is_string($imageUrl) && !empty($imageUrl)) {
+            // Extract the relative path from the URL
+            $parsedUrl = parse_url($imageUrl);
+            $relativePath = $parsedUrl['path'] ?? '';
+
+            // Remove the leading '/storage/' from the path
+            $relativePath = preg_replace('/^\/?storage\//', '', $relativePath);
+
+            // Check if the image exists
+            if (Storage::disk('public')->exists($relativePath)) {
+                // Delete the image if it exists
+                Storage::disk('public')->delete($relativePath);
+                return true;
+            } else {
+                // Return false if the image does not exist
+                return false;
+            }
+        } else {
+            // Return false if $imageUrl is not a valid string
+            return false;
+        }
+    } catch (Exception $e) {
+        // Handle any other exceptions
+        return false;
+    }
+}
+
+
+/**
+ * Generate a unique slug for the given model and title.
+ *
+ * @param string $title
+ * @param string $table
+ * @param string $slugColumn
+ * @return string
+ */
+function generateUniqueSlug($title, $table, $slugColumn = 'slug')
+{
+    // Generate initial slug
+    $slug = str::slug($title);
+
+    // Check if the slug exists
+    $count = DB::table($table)->where($slugColumn, 'LIKE', "$slug%")->count();
+
+    // If it exists, append the count
+    return $count ? "{$slug}-{$count}" : $slug;
+}
