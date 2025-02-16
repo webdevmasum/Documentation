@@ -1,0 +1,22 @@
+Hello client name,
+
+I hope you and your family are safe and sound.
+
+As per your order requirements, I have completed the following tasks:
+
+- I've developed API for cms part to create and update content dynamically from the admin panel.
+- I've developed API c-on-tact section to co-mm-uni-ca-te user.
+- I've developed API for blog module with tags.
+- I've developed API for team member module with Industries Serve.
+- I've developed API for brand logo section.
+- I've developed API for designation logo section.
+- I've developed API for about us section.
+
+For your help, I have added a video explanation.
+Please have a look: https://www.loom.com/share/7a7e519ce7034309a0915cbdffd1c47d?sid=a9fb0afa-c165-4db5-9f1c-db8ddfce07d0
+
+For some reason, if you have any questions or concerns, please don’t hesitate to reach out. I’ll be happy to assist you.
+
+Best wishes.
+
+ Fiverr | Update Message
