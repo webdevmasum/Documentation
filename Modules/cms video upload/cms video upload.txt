@@ -1,0 +1,148 @@
+
+//!! video upload, use dropify, video image show in dropify.
+
+
+****************
+blade
+****************
+
+<div class="row">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header pb-0">
+                                <h4>Video Section</h4>
+                            </div>
+                            <div class="card-body">
+                                <form class="theme-form"
+                                    action="{{ route('cms.costSegregation-page.costSegregation-video.update') }}" method="post"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <!-- Video Preview Inside Dropify -->
+                                    <div class="form-group">
+                                        <label class="col-form-label pt-0" >Upload Video :</label>
+                                        <input type="file"
+                                            class="form-control dropify @error('video') is-invalid @enderror"
+                                            name="video" id="video-input"
+                                            accept="video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv"
+                                            data-default-file="{{ isset($data) && (is_object($data) || is_array($data)) && isset($data['video']) ? asset('storage/' . $data['video']) : (isset($data) && is_object($data) && isset($data->video) ? asset('storage/' . $data->video) : '') }}">
+
+                                        @error('video')
+                                            <div style="color: red;">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="card-footer text-end">
+                                        <button class="btn btn-primary">Submit</button>
+                                        <a href="{{ route('cms.costSegregation-page.costSegregation-video') }}"
+                                            class="btn btn-warning">Cancel</a>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+<!-- Include Select2 JS. it's using for custom select -->
+    <!-- dropify video show customize -->
+    <script>
+        $(document).ready(function() {
+            $('.dropify').dropify();
+
+            let videoInput = document.getElementById('video-input');
+            let defaultVideo =
+                "{{ isset($data) && (is_object($data) || is_array($data)) && isset($data['video']) ? asset('storage/' . $data['video']) : (isset($data) && is_object($data) && isset($data->video) ? asset('storage/' . $data->video) : '') }}";
+
+            if (defaultVideo) {
+                let dropifyWrapper = videoInput.closest('.dropify-wrapper');
+                let previewContainer = dropifyWrapper.querySelector('.dropify-preview');
+                let renderContainer = dropifyWrapper.querySelector('.dropify-render');
+
+                let videoTag = document.createElement('video');
+                videoTag.src = defaultVideo;
+                videoTag.controls = true;
+                renderContainer.innerHTML = "";
+                renderContainer.appendChild(videoTag);
+                previewContainer.style.display = "block";
+            }
+
+
+            videoInput.addEventListener('change', function(event) {
+                let file = event.target.files[0];
+
+                if (file) {
+                    let fileURL = URL.createObjectURL(file);
+                    let dropifyWrapper = videoInput.closest('.dropify-wrapper');
+                    let previewContainer = dropifyWrapper.querySelector('.dropify-preview');
+                    let renderContainer = dropifyWrapper.querySelector('.dropify-render');
+
+                    let videoTag = document.createElement('video');
+                    videoTag.src = fileURL;
+                    videoTag.controls = true;
+                    renderContainer.innerHTML = "";
+                    renderContainer.appendChild(videoTag);
+                    previewContainer.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+
+
+
+****************
+Controller
+****************
+
+
+/**
+     * Function to see video for CostSegregationPage Video Section
+     */
+    public function costSegregationvideo()
+    {
+        $data = CMS::where('page', Page::CostSegregationPage)->where('section', Section::CostSegregationVideoSection)->first();
+        return view('backend.layouts.cms.cost-segregation-page.cost-segregation-hero', compact('data'));
+    }
+
+
+    /**
+     * Function to store video for CostSegregationPage Video Section
+     */
+    public function storecostSegregationvideo(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:102400',  // Max 100MB
+        ]);
+
+        $data = CMS::updateOrCreate(
+            [
+                'page'    => Page::CostSegregationPage,
+                'section' => Section::CostSegregationVideoSection,
+            ]
+        );
+
+        // If video file is present
+        if ($request->hasFile('video')) {
+            $videoPath = Helper::videoUpload($request->file('video'), 'cost-segregation-videos', 'video');
+
+            if ($videoPath) {
+                $data->video = $videoPath;
+                $data->save();
+            }
+        }
+
+        if ($data) {
+            return redirect()->back()->with('notify-success', 'Data Updated Successfully');
+        } else {
+            return redirect()->back()->with('notify-warning', 'Data Update Failed');
+        }
+    }
