@@ -281,12 +281,12 @@ class ContactMessageController extends Controller
     {
         // Validation
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'email'      => 'required|email',
-            'phone'      => 'required|string|max:20',
-            'company'    => 'nullable|string|max:255',
-            'message'    => 'required|string'
+            'first_name'        => 'required|string|max:255',
+            'last_name'         => 'required|string|max:255',
+            'email'             => 'required|email',
+            'phone'             => 'required|string|max:20',
+            'company'           => 'nullable|string|max:255',
+            'message'           => 'required|string'
         ]);
 
         try {
@@ -295,26 +295,22 @@ class ContactMessageController extends Controller
 
             // Create Contact
             $contact = Contact::create([
-                'first_name' => $request->first_name,
-                'last_name'  => $request->last_name,
-                'full_name'  => $request->first_name . ' ' . $request->last_name,
-                'email'      => $request->email,
-                'phone'      => $request->phone,
-                'company'    => $request->company,
-                'message'    => $request->message
+                'first_name'    => $request->first_name,
+                'last_name'     => $request->last_name,
+                'full_name'     => $request->first_name . ' ' . $request->last_name,
+                'email'         => $request->email,
+                'phone'         => $request->phone,
+                'company'       => $request->company,
+                'message'       => $request->message
             ]);
 
+            // Admin Email Set from .env
+            $adminEmail = env('ADMIN_EMAIL', 'defaultadmin@example.com');
 
-
-            // Check if the 'to_email' exists in the request, otherwise use default
-            $toEmail = $request->email ?? env('ADMIN_EMAIL');
-
-
-            // dd($toEmail);
+            // dd($adminEmail);
             // Send Email to Admin
-            Mail::to($toEmail)->send(new ContactFormMail($contact));
+            Mail::to($adminEmail)->send(new ContactFormMail($contact));
 
-            // Commit Transaction
             DB::commit();
 
             return response()->json([
@@ -325,7 +321,6 @@ class ContactMessageController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            // Log the error message
             Log::error('Error in Contact Form Submission: ' . $e->getMessage());
 
             return response()->json([
@@ -336,6 +331,28 @@ class ContactMessageController extends Controller
         }
     }
 }
+
+
+
+
+********
+step-6: API Controller .ENV Credentials like
+********
+
+
+# Looking to send emails in production? Check out our Email API/SMTP product!
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=587
+MAIL_USERNAME=b9754398580118
+MAIL_PASSWORD=1b1aa7a122468c
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="bovane4211@kytstore.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+ADMIN_EMAIL=bovane4211@kytstore.com
+
+
 
 
 
