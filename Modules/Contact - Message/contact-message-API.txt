@@ -258,8 +258,90 @@ step-5: route API
     Route::post('/contact-message', [ContactMessageController::class, 'store']);
 
 
+
 ********
-step-6: API Controller
+step-6: API Controller to use
+********
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Mail\ContactFormMail;
+use App\Models\Contact;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+
+class ContactMessageController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Validation
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name'  => 'required|string|max:255',
+            'email'      => 'required|email',
+            'phone'      => 'required|string|max:20',
+            'company'    => 'nullable|string|max:255',
+            'message'    => 'required|string'
+        ]);
+
+        try {
+            // Start Transaction
+            DB::beginTransaction();
+
+            // Create Contact
+            $contact = Contact::create([
+                'first_name' => $request->first_name,
+                'last_name'  => $request->last_name,
+                'full_name'  => $request->first_name . ' ' . $request->last_name,
+                'email'      => $request->email,
+                'phone'      => $request->phone,
+                'company'    => $request->company,
+                'message'    => $request->message
+            ]);
+
+
+
+            // Check if the 'to_email' exists in the request, otherwise use default
+            $toEmail = $request->email ?? env('ADMIN_EMAIL');
+
+
+            // dd($toEmail);
+            // Send Email to Admin
+            Mail::to($toEmail)->send(new ContactFormMail($contact));
+
+            // Commit Transaction
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Message sent successfully!',
+                'data'    => $contact
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Log the error message
+            Log::error('Error in Contact Form Submission: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data'    => []
+            ], 500);
+        }
+    }
+}
+
+
+
+
+********
+step-6: API Controller simple / optional use
 ********
 
 
