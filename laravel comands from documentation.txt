@@ -55,7 +55,7 @@ php artisan storage:link 		{ To create image path }
 
 git project run system..
 	1. npm i
-	2. npm run build
+	2. 
 	3. composer update
 	4. php artisan migrate
 	5. php artisan db:seed
@@ -111,4 +111,16 @@ i want to delete button for image. when i update image if i want to delete speci
 
 [ ***** if you delete profile you have to give confirmation password.
 go to route, in destroy function, ->middleware(something. Password) *****]
+
+
+
+
+
+
+
+
+
+
+
+
 
