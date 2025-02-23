@@ -2,11 +2,17 @@
 Route API
 **********************
 
+Route::post('subscribe', [SubscriberController::class, 'store']);
+
+
 
 **********************
 Route WEB
 **********************
 
+    //!! Route for SubscriberController to fetch subscribers
+    Route::get('/subscriber', [SubscriberController::class, 'index'])->name('subscriber.index');
+    Route::delete('/subscriber/{id}', [SubscriberController::class, 'destroy'])->name('subscriber.destroy');
 
 
 **********************
@@ -14,9 +20,124 @@ Controller API
 **********************
 
 
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Subscriber;
+use Illuminate\Http\Request;
+
+class SubscriberController extends Controller
+{
+
+
+    public function store(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'email' => 'required|email|unique:subscribers,email',
+        ]);
+
+        try {
+            $subscriber = Subscriber::create([
+                'email' => $request->email,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email successfully subscribed!',
+                'data' => $subscriber,
+            ], 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation error.',
+                'status_code' => 422,
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong. Please try again.',
+                'error' => $e->getMessage(),
+                'data' => null,
+            ], 500);
+        }
+    }
+}
+
+
+
+
 **********************
 Controller WEB
 **********************
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Subscriber;
+
+use App\Http\Controllers\Controller;
+use App\Models\Subscriber;
+use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
+
+class SubscriberController extends Controller
+{
+    public function index(Request $request)
+    {
+        // $subscribers = Subscriber::all();
+
+        $subscribers = Subscriber::latest();
+        if ($request->ajax()) {
+            return DataTables::of($subscribers)
+                ->addIndexColumn()
+
+
+                ->addColumn('action', function ($data) {
+
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="action delete text-danger" title="Delete">
+                                  <i class="icon-trash"></i>
+                                </a>
+                                </div>';
+                })
+
+                ->rawColumns(['status', 'action', 'image'])
+
+                ->make(true);
+        }
+
+
+        return view('backend.layouts.subscriber.index', compact('subscribers'));
+    }
+
+
+    public function destroy(string $id)
+    {
+        $data = Subscriber::findOrFail($id);
+
+        $data->tags()->detach();
+
+        if (!$data) {
+            return response()->json(['t-success' => false, 'message' => 'Data not found.']);
+        }
+
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deleted successfully.',
+        ]);
+    }
+}
+
+
+
 
 
 **********************
