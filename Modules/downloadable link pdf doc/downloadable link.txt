@@ -265,6 +265,41 @@ Controller for API
 *************************
 
 
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\UsefulTemplate;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\File;
+
+class UsefulTemplateController extends Controller
+{
+    //  All files list return
+    public function index()
+    {
+        $templates = UsefulTemplate::select('id', 'title', 'usefultemplate')->get();
+
+        if ($templates->isEmpty()) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'No templates found',
+                'data'      => []
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'status'        => true,
+            'message'       => 'Templates retrieved successfully',
+            'data'          => $templates
+        ], Response::HTTP_OK);
+    }
+}
+
+
 *************************
 Blade for web
 *************************
