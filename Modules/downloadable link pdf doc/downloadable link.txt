@@ -1,0 +1,56 @@
+*************************
+Database
+*************************
+
+    public function up(): void
+    {
+        Schema::create('useful_templates', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('slug')->nullable()->unique();
+            $table->string('usefultemplate')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+
+*************************
+Route for web
+*************************
+
+     //! Route for UsefulTemplateController
+     Route::get('/usefultemplate', [UsefulTemplateController::class, 'index'])->name('usefultemplate.index');
+     Route::get('/usefultemplate/create', [UsefulTemplateController::class, 'create'])->name('usefultemplate.create');
+     Route::post('/usefultemplate/store', [UsefulTemplateController::class, 'store'])->name('usefultemplate.store');
+     Route::get('/usefultemplate/show/{id}', [UsefulTemplateController::class, 'show'])->name('usefultemplate.show');
+     Route::get('/usefultemplate/edit/{id}', [UsefulTemplateController::class, 'edit'])->name('usefultemplate.edit');
+     Route::post('/usefultemplate/update/{id}', [UsefulTemplateController::class, 'update'])->name('usefultemplate.update');
+     Route::get('/usefultemplate/status/{id}', [UsefulTemplateController::class, 'status'])->name('usefultemplate.status');
+     Route::delete('/usefultemplate/destroy/{id}', [UsefulTemplateController::class, 'destroy'])->name('usefultemplate.destroy');
+
+
+*************************
+Route for API
+*************************
+
+//!! Route for UsefulTemplateController
+Route::get('/useful-templates', [UsefulTemplateController::class, 'index']);
+
+
+
+*************************
+Controller for web
+*************************
+
+
+*************************
+Controller for API
+*************************
+
+
+*************************
+Blade for web
+*************************
+
