@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tag;
+use Illuminate\Http\Request;
+
+class BloSearchController extends Controller
+{
+    /**
+     * Search blogs by tag name
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchBlogs(Request $request)
+    {
+        // Validate the request for 'tag_name'
+        $validated = $request->validate([
+            'tag_name' => 'required|string',
+        ]);
+
+        // Find the tag by name (using LIKE for partial matching)
+        $tag = Tag::where('name', 'like', '%' . $request->tag_name . '%')->first();
+
+        // If the tag is not found, return a 404 response
+        if (!$tag) {
+            return response()->json(['message' => 'Tag not found'], 404);
+        }
+
+        // Get the blogs related to this tag with their associated tags
+        $blogs = $tag->blogs()->where('status', 'active')->with('tags')->get();
+
+        // If no blogs found for this tag, return a message
+        if ($blogs->isEmpty()) {
+            return response()->json(['message' => 'No blogs found for this tag'], 404);
+        }
+
+        // Return the blogs with their tags
+        return response()->json([
+            'tag' => [
+                'id' => $tag->id,
+                'name' => $tag->name,
+                'status' => $tag->status,
+            ],
+            'blogs' => $blogs->map(function ($blog) {
+                return [
+                    'id' => $blog->id,
+                    'author_name' => $blog->author_name,
+                    'author_designation' => $blog->author_designation,
+                    'author_image' => $blog->author_image,
+                    'image' => $blog->image,
+                    'title' => $blog->title,
+                    'sub_title' => $blog->sub_title,
+                    'description' => $blog->description,
+                    'status' => $blog->status,
+                    'created_at' => $blog->created_at ? $blog->created_at->format('Y-m-d H:i:s') : null,
+                    'tags' => $blog->tags->map(function ($tag) {
+                        return [
+                            'id' => $tag->id,
+                            'name' => $tag->name,
+                            'status' => $tag->status,
+                        ];
+                    }),
+                ];
+            })
+        ]);
+    }
+}
