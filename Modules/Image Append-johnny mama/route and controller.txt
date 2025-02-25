@@ -1,0 +1,441 @@
+***********************
+Web Route
+***********************
+
+
+ //! Route for Product Controller
+    Route::get('/product', [ProductController::class, 'index'])->name('product.index');
+    Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('/product/store', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/product/show/{id}', [ProductController::class, 'show'])->name('product.show');
+    Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('product.edit');
+    Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::get('/product/status/{id}', [ProductController::class, 'status'])->name('product.status');
+    Route::delete('/product/destroy/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+    Route::get('/product/toggle-trending/{id}', [ProductController::class, 'toggleTrendingProduct'])->name('product.toggle-trending');
+
+
+
+
+***********************
+Web Controller
+***********************
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Product;
+
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Designer;
+use App\Models\Gallery;
+use App\Models\Product;
+use App\Models\Variant;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
+
+class ProductController extends Controller
+{
+    /**
+     * Displays the list of product.
+     *
+     * This method handles AJAX requests to fetch and return product data
+     * in a format suitable for DataTables, including columns for publish
+     * products. If not an AJAX request, it returns the main view for products.
+     *
+     * @param Request $request The incoming HTTP request.
+     */
+
+    public function index(Request $request)
+    {
+        $data = Product::latest();
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('category_name', function ($query) {
+                    return $query->category->category_name;
+                })
+                ->addColumn('brand_name', function ($query) {
+                    return $query->brand->brand_name;
+                })
+                ->addColumn('designer_name', function ($query) {
+                    return $query->designer->designer_name;
+                })
+
+                ->addColumn('quantity', function ($query) {
+                    return $query->variants->sum('quantity');
+                })
+
+                ->addColumn('status', function ($data) {
+                    $status = '';
+                    $status .= '<div class="switch-sm icon-state">';
+                    $status .= '<label class="switch">';
+                    $status .= '<input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+
+                    // Check if the status is active
+                    if ($data->status == "active") {
+                        $status .= ' checked';
+                    }
+
+                    $status .= '>';
+                    $status .= '<span class="switch-state"></span>'; // This is the visual switch
+                    $status .= '</label>';
+                    $status .= '</div>';
+                    $status .= '</div>';
+
+                    return $status;
+                })
+
+                ->addColumn('trending_product', function ($data) {
+                    $checked = $data->trending_product ? 'checked' : '';
+                    return '<div class="switch-sm icon-state">
+                                <label class="switch">
+                                    <input type="checkbox" onclick="toggleTrendingProduct(' . $data->id . ')" ' . $checked . '>
+                                    <span class="switch-state"></span>
+                                </label>
+                            </div>';
+                })
+
+
+                ->addColumn('action', function ($data) {
+
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="' . route('product.edit', $data->id) . '" type="button" class="action edit text-success" title="Edit">
+                                  <i class="icon-pencil-alt"></i>
+                                  </a>&nbsp;
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="action delete text-danger" title="Delete">
+                                  <i class="icon-trash"></i>
+                                </a>
+                                </div>';
+                })
+                ->addColumn('image', function ($data) {
+                    $url = asset($data->image);
+                    return '<img src="' . $url . '" alt="image" width="50px" height="50px" style="margin-left:20px;">';
+                })
+
+                ->rawColumns(['status', 'action', 'image', 'category_name', 'brand_name', 'color', 'quantity', 'variant_image', 'designer_name', 'trending_product'])
+
+                ->filterColumn('category_name', function ($query, $keyword) {
+                    $query->whereHas('category', function ($q) use ($keyword) {
+                        $q->where('category_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('brand_name', function ($query, $keyword) {
+                    $query->whereHas('brand', function ($q) use ($keyword) {
+                        $q->where('brand_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->filterColumn('designer_name', function ($query, $keyword) {
+                    $query->whereHas('designer', function ($q) use ($keyword) {
+                        $q->where('designer_name', 'like', "%{$keyword}%");
+                    });
+                })
+                ->make(true);
+        }
+
+        return view('backend.layouts.product.index');
+    }
+
+    /**
+     * Show the form for creating a new product dynamic page.
+     */
+
+    public function create()
+    {
+        $categories = Category::all();
+        $brands = Brand::all();
+        $designers = Designer::all();
+        return view('backend.layouts.product.create', compact('categories', 'brands', 'designers'));
+    }
+
+    /**
+     * Store a newly created product page in the database.
+     *
+     * @param Request $request
+     */
+
+    public function store(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+            'designer_id' => 'required|exists:designers,id',
+            'name' => 'required|string|max:255',
+            'old_price' => 'required|numeric',
+            'selling_price' => 'required|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4000',
+            // 'gallery' => 'required|array',
+            // 'gallery.*' => 'image|mimes:jpeg,png,jpg,gif|max:4000',
+
+            //!! 2nd time added
+            'product_code' => 'required|string|max:50|unique:products,product_code',
+            'description' => 'required|string',
+            'sub_description' => 'nullable|string',
+
+            'variants.*.color' => 'nullable|string|max:255',
+            'variants.*.color_code' => 'nullable|string|max:255',
+            'variants.*.quantity' => 'required|integer|min:1',
+            'variants.*.variant_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4000',
+        ]);
+
+        $data = new Product();
+        $data->category_id = $request->category_id;
+        $data->brand_id = $request->brand_id;
+        $data->designer_id = $request->designer_id;
+        $data->name = $request->name;
+        $data->old_price = $request->old_price;
+        $data->selling_price = $request->selling_price;
+
+        //!! 2nd time added
+        //!! strip_tags use for avoid html tags
+        $data->product_code = $request->product_code;
+        $data->description = strip_tags($request->description);
+        $data->sub_description = strip_tags($request->sub_description);
+
+
+        // Image store in local
+        $featuredImage = Helper::fileUpload($request->file('image'), 'product-image', $request->image);
+        $data->image = $featuredImage;
+
+        $data->save();
+
+        // if ($request->hasFile('gallery')) {
+        //     foreach ($request->file('gallery') as $image) {
+        //         $imagePath = Helper::fileUpload($image, 'product-images', $image->getClientOriginalName());
+        //         Gallery::create([
+        //             'product_id' => $data->id, // Associate with Product
+        //             'gallery' => $imagePath,
+        //             'status' => 'active',
+        //         ]);
+        //     }
+        // }
+
+        // Save variants
+        if ($request->has('variants')) {
+            foreach ($request->variants as $variant) {
+                $variantImage = null;
+
+                // Upload variant image
+                if (isset($variant['variant_image'])) {
+                    $variantImage = Helper::fileUpload($variant['variant_image'], 'variant-image', $variant['variant_image']);
+                }
+
+                // Create variant
+                $data->variants()->create([
+                    'color' => $variant['color'],
+                    'color_code' => $variant['color_code'],
+                    'quantity' => $variant['quantity'],
+                    'variant_image' => $variantImage,
+                ]);
+            }
+        }
+
+        return redirect()->route('product.index')->with('notify-success', 'Product Created Successfully');
+    }
+
+    /**
+     * Display the specified product to edit and update.
+     *
+     * @param  string  $id
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+
+    public function edit($id)
+    {
+        $data = Product::with('galleries')->findOrFail($id);
+        // $data = Product::find($id);
+        $categories = Category::all();
+        $brands = Brand::all();
+        $designers = Designer::all();
+        return view('backend.layouts.product.edit', compact('data', 'categories', 'brands', 'designers'));
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        // Validate the request data
+        $validatedData = $request->validate([
+            'category_id' => 'nullable|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
+            'designer_id' => 'nullable|exists:designers,id',
+            'name' => 'nullable|string|max:255',
+            'old_price' => 'nullable|numeric',
+            'selling_price' => 'nullable|numeric',
+            'colour_code' => 'nullable|string|',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4000',
+
+            //! 2nd time added
+            'product_code' => 'required|string|max:50|unique:products,product_code,' . $id,
+            'description' => 'required|string',
+            'sub_description' => 'nullable|string',
+        ]);
+
+        $data = Product::find($id);
+        // $data = Product::findOrFail($id);
+        $data->category_id = $request->category_id;
+        $data->brand_id = $request->brand_id;
+        $data->designer_id = $request->designer_id;
+        $data->name = $request->name;
+        $data->old_price = $request->old_price;
+        $data->selling_price = $request->selling_price;
+
+        //!! 2nd time added
+        //!! strip_tags use for avoid html tags
+        $data->product_code = $request->product_code;
+        $data->description = strip_tags($request->description);
+        $data->sub_description = strip_tags($request->sub_description);
+
+        // Check Image Update for Product Image
+        if ($request->hasFile('image')) {
+            // Remove old image if a new image is uploaded
+            if ($data->image && File::exists($data->image)) {
+                File::delete($data->image);
+            }
+            // Store the new image
+            $data->image = Helper::fileUpload($request->file('image'), 'product-image', $request->image);
+        }
+
+        // Handle gallery updates
+        if ($request->hasFile('gallery')) {
+            // Delete existing galleries for this ProductDetail
+            Gallery::where('product_id', $id)->delete();
+
+            // Add new galleries
+            foreach ($request->file('gallery') as $image) {
+                $imagePath = Helper::fileUpload($image, 'product-images', $image->getClientOriginalName());
+                Gallery::create([
+                    'product_id' => $id,
+                    'gallery' => $imagePath,
+                    'status' => 'active',
+                ]);
+            }
+        }
+
+        $data->save();
+
+        // Get the existing variant IDs for comparison
+        $existingVariantIds = $data->variants->pluck('id')->toArray();
+
+        // Loop through the variant data
+        foreach ($request->variants as $variantData) {
+            if (isset($variantData['id']) && in_array($variantData['id'], $existingVariantIds)) {
+                // Update existing variant
+                $variant = Variant::findOrFail($variantData['id']);
+            } else {
+                // Create a new variant
+                $variant = new Variant();
+                $variant->product_id = $data->id;
+            }
+
+            // Update variant details
+            $variant->color = $variantData['color'];
+            $variant->color_code = $variantData['color_code'];
+            $variant->quantity = $variantData['quantity'] ?? '000000';
+
+            // Handle variant image upload (optional)
+            if (isset($variantData['variant_image']) && $variantData['variant_image'] instanceof \Illuminate\Http\UploadedFile) {
+                // Handle image upload only if a new image is provided
+                $image = $variantData['variant_image']->getClientOriginalName();
+                $imagePath = '/backend/products/' . time() . '_' . $image;
+                $variantData['variant_image']->move(public_path('/backend/products/'), $imagePath);
+                $variant->variant_image = $imagePath;
+            } else {
+                // If no new image, retain the existing image (if it exists)
+                $variant->variant_image = $variantData['existing_variant_image'] ?? $variant->variant_image;
+            }
+
+            $variant->save();
+        }
+
+        // Optionally delete any remaining variants that were not in the request
+        foreach ($existingVariantIds as $existingVariantId) {
+            if (!collect($request->variants)->contains('id', $existingVariantId)) {
+                $variantToDelete = Variant::find($existingVariantId);
+                if ($variantToDelete) {
+                    $variantToDelete->delete();
+                }
+            }
+        }
+
+        return redirect()->route('product.index')->with('notify-success', 'Product Updated Successfully');
+    }
+
+
+
+    /**
+     * Delete the specified dynamic page from the product database.
+     *
+     * @param int $id
+     */
+    public function destroy($id)
+    {
+        $data = Product::findOrFail($id);
+
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deleted successfully.',
+        ]);
+    }
+
+
+    /**
+     * Update the status of a product.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status($id)
+    {
+        $data = Product::findOrFail($id);
+
+        if ($data->status == 'active') {
+            $data->status = 'inactive';
+            $data->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Unpublished Successfully.',
+                'data' => $data,
+            ]);
+        } else {
+            $data->status = 'active';
+            $data->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Published Successfully.',
+                'data' => $data,
+            ]);
+        }
+    }
+
+
+    //!  Trending Product status change
+    public function toggleTrendingProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->trending_product = !$product->trending_product;
+        $product->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $product->trending_product ? 'Marked as Trending Product' : 'Unmarked as Trending Product',
+            'data' => $product,
+        ]);
+    }
+}
+
+
