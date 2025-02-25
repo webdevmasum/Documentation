@@ -58,8 +58,62 @@ return new class extends Migration
 
 
 
+********************
+Database --->>> for relation
+********************
 
 
+    Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('category_name');
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });
+        
+
+    Schema::create('variants', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->string('color')->nullable();
+            $table->string('color_code')->nullable();
+            $table->integer('quantity')->default(0);
+            $table->string('variant_image')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
 
+    Schema::create('designers', function (Blueprint $table) {
+            $table->id();
+            $table->string('designer_name');
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });
 
+    Schema::create('brands', function (Blueprint $table) {
+            $table->id();
+            $table->string('brand_name');
+            $table->string('brand_image')->nullable();
+            $table->boolean('is_featured')->default(false);
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });        
+
+
+    Schema::create('designers', function (Blueprint $table) {
+            $table->id();
+            $table->string('designer_name');
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });
+
+
+        ++++++++++++++++++++++++>>>>>>>>>>> Database End<<<<<<<<<<<<<<<<<<<<++++++++++++++++++
