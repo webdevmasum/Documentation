@@ -1,0 +1,78 @@
+******************
+model--->>>
+******************
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class BrandLogo extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+
+    //!! this function create url/link when API development
+    //!! --->> but to update image , old image didn't remove in that folder
+    //!! --->> so last approach is good practice
+    // public function getImageAttribute($value)
+    // {
+    //     return $value ? url($value) : null;
+    // }
+
+
+
+    //!! API development iamge url is working
+    //!! -->> but that function is good practice
+    /* protected $appends = ['image_url'];
+
+     public function getImageUrlAttribute()
+    {
+        // Full URL with asset() function using public path
+        return url($this->image);
+    } */
+
+
+    //!! API development iamge url is working perfectly
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/default-placeholder.png');
+        }
+
+        $imagePath = public_path($this->image);
+
+        if (file_exists($imagePath)) {
+            return url($this->image);
+        }
+
+        return asset('images/default-placeholder.png');
+    }
+}
+
+
+
+
+******************
+Web Controller--->>>
+******************
+
+
+******************
+API Controller--->>>
+******************
