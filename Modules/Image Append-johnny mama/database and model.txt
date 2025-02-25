@@ -1,0 +1,65 @@
+********************
+Database --->>>
+********************
+
+=================>>>>>>>>>>>>>>>> Product <<<<<<<<<<<===================
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('brand_id');
+            $table->foreign('brand_id')->references('id')->on('brands')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedBigInteger('designer_id');
+            $table->foreign('designer_id')->references('id')->on('designers')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->string('name');
+            $table->integer('old_price')->nullable();
+            $table->integer('selling_price');
+
+            //!! 2nd time add
+            $table->string('product_code', 50);
+            $table->text('description');
+            $table->text('sub_description');
+
+            $table->string('image')->nullable();
+            $table->boolean('trending_product')->default(false);
+
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('products');
+    }
+};
+
+
+=================>>>>>>>>>>>>>>>> Product End <<<<<<<<<<<===================
+
+
+
+
+
+
+
+
