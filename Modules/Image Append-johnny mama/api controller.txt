@@ -1,0 +1,352 @@
+****************
+API Route
+****************
+
+
+    //Route for Product Controller
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('product/show/{id}', [ProductController::class, 'show']);
+    Route::get('/product-show/{id}', [ProductController::class, 'showWithReviews']);
+    Route::get('/products/reviews/{productId}', [ProductController::class, 'getReviews']);
+
+
+
+****************
+API Controller
+****************
+
+
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Gallery;
+use App\Models\ProductDetail;
+use App\Models\Review;
+use App\Models\Variant;
+use Illuminate\Http\Request;
+use App\Models\Category;
+use App\Models\Product;
+//use Illuminate\Auth\Access\Response;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
+use App\Helpers\Helper;
+use Illuminate\Http\JsonResponse;
+
+class ProductController extends Controller
+{
+    /**
+     * Displays the list of products for the authenticated user.
+     *
+     * This method handles AJAX requests to fetch and return product data
+     * in a format suitable for DataTables, including columns for publish
+     * products. If not an AJAX request, it returns the main view for products.
+     *
+     * @param Request $request The incoming HTTP request.
+     * @return \Illuminate\View\View|\Illuminate\Http\JsonResponse
+     */
+
+// new add at 2:34 pm 28/12/2024
+
+    public function index(Request $request)
+    {
+        $pageId = $request->query('page', 1);
+        $productsPerPage = 12;
+        $sort = $request->query('sort', 'all');
+
+        $designerIds = $request->query('designer_id', []);
+        $categoryIds = $request->query('category_id', []);
+        $colorCodes = $request->query('color', []);
+        $minPrice = $request->query('min_price', null);
+        $maxPrice = $request->query('max_price', null);
+
+        $designerIds = is_array($designerIds) ? $designerIds : explode(',', $designerIds);
+        $categoryIds = is_array($categoryIds) ? $categoryIds : explode(',', $categoryIds);
+        $colorCodes = is_array($colorCodes) ? $colorCodes : explode(',', $colorCodes);
+
+        $query = Product::with(['variants']);
+
+        // Filter by designer
+        if (!empty($designerIds)) {
+            $query->whereIn('designer_id', $designerIds);
+        }
+
+        // Filter by category
+        if (!empty($categoryIds)) {
+            $query->whereIn('category_id', $categoryIds);
+        }
+
+        // Filter by color
+        if (!empty($colorCodes)) {
+            $query->whereHas('variants', function ($q) use ($colorCodes) {
+                $q->whereIn('color_code', $colorCodes);
+            });
+        }
+
+        // Filter by price range
+        if (!is_null($minPrice) || !is_null($maxPrice)) {
+            $query->where(function ($q) use ($minPrice, $maxPrice) {
+                if (!is_null($minPrice)) {
+                    $q->where('selling_price', '>=', (float)$minPrice);
+                }
+                if (!is_null($maxPrice)) {
+                    $q->where('selling_price', '<=', (float)$maxPrice);
+                }
+            });
+        }
+
+        // Apply sorting logic
+        if ($sort === 'new') {
+            $query->orderBy('id', 'desc');
+        } elseif ($sort === 'popular') {
+            $query->withAvg('reviews', 'rating')
+                ->havingRaw('reviews_avg_rating IS NOT NULL')
+                ->orderBy('reviews_avg_rating', 'desc');
+        } else {
+            $query->orderBy('id', 'asc'); // Default sorting
+        }
+
+        // Paginate results
+        $products = $query->paginate($productsPerPage, ['*'], 'page', $pageId);
+
+        $formattedProducts = $products->map(function ($product) {
+            // Get the first variant's image if available
+            $firstVariantImage = $product->variants->first()->variant_image ?? $product->image;
+
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'old_price' => $product->old_price,
+                'selling_price' => $product->selling_price,
+                'image' => $firstVariantImage, // Use the first variant's image or fallback to the product image
+                'variants' => $product->variants->map(function ($variant) {
+                    return [
+                        'color_code' => $variant->color_code,
+//                        'variant_image' => $variant->variant_image,
+                    ];
+                }),
+            ];
+        });
+
+
+        $message = $products->total() > 0
+            ? 'Products retrieved successfully'
+            : 'There are no products to show';
+
+        return response()->json([
+            'success' => true,
+            'status' => 200,
+            'message' => $message,
+            'total_products' => $products->total(),
+            'total_pages' => $products->lastPage(),
+            'data' => $formattedProducts,
+        ]);
+    }
+
+
+
+
+
+    /**
+     * Show the specified dynamic page from the product database.
+     *
+     * @param int $id
+     */
+    public function show($id): JsonResponse
+    {
+        $product = Product::with('variants')->find($id);
+
+        if ($product) {
+            return response()->json([
+                'success' => true,
+                'status' => Response::HTTP_OK,
+                'message' => 'Products retrieved successfully',
+                'data' => $product,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'status' => Response::HTTP_NOT_FOUND,
+            'message' => 'Product not found',
+            'data' => null
+        ]);
+    }
+
+
+ 
+// new 28/12/2024
+
+    public function showWithReviews(Request $request, $id): JsonResponse
+    {
+        // Fetch the product details from the products table
+        $product = Product::with('brand', 'variants', 'category', 'designer')->find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'Product not found',
+                'data' => null,
+            ]);
+        }
+
+        // Fetch related products from the same category (excluding the current product)
+        $relatedProducts = Product::with('variants')
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->latest()
+            ->take(6)
+            ->get()
+            ->map(function ($relatedProduct) {
+                return [
+                    'id' => $relatedProduct->id,
+                    'name' => $relatedProduct->name,
+                    'old_price' => $relatedProduct->old_price,
+                    'selling_price' => $relatedProduct->selling_price,
+                    'image' => $relatedProduct->image,
+                    'variants' => $relatedProduct->variants->map(function ($variant) {
+                        return [
+//                            'id' => $variant->id,
+                            'color_code' => $variant->color_code,
+                        ];
+                    }),
+                ];
+            });
+
+        // Fetch paginated reviews for the product
+        $reviewsPerPage = 8;
+        $reviews = Review::with('user:id,name,avatar') // Fetch only the fields you need
+        ->where('product_id', $product->id)
+            ->orderBy('id', 'desc') // Order reviews by id in descending order
+            ->paginate($reviewsPerPage);
+
+        // Map reviews to include user details
+        $formattedReviews = $reviews->map(function ($review) {
+            return [
+                'id' => $review->id,
+                'user_id' => $review->user_id,
+                'user_name' => $review->user->name ?? null,
+                'user_avatar' => $review->user->avatar ?? null,
+                'product_id' => $review->product_id,
+                'description' => $review->description,
+                'rating' => $review->rating,
+            ];
+        });
+
+        // Calculate total reviews and average rating
+        $totalReviews = $reviews->total();
+        $averageRating = Review::where('product_id', $product->id)->avg('rating');
+
+        // Fetch the gallery images
+        $gallery = Gallery::where('product_id', $product->id)
+            ->where('status', 'active')
+            ->pluck('gallery');
+
+        // Fetch the product variants
+        $variants = $product->variants;
+
+        // Calculate total stock amount by summing up the quantity of all variants
+        $stockAmount = $variants->sum('quantity');
+
+        // Prepare the product detail response
+        $productDetailResponse = [
+            'id' => $product->id,
+            'product_code' => $product->product_code,
+            'stock_amount' => $stockAmount,
+            'product_price' => $product->selling_price,
+            'product_name' => $product->name,
+            'brand' => $product->brand->brand_name ?? null,
+            'gallery' => $gallery,
+            'variants' => $variants,
+            'description' => $product->description,
+            'sub_description' => $product->sub_description,
+        ];
+
+        return response()->json([
+            'success' => true,
+            'status' => Response::HTTP_OK,
+            'message' => 'Product Details, Reviews, and Related Products retrieved successfully',
+            'data' => [
+                'product_detail' => $productDetailResponse,
+                'reviews' => $formattedReviews,
+                'total_reviews' => $totalReviews,
+                'average_rating' => round($averageRating, 2),
+                'related_products' => $relatedProducts,
+            ],
+        ]);
+    }
+
+
+    public function getReviews(Request $request, $productId): JsonResponse
+    {
+        // Fetch the product to ensure it exists
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'Product not found',
+                'data' => null,
+            ]);
+        }
+
+        // Fetch paginated reviews for the product, ordered by id in descending order
+        $reviewsPerPage = 8; // Set your desired number of reviews per page
+        $reviews = Review::with('user:id,name,avatar') // Fetch only the fields you need
+        ->where('product_id', $product->id)
+            ->orderBy('id', 'desc') // Order reviews by id in descending order
+            ->paginate($reviewsPerPage);
+
+        // Format reviews to include user details
+        $formattedReviews = $reviews->map(function ($review) {
+            return [
+                'id' => $review->id,
+                'user_id' => $review->user_id,
+                'user_name' => $review->user->name ?? null,
+                'user_avatar' => $review->user->avatar ?? null,
+                'product_id' => $review->product_id,
+                'description' => $review->description,
+                'rating' => $review->rating,
+            ];
+        });
+
+        // Calculate total reviews and average rating
+        $totalReviews = Review::where('product_id', $product->id)->count();
+        $averageRating = Review::where('product_id', $product->id)->avg('rating');
+
+        return response()->json([
+            'success' => true,
+            'status' => Response::HTTP_OK,
+            'message' => 'Reviews retrieved successfully',
+            'data' => [
+                'reviews' => $formattedReviews,
+                'total_reviews' => $totalReviews,
+                'total_pages' => $reviews->lastPage(),
+                'average_rating' => round($averageRating, 2),
+//                'pagination' => [
+//                    'total' => $reviews->total(),
+//                    'per_page' => $reviews->perPage(),
+//                    'current_page' => $reviews->currentPage(),
+//                    'last_page' => $reviews->lastPage(),
+//                ],
+            ],
+        ]);
+    }
+
+
+
+
+
+}
+
+
+
+//$products = Product::select('id', 'name', 'selling_price', 'image') // Select specific columns
+//->orderBy('id', 'desc') // Order by ID in descending order
+//->limit(6) // Limit to 6 products
+//->get();
