@@ -71,7 +71,7 @@ Database --->>> for relation
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();
         });
-        
+
 
     Schema::create('variants', function (Blueprint $table) {
             $table->id();
@@ -117,3 +117,221 @@ Database --->>> for relation
 
 
         ++++++++++++++++++++++++>>>>>>>>>>> Database End<<<<<<<<<<<<<<<<<<<<++++++++++++++++++
+
+********************
+Models --->>> for relation
+********************
+
+
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Product extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'colour_code',
+    ];
+
+
+    //! using for image url (API - React)
+    // public function getImageAttribute($value)
+    // {
+    //     return $value ? url($value) : null;
+    // }
+
+
+    public function getImageAttribute($value)
+    {
+        return $value ? url($value) : null;
+    }
+
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function designer(): BelongsTo
+    {
+        return $this->belongsTo(Designer::class);
+    }
+
+
+
+    public function productDetails(): HasMany
+    {
+        return $this->hasMany(ProductDetail::class);
+    }
+
+    // Define the relationship with ProductDetail
+    public function productDetail()
+    {
+        return $this->hasOne(ProductDetail::class);
+    }
+
+
+    // A product has many variants  by Masum
+    public function variants()
+    {
+        return $this->hasMany(Variant::class);
+    }
+
+
+    //! A product has many orders by Masum
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
+    //! A product has many cart items by Masum
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    // Define the relationship with the Review model
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(Gallery::class);
+    }
+
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class, 'product_id'); // Explicitly reference 'product_id'
+    }
+
+
+}
+
+
+
+-------------------------------------------------------------------------
+
+
+class Category extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
+}
+
+
+
+
+
+
+class Variant extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at',        
+    ];
+
+    // A variant belongs to a product
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+
+    //! A variant has many cart items
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+}
+
+
+
+
+class Designer extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
+}
+
+
+
+
+
+class Brand extends Model
+{
+    use HasFactory,SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = [
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    public function products(): HasMany {
+        return $this->hasMany(Product::class);
+    }
+}
+
+
+
+
