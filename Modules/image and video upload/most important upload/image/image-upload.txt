@@ -291,3 +291,80 @@ class BrandLogoController extends Controller
 ******************
 API Controller--->>>
 ******************
+
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\BrandLogo;
+
+class BrandLogoController extends Controller
+{
+    // Get all brand logos
+    public function getAll()
+    {
+        try {
+            // Fetch all brand logos (including soft-deleted ones if needed)
+            $brandLogos = BrandLogo::all();
+
+            // If no data found, return a null response
+            if ($brandLogos->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'No brand logos found.',
+                    'data' => []
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Brand logos fetched successfully.',
+                'data' => $brandLogos
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch data.',
+                'data' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Get a single brand logo by ID
+    public function getSingle($id)
+    {
+        try {
+            // Find the brand logo by ID
+            $brandLogo = BrandLogo::find($id);
+
+            // If not found, return null
+            if (!$brandLogo) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Brand logo not found.',
+                    'data' => []
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Brand logo fetched successfully.',
+                'data' => $brandLogo
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch data.',
+                'data' => [],
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+}
+
+
+
+
