@@ -1,0 +1,119 @@
+Laravel Notification:
+
+1. php artisan make:notification MailNotification
+
+ >>>>>>>>>>>>MailNotification<<<<<<<<<<<<<<<<<<<
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Notifications\Notification;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+
+class MailNotification extends Notification implements ShouldQueue
+{
+    use Queueable;
+
+    public $subject;
+    public $content;
+
+    public function __construct($subject, $content)
+    {
+        $this->subject = $subject;
+        $this->content = $content;
+        /*  Log::info($this->subject);
+        * Log::info($this->content);
+        */
+    }
+
+    public function via(object $notifiable): array
+    {
+        return ['mail', 'database'];
+    }
+
+
+    public function toMail(object $notifiable): MailMessage
+    {
+        /*
+        * Log::info('male');
+         */
+        return (new MailMessage)
+            ->subject($this->subject)
+            ->line($this->content)
+            ->action('Notification Action', route('notification'))
+            ->line('Thank you By Admin!');
+    }
+
+
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'subject' => $this->subject,
+            'content' => $this->content,
+            'url' => route('notification'),
+        ];
+    }
+
+    public function toArray(object $notifiable): array
+    {
+        // Same structure for database and array
+        return $this->toDatabase($notifiable);
+    }
+}
+
+
+
+
+2. NotificationController
+
+...................NotificationController................
+
+Actions of Forms Passing this Function:
+---------------------------------------------------------------
+public function MailSend(Request $request)
+    {
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        // Get all users of type 'producer'
+        $users = User::where('type', 'producer')->get();
+
+        // Send notification to the users
+
+        foreach ($users as $user) {
+            $user->notify(new MailNotification($validatedData['subject'], $validatedData['content']));
+        }
+
+        return redirect()->back()->with('t-success', 'Notifications sent successfully!');
+    }
+
+
+
+
+3.  install queue table :
+	 php artisan queue:table
+
+4. install Notification table and Migrate it.  : 
+	php artisan notifications:table
+
+5. .env
+	QUEUE_CONNECTION=database
+
+	MAIL_MAILER=smtp
+	MAIL_HOST=mail.reigeeky.com
+	MAIL_PORT=465
+	MAIL_USERNAME=support@reigeeky.com
+	MAIL_PASSWORD=HRBO0aObLuw
+	MAIL_ENCRYPTION=tls
+	MAIL_FROM_ADDRESS="support@reigeeky.com"
+	MAIL_FROM_NAME="${APP_NAME}"
+
+
+
+6. Use Log  Debug for Easily .
