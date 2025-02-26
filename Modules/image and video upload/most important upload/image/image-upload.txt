@@ -25,6 +25,25 @@ class BrandLogo extends Model
     ];
 
 
+------------>>>>>>>> Finally It's working for image url create in API <<<<<<<<<<----------------
+
+public function getThumbnailAttribute($value): string|null
+    {
+        if (filter_var($value, FILTER_VALIDATE_URL)) {
+            return $value;
+        }
+        // Check if the request is an API request
+        if (request()->is('api/*') && !empty($value)) {
+            // Return the full URL for API requests
+            return url($value);
+        }
+
+        // Return only the path for web requests
+        return $value;
+    }
+
+------------>>>>>>>> End here........................................ <<<<<<<<<<----------------
+
     //!! this function create url/link when API development
     //!! --->> but to update image , old image didn't remove in that folder
     //!! --->> so last approach is good practice
@@ -34,6 +53,7 @@ class BrandLogo extends Model
     // }
 
 
+    ------------>>>>>>>> BUT ai code o jamela ace image_url deye link hobe <<<<<<<<<<----------------
 
     //!! API development iamge url is working
     //!! -->> but that function is good practice
