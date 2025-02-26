@@ -1,0 +1,88 @@
+Continue with Facebook :
+
+
+
+step - 1  : composer require laravel/socialite
+
+step-2 : .env 
+	FACEBOOK_CLIENT_ID=1239831203974431
+	FACEBOOK_CLIENT_SECRET=7eb3fb1c62051d4503990a78934655ee
+	FACEBOOK_REDIRECT_URI=http://localhost:8000/auth/facebook/callback
+
+step-3 :  config >service.php :
+		
+	'facebook' => [
+    		'client_id' => env('FACEBOOK_CLIENT_ID'),
+   		'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+ 	  	'redirect' => env('FACEBOOK_REDIRECT_URI'),
+	],
+
+
+step-4 :  Route:
+		Route::controller(SocialAuthController::class)->group(function () {
+   			 //Facebook log in
+    			Route::get('/auth/facebook', 'redirectToFacebook')->name('facebook.login');
+    			Route::get('/auth/facebook/callback', 'handleFacebookCallback');
+		});
+
+
+step-5 : Controller :
+
+
+	  // Redirect to Facebook
+    public function redirectToFacebook()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+
+
+    // Handle Facebook Callback
+
+    public function handleFacebookCallback()
+    {
+        try {
+            $facebookUser = Socialite::driver('facebook')->user();
+            // dd($facebookUser);
+            // Access user details
+            $facebookId = $facebookUser->getId();
+            $name = $facebookUser->getName();
+            $email = $facebookUser->getEmail();
+            $avatar = $facebookUser->getAvatar();
+
+            // Check if email already exists in the database
+            if ($email) {
+                $existingUser = User::where('email', $email)->first();
+
+                if ($existingUser) {
+                    // Login the user
+                    Auth::login($existingUser);
+
+                    return redirect()->route('homepage');
+                }
+            }
+
+            // Handle user login or registration logic
+            $userInDB = User::updateOrCreate(
+                ['facebook_id' => $facebookId],
+                [
+                    'name' => $name,
+                    'email' => $email,
+                    'avatar' => $avatar,
+                ]
+            );
+
+            // Login the user
+            Auth::login($userInDB);
+
+            return redirect()->route('homepage');
+        } catch (\Exception $e) {
+            return redirect('/signin')->with('t-error', 'Unable to login using Facebook. Please try again.');
+        }
+    }
+
+step-6 : https://developers.facebook.com/
+
+1. login your own account
+2. create  app then follow youtube :
+ https://www.youtube.com/watch?v=d_JKbOAlxN8
