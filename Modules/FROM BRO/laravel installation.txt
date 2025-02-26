@@ -1,0 +1,255 @@
+***Laravel Installation:***
+
+a. composer create-project laravel/laravel todo
+b. cd todo
+c. php artisan serve
+d. php artisan migrate
+e. composer require laravel/breeze --dev (Ai cmd tei login | Registration option asbe)
+f. php artisan breeze:install
+g. php artisan migrate
+
+............................................
+----------Command--------------------------
+............................................
+0.	git project run system..
+	1. npm i
+	2. npm run build
+	3. composer update
+	4. php artisan migrate
+	5. php artisan db:seed
+	6. php artisan storage:link
+	7. php artisan key:generate
+	8. php artisan config:cache
+
+
+
+1. 	MUST INSTALL LARAVEL...(2 commands)
+	a. composer require Laravel/breeze --dev
+	(composer e dev dependice e add hobe) then..
+	b. php artisan breeze:install 
+	( breeze install dile route er path gulo remove hoye jay )
+	
+
+1.1	php artisan make:model todo -mcr
+
+	(Model: todo/app/model/todo.php , 
+	Migration: todo/database/migration/todos_table.php,
+	Controller: todo/app/Http/Controllers/TodoController.php
+	table creation just)
+
+1.2	php artisan make:migration add_field_table
+	(table customization)
+
+2.	php artisan migrate
+
+	(er kaj hosse database a todos table a making kora. database/migration/2024_04_29_	131748_create_todos_table.php ja ager command(1)
+	 er maddhome toiry hoice. niche evabe data debar por 	command chalale database a 	data in hobe.
+
+ 	public function up(): void {
+   	
+          Schema::create('todos', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->boolean('completed')->default(false);
+            $table->timestamps();
+	}});
+)
+
+3.	php artisan migrate:rollback
+
+	( last create kora table delete kore dibe batch no dhore{1,2,3,4 amon hote pare}. )
+
+4.	Laravel Directive shikhte hole ai site best.
+	(https://laravel.com/docs/11.x/blade)
+
+5.	php artisan migrate:refresh
+	( rollback hoye abar migrate kore dibe. i mean php artisan migrate and rollback er kaj ek command a hoye jay. )
+
+6.	 @style('color:red')
+	( css inline style for Laravel )
+
+7.	php artisan make:middleware checkAdminRole
+	( checkAdminRole name middleware toiry hoye jabe )
+
+8.	php artisan make:model category -mcrfs
+	( model, controller, resources, factory, seeder)
+
+9.	php artisan db:seed
+	( for data insert in db )
+
+10.	php artisan make:seeder UserSeeder
+	( for make seeder command)
+
+11.	php artisan make:controller UserController -r
+	( for making controlller wirh resources(7 ta j resource thake create, update, edit etc.))
+
+12.	php artisan make:factory abcdFactory
+	(Factory making command. Factory is also pagiantion)
+
+13.	php artisan db:seed CategorySeeder
+	(cat. table a data insert)
+
+14.  $table->bigInteger('user_id')->unsigned()->nullable();
+            $table->foreign('user_id')->references('id')->on('users')
+	(one to one relationship most important two lines to create table with 	relationship)
+
+15.	composer require spatie/Laravel-html
+	( )
+
+16.	php artisan route:list
+	(route running list show korbe.)
+
+17.	php artisan install:api
+	(api install code)
+18.	php artisan storge:link
+	( public folder a sstorage shortcut make hobe. ata very much important  )
+
+19.	php artisan cache:clear
+
+20.	php artisan make:model product -mcrsfR
+	( capital R mran Request  )
+
+21.	tinker: use App\Models\comment;
+	( jokhon kono class na pay tinker, tkn manually path set korte hoy )
+
+22.	#####################################
+	For middleware:
+	#######################################
+	**step-1: php artisan make:middleware AdminMiddleware
+........................................................................................
+	**step-2: Bootstrap->app.php>
+
+		 ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'admin' => App\Http\Middleware\AdminMiddleware::class
+        ]);
+    })
+...................................................................................................................
+	**step-3: App->http->Middleware->AdminMiddleware.php (j middleware ta create korci seta ekhane pawa jabe)
+	
+	 public function handle(Request $request, Closure $next): Response
+    {
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return $next($request);
+        }else{
+            return redirect()->route('/');
+        }
+        
+        abort(403, 'Unauthorized action.');
+    }
+......................................................................................................
+	**step-4: Web.php
+
+	Route::middleware(['auth', 'admin'])->group(function () {
+
+	});
+	#######################################
+
+23.  Roll Manage System:
+
+	Route::get('/dashboard', function () {
+    if (Auth::user()->role === 'admin') {
+        return redirect()->intended(route('adminDashboard', absolute: false));
+    }
+    if (Auth::user()->role === 'user') {
+        return redirect('/');
+    }
+})->middleware(['auth'])->name('dashboard');
+
+#################################################################
+
+24. How can i controller path customize:
+	php artisan make:controller App\Http\Controllers\\Backend\
+
+##############################################################
+
+25. helper function use:
+
+1####:
+location: App/Helper/Helper.php
+
+namespace App\Helper;
+
+class Helper
+{
+  // Upload Image
+  public static function fileUpload($file, $folder, $name)
+  {
+    $imageName = Str::slug($name) . '.' . $file->extension();
+    $file->move(public_path('uploads/' . $folder), $imageName);
+    $path = 'uploads/' . $folder . '/' . $imageName;
+    return $path;
+  }
+
+2###:
+controller er vitor code thakbe
+use App\Helper\Helper;
+
+ public function update(SettingRequest $request)
+    {
+        $setting = Setting::latest('id')->first();
+
+        // Check Exit Of Setting
+        if ($setting == null) {
+            $setting = new Setting();
+        }
+
+        $setting->title = $request->title;
+        $setting->address = $request->address;
+        $setting->description = $request->description;
+        $setting->email = $request->email;
+        $setting->phone = $request->phone;
+        $setting->office_time = $request->office_time;
+        $setting->footer_text = $request->footer_text;
+
+        // Upload Logo
+        if (!empty($request['logo'])) {
+            if (empty($setting->logo)) {
+                // Upload New Logo
+                $logo = Helper::fileUpload($request->logo, 'setting', 'logo');
+
+            } else {
+                // Remove Old File
+                @unlink(public_path('/') . $setting->logo);
+
+                // Upload New Logo
+                $logo = Helper::fileUpload($request->logo, 'setting', 'logo');
+
+            }
+            $setting->logo = $logo;
+        }
+
+        // Upload Favicon
+        if (!empty($request['favicon'])) {
+            if (empty($setting->favicon)) {
+                // Upload New Favicon
+                $favicon = Helper::fileUpload($request->favicon, 'setting', 'favicon');
+
+            } else {
+                // Remove Old File
+                @unlink(public_path('/') . $setting->favicon);
+
+                // Upload New Favicon
+                $favicon = Helper::fileUpload($request->favicon, 'setting', 'favicon');
+            }
+            $setting->favicon = $favicon;
+        }
+        $setting->save();
+        return redirect()->route('admin.setting')->with('t-success', 'Update successfully.');
+
+    }
+
+	###############################
+	26.Git Branch Openning :
+		1. git a giye New Branch or cmd: git checkout -b new-branch-name
+		2. বিভিন্ন ব্রাঞ্চের মধ্যে স্যুইচ করতে: git checkout abdullah
+		2. Main Branch clone then
+		3. git pull origin akash (akash er branch theke git pull korlam for data)
+	############################################################
+	27.layout (main.blade.php) a @stack('style') add korar por view file a 
+	@push('style')
+	 ekhane style css gulo add kore deya jay. ja ekhan theke layout er vitor a push kore dibe. 
+	@endpush
+	############################################################
+	28.
+	############################################################
