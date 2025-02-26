@@ -1,0 +1,211 @@
+Notification with image:
+
+step-1:
+-------------------------
+command: php artisan notifications:table
+
+
+
+step-2:
+-------------------------
+Store notification in DB:
+
+
+
+<?php
+
+namespace App\Notifications;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+
+class AllUsersNotification extends Notification
+{
+    use Queueable;
+
+    protected $details;
+
+    /**
+     * Constructor to initialize notification details
+     */
+    public function __construct($details)
+    {
+        $this->details = $details;
+    }
+
+    /**
+     * Specify the delivery channels (only database in this case)
+     */
+    public function via($notifiable)
+    {
+        return ['database']; // Store in the database
+    }
+
+    /**
+     * Convert the notification to an array for database storage
+     */
+    /* public function toArray($notifiable)
+    {
+        return [
+            'subject' => $this->details['subject'],
+            'message' => $this->details['message'], 
+        ];
+    } */
+
+    public function toArray($notifiable)
+    {
+        $data = [
+            'subject' => $this->details['subject'],
+            'message' => $this->details['message'],
+        ];
+
+        // Check if liker_id exists and add it to the notification data
+        if (isset($this->details['liker_id'])) {
+            $data['liker_id'] = $this->details['liker_id'];
+        }
+        // Check if follower_id exists and add it to the notification data
+        if (isset($this->details['follower_id'])) {
+            $data['follower_id'] = $this->details['follower_id'];
+        }
+        // Check if owner_id exists and add it to the notification data (poat creator if exists)
+        if (isset($this->details['post_owner_id'])) {
+            $data['post_owner_id'] = $this->details['post_owner_id'];
+        }
+        // Check if commenter_id exists and add it to the notification data (Comment creator if exists)
+        if (isset($this->details['commenter_id'])) {
+            $data['commenter_id'] = $this->details['commenter_id'];
+        }
+        // for profile password change notification
+        if (isset($this->details['profile_id'])) {
+            $data['profile_id'] = $this->details['profile_id'];
+        }
+        // for profile password change notification
+        if (isset($this->details['password_id'])) {
+            $data['password_id'] = $this->details['password_id'];
+        }
+
+        return $data;
+    }
+}
+
+
+
+step-3:
+-------------------------
+Call this Notification: Example:
+
+
+public function toggleLike($postId)
+    {
+        try {
+            $userId = auth()->id();
+            $authUser = auth()->user();
+            $post = Post::findOrFail($postId);
+
+            // Check if the user already liked this post
+            $existingLike = PostLike::where('user_id', $userId)->where('post_id', $postId)->first();
+
+            if ($existingLike) {
+                // If already liked, then unlike (delete)
+                $existingLike->delete();
+                return $this->ok('Post unliked successfully');
+            } else {
+                // If not liked, then like (insert)
+                PostLike::create([
+                    'user_id' => $userId,
+                    'post_id' => $postId
+                ]);
+
+                // ✅ Like Notification Send to the Post owner (User who owns the post)
+                $details = [
+                    'liker_id' => auth()->id(),
+                    'subject' => 'New Like on Your Post',
+                    'message' => $authUser->name . ' liked your post.',
+                ];
+                // Send notification to the post owner
+                $post->user->notify(new AllUsersNotification($details));
+
+                return $this->ok('Post liked successfully');
+            }
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+
+
+step-4:
+-------------------------
+Get notification:
+
+Route: 
+//Notification api
+  Route::get('/notifications', [NotificationController::class, 'index']);
+
+
+  public function index()
+    {
+        try {
+            $user = auth()->user();
+
+            if (!$user) {
+                return $this->error('Unauthorized: User not authenticated', 401);
+            }
+
+            // Fetch unread notifications with user avatar
+            $unreadNotifications = $user->unreadNotifications->map(function ($notification) {
+                // Decode notification data if it's a string
+                $notificationData = is_string($notification->data) ? json_decode($notification->data, true) : $notification->data;
+
+                // Debugging: Check notification data
+                Log::info('Notification Data: ', $notificationData);
+
+                // Use liker_id or commenter_id to fetch the user
+                $sender = null;
+                $avatar = null;
+
+                // Check if it's a like notification
+                if (isset($notificationData['liker_id'])) {
+                    $sender = \App\Models\User::find($notificationData['liker_id']);
+                }
+                // Check if it's a comment notification
+                if (isset($notificationData['commenter_id'])) {
+                    $sender = \App\Models\User::find($notificationData['commenter_id']);
+                }
+                // Check if it's a Follow notification
+                if (isset($notificationData['follower_id'])) {
+                    $sender = \App\Models\User::find($notificationData['follower_id']);
+                }
+                // Check if it's a Follow notification
+                if (isset($notificationData['post_owner_id'])) {
+                    $sender = \App\Models\User::find($notificationData['post_owner_id']);
+                }
+                // Check if it's a profile update notification
+                if (isset($notificationData['profile_id'])) {
+                    $sender = \App\Models\User::find($notificationData['profile_id']);
+                }
+                // Check if it's a pass update notification
+                if (isset($notificationData['password_id'])) {
+                    $sender = \App\Models\User::find($notificationData['password_id']);
+                }
+                // Check if sender exists and has avatar
+                if ($sender && $sender->avatar) {
+                    $avatar = $sender->avatar; // Set avatar if exists
+                }
+
+                return [
+                    'message' => $notificationData['message'] ?? 'No message available',
+                    'time' => $notification->created_at->diffForHumans(),
+                    'user' => [
+                        'avatar' => $avatar,  // Show avatar if available
+                    ]
+                ];
+            });
+
+            return $this->ok('Notifications retrieved successfully', $unreadNotifications);
+        } catch (\Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
