@@ -1,0 +1,20 @@
+Laravel 10 Yajra set up:
+................................
+step-1:  composer require yajra/laravel-datatables-oracle:"~10.0"
+
+step-2: php artisan vendor:publish --provider="Yajra\DataTables\DataTablesServiceProvider"
+ 
+step-3: config/app.php file under the providers[] array:
+
+	Yajra\DataTables\DataTablesServiceProvider::class,
+
+
+step-4: use your controller where you want to use Yajra : use Yajra\DataTables\DataTables;
+
+step-5: In your Blade view, include the necessary DataTables JavaScript and CSS files:
+
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+.................................enjoy.....................................................................
