@@ -1,0 +1,38 @@
+
+If Else,
+short hand if else,
+count function,
+sizeof function,
+geettype function,
+ucwords,
+strtolower, upper,
+htmlentities,
+explode er kaj ki?
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+$age    =   45;
+$gender =   "Male"
+
+if($age == 45 && #gender == "Male"){
+    echo "You are middle age Male";
+}elseif{
+
+}else{
+
+}
+
+
+
+
+?>
