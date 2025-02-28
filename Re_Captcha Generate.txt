@@ -7,13 +7,18 @@
 4. https://www.google.com/recaptcha/admin/site/710765238/setup ( Collect site key and secret key )
 5. .env ( add site and secret key )
 
+   #  for home page form recaptcha
+   RECAPTCHA_SITE_KEY=6Le2al0qAAAAAJFsz-uGMzgUyVfmx0LEqDnSrXZu
+   RECAPTCHA_SECRET_KEY=6Le2al0qAAAAAHJ3LuZfA6-SiYXZ16y7WT_Ctmy_
+
+
 6.  php artisan vendor:publish --provider="Biscolab\ReCaptcha\ReCaptchaServiceProvider"
 7. recaptcha.php ( 'error_message_key' => 'Invalidation Recaptcha', and change something )
 8.  php artisan config:cache
 
 9. {!! htmlScriptTagJsApi() !!} [ app.blade.php ( in head tag )]
 10. login.blade.php --->> 
- <div class="bi-login-input-wrapper save">
+      <div class="bi-login-input-wrapper save">
          {!! htmlFormSnippet() !!}
 
           @if ($errors->has('g-recaptcha-response'))
@@ -24,6 +29,15 @@
                </div>
             @endif
        </div>
+
+
+oi page er sobar niche, body tey.
+---------------------------------
+
+{{-- it is use for recaptcha --}}
+    {!! htmlScriptTagJsApi() !!}
+
+
 
 11. 'g-recaptcha-response' => 'recaptcha', [ loginController.php, its for validation, it will be in a function ]
 
