@@ -126,6 +126,109 @@ but....................... example in controller.............
 
 
 
+🔹 3️⃣ Relationship Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+🔹One-to-One Relationship
+
+    class User extends Model
+    {
+        public function phone()
+        {
+            return $this->hasOne(Phone::class);
+        }
+    }
+
+
+
+🔹One-to-Many Relationship
+
+    class User extends Model
+    {
+        public function posts()
+        {
+            return $this->hasMany(Post::class);
+        }
+    }
+
+
+🔹Many-to-Many Relationship
+
+    class Student extends Model
+    {
+        public function courses()
+        {
+            return $this->belongsToMany(Course::class);
+        }
+    }
+
+
+
+
+✅ Use belongsTo Instead of hasOne in Reverse Relationship
+
+    class Phone extends Model
+    {
+        public function user()
+        {
+            return $this->belongsTo(User::class);
+        }
+    }
+
+
+
+
+🔹4️⃣ Mutators & Accessors Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+✅ Use Accessors for Formatted Data Output
+
+    class User extends Model
+    {
+        public function getFullNameAttribute()
+        {
+            return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+        }
+    }
+
+🔹 Use korar somoy:
+
+    $user = User::find(1);
+    echo $user->full_name;
+
+
+
+✅ Use Mutators for Data Transformation Before Saving
+
+    class User extends Model
+    {
+        public function setPasswordAttribute($value)
+        {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }
+
+
+🔹 Use korar somoy:
+
+    $user = new User();
+    $user->password = 'secret'; // Automatically hashed
+    $user->save();
+
+
+
+🔹 5️⃣ Soft Delete Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+✅ Enable Soft Deletes in Model
+
+    use Illuminate\Database\Eloquent\SoftDeletes;
+
+    class Product extends Model
+    {
+        use SoftDeletes;
+        protected $dates = ['deleted_at'];
+    }
 
 
 
