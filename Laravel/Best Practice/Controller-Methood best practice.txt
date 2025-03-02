@@ -1,0 +1,82 @@
+✅ Controller & Method Best Practices
+
+    class ProductController extends Controller
+    {
+        public function store(StoreProductRequest $request)
+        {
+            // Store logic
+        }
+
+        public function update(UpdateProductRequest $request, Product $product)
+        {
+            // Update logic
+        }
+    }
+
+
+
+✅ Resource Controller & Resource Routes
+
+    -->> php artisan make:controller ProductController --resource
+    >>>> Route::resource('products', ProductController::class);
+
+
+
+🔹🔹 Database Transaction Best Practices
+
+    DB::beginTransaction();
+    try {
+        // Multiple database operations
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        // Handle error
+    }
+
+
+
+🔹🔹 Use Transactions for Multiple Queries
+
+    DB::beginTransaction();
+
+    try {
+        $user = User::create(['name' => 'John Doe']);
+        $order = Order::create(['user_id' => $user->id, 'total' => 100]);
+        
+        DB::commit();
+    } catch (\Exception $e) {
+        DB::rollBack();
+        // Handle error
+    }
+
+
+
+🔹🔹Security Best Practices
+
+✅ Avoid SQL Injection Using Eloquent & Query Builder
+
+    🔹Eloquent Example:
+        $users = User::where('email', $email)->get();
+
+
+    🔹Query Builder Example:
+        $users = DB::table('users')->where('email', $email)->get();
+
+
+
+✅ XSS Protection (Cross-site Scripting)
+
+    🔹 User input er theke HTML content sanitize korte hobe jate XSS attack na hoy.
+
+    {{ $user->bio }}
+
+    🔹 Laravel e {!! !!} diye direct HTML output korle XSS vulnerability thakte pare, tai {!! !!} use kora avoid korte hobe.
+
+
+
+✅ Avoid count() on Large Datasets
+
+🔹Good Practice
+    $exists = Product::where('price', '>', 500)->exists();
+
+
