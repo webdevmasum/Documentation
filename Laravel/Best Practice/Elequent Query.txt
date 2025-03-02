@@ -1,0 +1,131 @@
+*******************
+Eloquent ORM
+*******************
+
+
+Example 1: find() specific user fetch
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getUserById($id)
+    {
+        $user = User::find($id);
+
+        return view('users.show', compact('user'));
+    }
+
+
+Example 2: firstWhere() ekta row fetch
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getActiveUser()
+    {
+        $user = User::firstWhere('status', 'active');
+
+        return view('users.show', compact('user'));
+    }
+
+
+Example 3: whereIn() multiple condition
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getSelectedUsers()
+    {
+        $users = User::whereIn('status', ['active', 'pending'])->get();
+
+        return view('users.index', compact('users'));
+    }
+
+
+
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+Model Design Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    class Product extends Model
+    {
+        protected $fillable = ['name', 'price', 'stock'];
+    }
+
+
+
+✅ Use Meaningful & Plural Table Names
+
+    class Product extends Model
+    {
+        protected $table = 'products'; // ✅ Good Practice
+    }
+
+
+✅ Use firstOrFail() Instead of find()
+
+    $product = Product::where('id', 1)->firstOrFail();
+
+
+
+✅ Use Query Scopes for Reusable Queries
+
+    $activeProducts = Product::active()->get();
+
+
+✅ Use Eager Loading to Avoid N+1 Query Issue
+
+    🔹 Eager loading with() method use kore relational data fetch korte hoy, jar maddhome performance better hoy.
+
+    $users = User::with('posts')->get();
+    foreach ($users as $user) {
+        echo $user->posts;
+    }
+
+
+    ❌ Avoid Lazy Loading:
+
+    $users = User::all();
+    foreach ($users as $user) {
+        echo $user->posts; // N+1 Query Issue
+    }
+
+
+
+✅ Use update() Instead of Fetching & Updating Manually
+
+
+    🔹Query optimize korte direct update() use kora best practice.
+
+    Product::where('id', 1)->update(['price' => 80000]);
+
+
+    ❌ Avoid unnecessary fetch & save:
+
+    $product = Product::find(1);
+    $product->price = 80000;
+    $product->save();
+
+
+
+but....................... example in controller.............
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+
+    public function updateProductPrice(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $newPrice = $request->input('price');
+
+        // Direct update query
+        Product::where('id', $productId)->update(['price' => $newPrice]);
+
+        return response()->json(['message' => 'Price updated successfully']);
+    }
+
+
+
+
+
+
+
