@@ -1,0 +1,18 @@
+Hello Colin,
+
+I hope you and your family are safe and doing well.
+
+In your last m-e-s-s-a-g-e, you mentioned the O-T-P issue.
+
+I have checked several e-m-a-i-ls with O-T-P on both the local and your server. There is no issue with the local server. On your server, the O-T-P is s-e-n-t sometimes quickly and sometimes with a delay. 
+
+When we register or log in, the request goes to your server, and then it is sent to the e-m-a-i-l from the server. We have no control over this process. The server entirely manages it. This delay issue is coming from the server, and there is nothing we can do about it.
+
+For your help, I have added a video explanation. 
+Please watch video: https://www.loom.com/share/3eb5a6c62b984c679b16ed6b0551d65a?sid=7adfef07-84e0-46bf-8607-49b6d7304ef4
+
+If you have any questions or concerns, please let me know. I'll respond as soon as possible.
+
+Best wishes.
+
+Client name: colinhartlieb | Profile name: pandascout | Fiverr | Update message
