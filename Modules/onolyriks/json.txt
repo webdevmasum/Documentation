@@ -1,0 +1,434 @@
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "middle_name": "Michael",
+    "social_security_number": "123-45-6789",
+    "dob": "1990-01-01",
+    "street_address": "road 9",
+    "city": "Uttara, Dhaka",
+    "state": "Bangladesh",
+    "zip_code": "12345",
+    "phone": "555-123-9999",
+    "alternate_phone": "555-987-0000",
+    "applying_position": "Software Engineer",
+    "travel_side": "Yes Mirpur",
+    "available_date": "2023-12-01",
+    "employment_type": "full-time",
+    "salary_requested": 75000,
+
+    "emergency_name": "Mehedi",
+    "emergency_relationship": "Dosto",
+    "emergency_address": "koillas",
+    "emergency_phone": "555-123-1111",
+
+    "acquaintances": "None None",
+    "refer_details": "Referred by a friend",
+    "refer_email": "friend@example.com",
+
+    "previously_employed": "no",
+    "military": "yes",
+    "reserve": "yes",
+    "felony": "no",
+
+    "education": [
+        {
+            "school_name": "State University",
+            "location": "Anytown, CA",
+            "years_attended": 4,
+            "graduated": "yes",
+            "subjects_studied": "Computer Science"
+        },
+        {
+            "school_name": "Central University",
+            "location": "Koillas, CA",
+            "years_attended": 2,
+            "graduated": "yes",
+            "subjects_studied": "Computer Expert"
+        }
+    ],
+
+    "professional_licenses": {
+        "types": ["RN", "CNA"],
+        "license_number": "Mona123456",
+        "state": "BD",
+        "expiration_date": "2025-12-31",
+        "typing_skill": true,
+        "computer_skill": true
+    },
+
+    "employment_histories": [
+        {
+            "employment_date_from": "2018-01-01",
+            "employment_date_to": "2020-12-31",
+            "company": "Tech Corp",
+            "salary": 40000,
+            "address": "Mohakhali",
+            "supervisor": "Jane Smith",
+            "phone": "555-555-5555",
+            "job_title": "Software Developer",
+            "job_duties": "Developed web applications",
+            "reason_for_leaving": "Career growth"
+        },
+        {
+        "employment_date_from": "2021-02-01",
+        "employment_date_to": "2022-02-01",
+        "company": "XYZ Technologies",
+        "salary": 60000,
+        "address": "5678 Tech Rd, City, State",
+        "supervisor": "Jane Mona",
+        "phone": "987-654-3333",
+        "job_title": "Senior Software Engineer",
+        "job_duties": "Lead development teams.",
+        "reason_for_leaving": "Pursued new opportunities."
+        }
+    ],
+    
+  "references": [
+        {
+        "reference_name": "Mona",
+        "reference_address": "Singapur",
+        "reference_phone": "123-456-222",
+        "reference_years": 5,
+        "reference_relation": "Former Manager"
+        },
+        {
+        "reference_name": "TonoMono",
+        "reference_address": "Chaina",
+        "reference_phone": "987-654-4444",
+        "reference_years": 3,
+        "reference_relation": "Colleague"
+        }
+    ],
+
+
+    "assurance_services": {
+        "checkbox_data": {
+            "terms_and_conditions": true,
+            "privacy_policy": true,
+            "marketing_opt_in": true
+        },
+        "name": "Service Name Example",
+        "applicant_signature": "John Don",
+        "date": "2025-03-19",
+        "applicant_name": "John Montu",
+        "dateof_hire": "2025-03-01",
+        "checkbox": true,
+        "pas_employee": "Jane Poni",
+        "pas_date_employee": "2025-03-01",
+        "pas_supervisor": "Robert Brown",
+        "pas_date_supervisor": "2025-03-01",
+        "report_to": "Department Head",
+        "employee_initial": "JD",
+        "supervisor_initial": "RB",
+        "initial_date": "2025-03-19"
+    },
+
+    "job_responsibilities": [
+            {
+            "employee_name": "John Montu",
+            "topics": [
+                {
+                    "preceptor_initials": "Job",
+                    "employee_initials": "AA",
+                    "date": "2025-03-01"
+                },
+                {
+                    "preceptor_initials": "Philosophy",
+                    "employee_initials": "BB",
+                    "date": "2025-03-02"
+                },
+                {
+                    "preceptor_initials": "Report",
+                    "employee_initials": "CC",
+                    "date": "2025-03-03"
+                },
+                {
+                    "preceptor_initials": "Personnel",
+                    "employee_initials": "DD",
+                    "date": "2025-03-04"
+                },
+                {
+                    "preceptor_initials": "Personnel",
+                    "employee_initials": "EE",
+                    "date": "2025-03-05"
+                },
+                {
+                    "preceptor_initials": "Universal",
+                    "employee_initials": "FF",
+                    "date": "2025-03-06"
+                },
+                {
+                    "preceptor_initials": "Safety",
+                    "employee_initials": "GG",
+                    "date": "2025-03-07"
+                },
+                {
+                    "preceptor_initials": "Hours",
+                    "employee_initials": "HH",
+                    "date": "2025-03-08"
+                },
+                {
+                    "preceptor_initials": "Payroll",
+                    "employee_initials": "II",
+                    "date": "2025-03-09"
+                },
+                {
+                    "preceptor_initials": "Patient’s",
+                    "employee_initials": "JJ",
+                    "date": "2025-03-10"
+                }
+            ],
+            "supervisor": "Alice Brown",
+            "supervisor_date": "2025-03-01",
+            "employee": "Bob Cating",
+            "employee_date": "2025-03-01"
+        }
+    ],
+
+    "provider_orientations": {
+        "name": "Orientation One",
+        "task_details": [
+        {
+            "status": ["Completed", "Reviewed"],
+            "initials": "Bathing"
+        },
+        {
+            "status": ["Completed"],
+            "initials": "Dressing"
+        },
+        {
+            "status": ["Reviewed"],
+            "initials": "Exercise"
+        },
+        {
+            "status": ["Completed", "Reviewed"],
+            "initials": "Feeding, Eating"
+        },
+        {
+            "status": ["Completed"],
+            "initials": "Shaving, Oral Care"
+        },
+        {
+            "status": ["Reviewed"],
+            "initials": "Routine Hair and Skin Care"
+        },
+        {
+            "status": ["Completed", "Reviewed"],
+            "initials": "Toileting"
+        },
+        {
+            "status": ["Completed"],
+            "initials": "Transfer"
+        },
+        {
+            "status": ["Reviewed"],
+            "initials": "Walking"
+        },
+        {
+            "status": ["Completed", "Reviewed"],
+            "initials": "Cleaning"
+        },
+        {
+            "status": ["Completed"],
+            "initials": "Laundry"
+        },
+        {
+            "status": ["Reviewed"],
+            "initials": "CC"
+        },
+        {
+            "status": ["Completed", "Reviewed"],
+            "initials": "Meal Preparation"
+        },
+        {
+            "status": ["Completed"],
+            "initials": "Escort"
+        },
+        {
+            "status": ["Reviewed"],
+            "initials": "Shopping"
+        },
+        {
+            "status": ["Reviewed", "Completed"],
+            "initials": "Assist with Medications"
+        }
+        ],
+        "employee_name": "John Doe",
+        "employee_date": "2025-03-19",
+        "administrative_name": "Jane Smith",
+        "administrative_date": "2025-03-20",
+        "applicant_name": "David Johnson",
+        "social_security_number": "123-45-6789",
+        "supervisor": "Sarah Lee",
+        "date_employed": "2023-05-01",
+        "previous_company": "XYZ Corp",
+        "company_address": "123 Street Name",
+        "city": "New York",
+        "state": "Nolitaaaa",
+        "zip_code": "10001",
+        "company_telephone": "123-456-7777"
+    },
+
+
+    "authorization_ones": [
+        {
+            "consent": true,
+            "applicant_name": "John Bon Bon",
+            "applicant_date": "2023-10-01",
+            "dependability": "Above Average",
+            "attendance": "Above Average",
+            "knowledge": "Above Average",
+            "cooperation": "Above Average",
+            "initiative": "Above Average",
+            "performance": "Above Average",
+            "overall_rating": "Above Average",
+            "duties_performed": "Software Development",
+            "reason_for_leaving": "Career growth",
+            "rehire": "Yes",
+            "remarks": "Excellent employee",
+            "name": "Jane Smith",
+            "position": "Manager",
+            "date": "2023-10-01",
+            "applicant_name_again": "Montuuuu",
+            "company_previous_employed": "ABC Corp",
+            "social_security_number": "123-45-6789",
+            "supervisor": "Tom Green",
+            "company_address": "1234 Main St, City, State, 12345",
+            "city": "CityName",
+            "state": "StateName",
+            "zip_code": "12345",
+            "date_employed": "2022-06-01",
+            "company_telephone": "555-1234"
+        }
+    ],
+
+
+    "authorization_twos": {
+        "consent": true,
+        "applicant_name": "John Bon Bon",
+        "date": "2023-10-01",
+        "dependability": "Above Average",
+        "attendance": "Above Average",
+        "knowledge": "Above Average",
+        "cooperation": "Above Average",
+        "initiative": "Above Average",
+        "performance": "Above Average",
+        "overall_rating": "Above Average",
+        "duties_performed": "Software Development",
+        "reason_for_leaving": "Career growth",
+        "rehire": "Yes",
+        "remarks": "Excellent employee",
+        "employee_name": "John Doe",
+        "position": "Software Engineer",
+        "orientation_date": "2023-10-01",
+        "technical_skill": ["Philosophy", "Organizational Structure", "Benefits", "Dress Code", "Infection Control", "Assignment", "Availability"],
+        "job_description": "Develop and maintain web applications",
+        "received_handbook": true,
+        "applicant_signature": "John Doe",
+        "applicant_date": "2023-10-01",
+        "oriented_by": "Jane Smith",
+        "oriented_date": "2023-10-01"
+    },
+
+    "health_infos": [
+        {
+            "name": "John Bom Bom",
+            "address": "Koillas",
+            "phone": "555-123-8888",
+            "position_applied_for": "Software Engineer",
+            "date_of_birth": "1990-01-01",
+            "medical_conditions": [
+                {
+                    "condition": "Allergies",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Anemia",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Asthma",
+                    "status": "no"
+                },
+                {
+                    "condition": "Back Pain",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Back Injury",
+                    "status": "no"
+                },
+                {
+                    "condition": "Broken Bones",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Cancer",
+                    "status": "no"
+                },
+                {
+                    "condition": "HIV",
+                    "status": "no"
+                },
+                {
+                    "condition": "Sciatica",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Tumor",
+                    "status": "no"
+                },
+                {
+                    "condition": "Asthma",
+                    "status": "yes"
+                },
+                {
+                    "condition": "Eye Trouble",
+                    "status": "no"
+                }
+            ],
+            "illness_explanation": "None",
+            "accommodation_details": "None",
+            "knowledge_correct": true,
+            "applicant_signature": "John Doe Bom Bom",
+            "date": "2023-10-01"
+        }
+    ],
+
+
+    "hepatitis_vaccines": [
+        {
+            "received_handbook": true,
+            "received_vaccine_one": true,
+            "received_vaccine_two": true,
+            "last_vaccine_received_date": "2023-10-01",
+            "decline_vaccine": false,
+            "applicant_name": "John Doe",
+            "applicant_signature": "John Doe",
+            "witness": "Jane Smith",
+            "applicant_date": "2023-10-01",
+            "employee_name": "John Doe",
+            "employee_signature": "John Doe",
+            "employee_date": "2023-10-01",
+            "agency_supervisor": "Jane Smith",
+            "agency_supervisor_date": "2023-10-01",
+            "compliance_name": "John Doe",
+            "compliance_employee_name": "John Doe",
+            "compliance_date": "2023-10-01",
+            "compliance_time": "10:00 AM",
+            "name": "John Doe",
+            "other_names": "John Michael Doe",
+            "date": "2023-10-01",
+            "social_security_number": "123-45-6789",
+            "applicant_name_again": "John Doe",
+            "application_date": "2023-10-01",
+            "agreement": true,
+            "pledge_date": "2023-10-01",
+            "individual_name": "John Doe",
+            "department": "Engineering",
+            "discussion_agreement": true,
+            "administering_name": "Jane Smith",
+            "administering_date": "2023-10-01"
+        }
+    ]
+}
