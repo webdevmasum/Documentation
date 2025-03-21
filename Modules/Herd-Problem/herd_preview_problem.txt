@@ -3,6 +3,7 @@ Herd Preview Problem:-
 herd er kono project run hocce na. tokhon seta windows e set korar jonno oi folder er path e jabe than
 --->>> Open the hosts file located at C:\Windows\System32\drivers\etc\hosts.
 
+
 'hosts' file e geye -->> 127.0.0.1 onolyriks_backend.test
 ai vabe registration korte hobe and save korte hobe.
 
