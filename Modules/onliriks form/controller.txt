@@ -1,0 +1,311 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Applicant;
+use App\Models\AssuranceService;
+use App\Models\AuthorizationOne;
+use App\Models\AuthorizationTwo;
+use App\Models\Education;
+use App\Models\EmploymentHistory;
+use App\Models\HealthInfo;
+use App\Models\HepatitisVaccine;
+use App\Models\JobResponsibilities;
+use App\Models\ProfessionalLicenses;
+use App\Models\ProviderOrientation;
+use App\Models\References;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use League\CommonMark\Reference\Reference;
+
+class CareerController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Validate the request data
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'nullable|string|max:255',  //!! applicant.....
+            'last_name' => 'nullable|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'social_security_number' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'street_address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'alternate_phone' => 'nullable|string|max:255',
+            'applying_position' => 'nullable|string|max:255',
+            'travel_side' => 'nullable|string|max:255',
+            'available_date' => 'nullable|date',
+            'employment_type' => 'nullable|in:full-time,part-time',
+            'salary_requested' => 'nullable|numeric',
+
+            'emergency_name' => 'nullable|string|max:255',  //!! applicant emergency info
+            'emergency_relationship' => 'nullable|string|max:255',
+            'emergency_address' => 'nullable|string|max:255',
+            'emergency_phone' => 'nullable|string|max:255',
+
+            'acquaintances' => 'nullable|string',
+            'refer_details' => 'nullable|string|max:255',
+            'refer_email' => 'nullable|email|max:255',
+
+            'previously_employed' => 'nullable|in:yes,no',
+            'military' => 'nullable|in:yes,no',
+            'reserve' => 'nullable|in:yes,no',
+            'felony' => 'nullable|in:yes,no',
+
+            //!! Education Validation
+            'education' => 'nullable|array',
+            // 'education.*.applicant_id' => 'required|exists:applicants,id',
+            'education.*.school_name' => 'nullable|string|max:255',
+            'education.*.location' => 'nullable|string|max:255',
+            'education.*.years_attended' => 'nullable|integer',
+            'education.*.graduated' => 'nullable|in:yes,no',
+            'education.*.subjects_studied' => 'nullable|string',
+
+
+            //!! Professional Licenses Validation (for one license per applicant)
+            'professional_licenses' => 'nullable|array',
+            'professional_licenses.types' => 'nullable|array',
+            'professional_licenses.types.*' => 'nullable|string|in:RN,LVN,CNA,other',
+            'professional_licenses.license_number' => 'nullable|string|max:255',
+            'professional_licenses.state' => 'nullable|string|max:255',
+            'professional_licenses.expiration_date' => 'nullable|date',
+            'professional_licenses.typing_skill' => 'nullable|boolean',
+            'professional_licenses.computer_skill' => 'nullable|boolean',
+
+
+            //!! Employment Histories Validation (array of employment records)
+            'employment_histories' => 'nullable|array',
+            // 'employment_histories.*.applicant_id' => 'required|exists:applicants,id',
+            'employment_histories.*.employment_date_from' => 'nullable|date',
+            'employment_histories.*.employment_date_to' => 'nullable|date|after_or_equal:employment_histories.*.employment_date_from',
+            'employment_histories.*.company' => 'nullable|string|max:255',
+            'employment_histories.*.salary' => 'nullable|numeric',
+            'employment_histories.*.address' => 'nullable|string|max:255',
+            'employment_histories.*.supervisor' => 'nullable|string|max:255',
+            'employment_histories.*.phone' => 'nullable|string|max:255',
+            'employment_histories.*.job_title' => 'nullable|string|max:255',
+            'employment_histories.*.job_duties' => 'nullable|string',
+            'employment_histories.*.reason_for_leaving' => 'nullable|string',
+
+
+            //!! References Validation (array of references for each applicant)
+            'references' => 'nullable|array',
+            // 'references.*.applicant_id' => 'required|exists:applicants,id',
+            'references.*.reference_name' => 'nullable|string|max:255',
+            'references.*.reference_address' => 'nullable|string|max:255',
+            'references.*.reference_phone' => 'nullable|string|max:255',
+            'references.*.reference_years' => 'nullable|integer',
+            'references.*.reference_relation' => 'nullable|string',
+
+
+            //!! Assurance Services Validation (checkbox data and related fields)
+            'assurance_services' => 'nullable|array',
+            // 'assurance_services.*.applicant_id' => 'required|exists:applicants,id',
+            'assurance_services.checkbox_data' => 'nullable|json',
+            'assurance_services.name' => 'nullable|string|max:255',
+            'assurance_services.applicant_signature' => 'nullable|string|max:255',
+            'assurance_services.date' => 'nullable|date',
+
+            'assurance_services.applicant_name' => 'nullable|string|max:255',
+            'assurance_services.dateof_hire' => 'nullable|date',
+            'assurance_services.checkbox' => 'nullable|boolean',
+            'assurance_services.pas_employee' => 'nullable|string|max:255',
+            'assurance_services.pas_date_employee' => 'nullable|date',
+            'assurance_services.pas_supervisor' => 'nullable|string|max:255',
+            'assurance_services.pas_date_supervisor' => 'nullable|date',
+            'assurance_services.report_to' => 'nullable|string|max:255',
+            'assurance_services.employee_initial' => 'nullable|string|max:255',
+            'assurance_services.supervisor_initial' => 'nullable|string|max:255',
+            'assurance_services.initial_date' => 'nullable|date',
+
+            //!! Job Responsibilities Validation
+            'job_responsibilities' => 'nullable|array',
+            // 'job_responsibilities.*.applicant_id' => 'required|exists:applicants,id',
+            'job_responsibilities.*.employee_name' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics' => 'nullable|array',
+            'job_responsibilities.*.topics.*.preceptor_initials' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics.*.employee_initials' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics.*.date' => 'nullable|date',
+
+            'job_responsibilities.*.supervisor' => 'nullable|string|max:255',
+            'job_responsibilities.*.supervisor_date' => 'nullable|date',
+            'job_responsibilities.*.employee' => 'nullable|string|max:255',
+            'job_responsibilities.*.employee_date' => 'nullable|date',
+
+
+            //!! Provider_Orientations Validation
+            // 'applicant_id' => 'required|exists:applicants,id',
+            'provider_orientations' => 'nullable|array',
+            'provider_orientations.name' => 'nullable|string|max:255',
+
+            // Task Details Validation (JSON format)
+            'provider_orientations.task_details' => 'nullable|array',
+            'provider_orientations.task_details.*.status' => 'nullable|array',
+            'provider_orientations.task_details.*.status.*' => 'nullable|in:Completed,Reviewed',
+            'provider_orientations.task_details.*.initials' => 'nullable|string|max:255',
+
+            'provider_orientations.employee_name' => 'nullable|string|max:255',
+            'provider_orientations.employee_date' => 'nullable|date',
+            'provider_orientations.administrative_name' => 'nullable|string|max:255',
+            'provider_orientations.administrative_date' => 'nullable|date',
+
+            // Past Employment fields (nullable)
+            'provider_orientations.applicant_name' => 'nullable|string|max:255',
+            'provider_orientations.social_security_number' => 'nullable|string|max:20',
+            'provider_orientations.supervisor' => 'nullable|string|max:255',
+            'provider_orientations.date_employed' => 'nullable|date',
+            'provider_orientations.previous_company' => 'nullable|string|max:255',
+            'provider_orientations.company_address' => 'nullable|string|max:255',
+            'provider_orientations.city' => 'nullable|string|max:255',
+            'provider_orientations.state' => 'nullable|string|max:255',
+            'provider_orientations.zip_code' => 'nullable|string|max:10',
+            'provider_orientations.company_telephone' => 'nullable|string|max:15',
+
+            //!! Authorization Ones Validation
+            'authorization_ones' => 'nullable|array',
+            'authorization_ones.consent' => 'nullable|boolean',
+
+            'authorization_ones.applicant_name' => 'nullable|string|max:255',
+            'authorization_ones.applicant_date' => 'nullable|date',
+
+            'authorization_ones.dependability' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.attendance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.knowledge' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.cooperation' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.initiative' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.performance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.overall_rating' => 'nullable|in:Above Average,Average,Poor',
+
+            'authorization_ones.duties_performed' => 'nullable|string',
+            'authorization_ones.reason_for_leaving' => 'nullable|string',
+            'authorization_ones.rehire' => 'nullable|in:Yes,No',
+            'authorization_ones.remarks' => 'nullable|string',
+
+            'authorization_ones.name' => 'nullable|string|max:255',
+            'authorization_ones.position' => 'nullable|string|max:255',
+            'authorization_ones.date' => 'nullable|date',
+
+            'authorization_ones.applicant_name_again' => 'nullable|string|max:255', //dubble applicant
+            'authorization_ones.company_previous_employed' => 'nullable|string|max:255',
+            'authorization_ones.social_security_number' => 'nullable|string|max:255',
+            'authorization_ones.supervisor' => 'nullable|string|max:255',
+            'authorization_ones.company_address' => 'nullable|string|max:255',
+            'authorization_ones.city' => 'nullable|string|max:255',
+            'authorization_ones.state' => 'nullable|string|max:255',
+            'authorization_ones.zip_code' => 'nullable|string|max:255',
+            'authorization_ones.date_employed' => 'nullable|string|max:255',
+            'authorization_ones.company_telephone' => 'nullable|string|max:255',
+
+
+
+
+            //!! Authorization Twos Validation
+            // 'applicant_id' => 'required|exists:applicants,id',
+            'authorization_twos.consent' => 'nullable|boolean',
+            'authorization_twos.applicant_name' => 'nullable|string|max:255',
+            'authorization_twos.date' => 'nullable|date',
+
+            // Enum validation for ratings (dependability, performance, etc.)
+            'authorization_twos.dependability' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.attendance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.knowledge' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.cooperation' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.initiative' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.performance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.overall_rating' => 'nullable|in:Above Average,Average,Poor',
+
+            // Optional text fields
+            'authorization_twos.duties_performed' => 'nullable|string',
+            'authorization_twos.reason_for_leaving' => 'nullable|string',
+            'authorization_twos.rehire' => 'nullable|in:Yes,No',
+            'authorization_twos.remarks' => 'nullable|string',
+
+            'authorization_twos.employee_name' => 'nullable|string|max:255',
+            'authorization_twos.position' => 'nullable|string|max:255',
+            'authorization_twos.orientation_date' => 'nullable|date',
+
+            // JSON array of technical skills (checkboxes validation)
+            'authorization_twos.technical_skill' => 'nullable|array',  // Ensure it's an array
+            'authorization_twos.technical_skill.*' => 'nullable|string', // Ensure each value is valid
+            'authorization_twos.job_description' => 'nullable|string',
+            'authorization_twos.received_handbook' => 'nullable|boolean',
+
+            'authorization_twos.applicant_signature' => 'nullable|string|max:255',
+            'authorization_twos.applicant_date' => 'nullable|date',
+            'authorization_twos.oriented_by' => 'nullable|string|max:255',
+            'authorization_twos.oriented_date' => 'nullable|date',
+
+
+            //!! Health Information
+            'health_infos' => 'nullable|array',
+            // 'health_infos.*.applicant_id' => 'required|exists:applicants,id',
+            'health_infos.name' => 'nullable|string|max:255',
+            'health_infos.address' => 'nullable|string|max:255',
+            'health_infos.phone' => 'nullable|string|max:255',
+            'health_infos.position_applied_for' => 'nullable|string|max:255',
+            'health_infos.date_of_birth' => 'nullable|date',
+
+            // Validate medical_conditions as an array of objects
+            'health_infos.medical_conditions' => 'nullable|array',
+            'health_infos.medical_conditions.*.condition' => 'required|string',
+            'health_infos.medical_conditions.*.status' => 'required|in:yes,no',
+
+            'health_infos.illness_explanation' => 'nullable|string',
+            'health_infos.accommodation_details' => 'nullable|string',
+            'health_infos.knowledge_correct' => 'nullable|boolean',
+            'health_infos.applicant_signature' => 'nullable|string|max:255',
+            'health_infos.date' => 'nullable|date',
+
+
+            //!! Hepatitis B Vaccine related fields
+            'hepatitis_vaccines' => 'nullable|array',
+            // 'hepatitis_vaccines.*.applicant_id' => 'required|exists:applicants,id',
+            'hepatitis_vaccines.received_handbook' => 'nullable|boolean',
+            'hepatitis_vaccines.received_vaccine_one' => 'nullable|boolean',
+            'hepatitis_vaccines.received_vaccine_two' => 'nullable|boolean',
+            'hepatitis_vaccines.last_vaccine_received_date' => 'nullable|date',
+            'hepatitis_vaccines.decline_vaccine' => 'nullable|boolean',
+
+            // Applicant details
+            'hepatitis_vaccines.applicant_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_signature' => 'nullable|string|max:255',
+            'hepatitis_vaccines.witness' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_date' => 'nullable|date',
+
+            // Employee statement fields
+            'hepatitis_vaccines.employee_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.employee_signature' => 'nullable|string|max:255',
+            'hepatitis_vaccines.employee_date' => 'nullable|date',
+            'hepatitis_vaccines.agency_supervisor' => 'nullable|string|max:255',
+            'hepatitis_vaccines.agency_supervisor_date' => 'nullable|date',
+
+            // Compliance statement fields
+            'hepatitis_vaccines.compliance_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.compliance_employee_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.compliance_date' => 'nullable|date',
+            'hepatitis_vaccines.compliance_time' => 'nullable|string|max:50',
+
+            // Employability consent statement fields
+            'hepatitis_vaccines.name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.other_names' => 'nullable|string|max:255',
+            'hepatitis_vaccines.date' => 'nullable|date',
+            'hepatitis_vaccines.social_security_number' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_name_again' => 'nullable|string|max:255',
+            'hepatitis_vaccines.application_date' => 'nullable|date',
+
+            // Confidentiality pledge fields
+            'hepatitis_vaccines.agreement' => 'nullable|boolean',
+            'hepatitis_vaccines.pledge_date' => 'nullable|date',
+            'hepatitis_vaccines.individual_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.department' => 'nullable|string|max:255',
+            'hepatitis_vaccines.discussion_agreement' => 'nullable|boolean',
+            'hepatitis_vaccines.administering_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.administering_date' => 'nullable|date',
+
+        ]);
