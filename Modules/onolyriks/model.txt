@@ -1,0 +1,300 @@
+Career Models--------------------------->>>>>>>>>>>>>>
+
+
+
+class Applicant extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Education model
+    public function education()
+    {
+        return $this->hasMany(Education::class);
+    }
+
+    // Relationship with ProfessionalLicenses model
+    public function professionalLicenses()
+    {
+        return $this->hasMany(ProfessionalLicenses::class);
+    }
+
+    // Relationship with EmploymentHistory model
+    public function employmentHistories()
+    {
+        return $this->hasMany(EmploymentHistory::class);
+    }
+
+    // Relationship with Reference model
+    public function references()
+    {
+        return $this->hasMany(References::class);
+    }
+
+    // Relationship with HealthInfo model
+    public function healthInfos()
+    {
+        return $this->hasMany(HealthInfo::class);
+    }
+
+    // Relationship with AssuranceService model
+    public function assuranceServices()
+    {
+        return $this->hasMany(AssuranceService::class);
+    }
+
+    // Relationship with JobResponsibility model
+    public function jobResponsibilities()
+    {
+        return $this->hasMany(JobResponsibilities::class);
+    }
+
+    // Relationship with ProviderOrientation model
+    public function providerOrientations()
+    {
+        return $this->hasMany(ProviderOrientation::class);
+    }
+
+    // Relationship with AuthorizationOne model
+    public function authorizationOnes()
+    {
+        return $this->hasMany(AuthorizationOne::class);
+    }
+
+    // Relationship with AuthorizationTwo model
+    public function authorizationTwos()
+    {
+        return $this->hasMany(AuthorizationTwo::class);
+    }
+
+    // Relationship with HepatitisVaccine model
+    public function hepatitisVaccines()
+    {
+        return $this->hasMany(HepatitisVaccine::class);
+    }
+}
+
+
+
+
+class AssuranceService extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
+}
+
+
+
+
+class AuthorizationOne extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+
+class AuthorizationTwo extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+class Education extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+
+
+
+class EmploymentHistory extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
+}
+
+
+
+
+
+class HealthInfo extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+
+class HepatitisVaccine extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+
+class JobResponsibilities extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
+}
+
+
+
+class ProfessionalLicenses extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    protected $casts = [
+        'types' => 'array',
+    ];
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+    
+}
+
+
+
+
+class ProviderOrientation extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+}
+
+
+
+
+
+class References extends Model
+{
+    use HasFactory;
+
+    protected $guarded = [];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
+
+
+    // Relationship with Applicant model
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
+}
+
+
+
+

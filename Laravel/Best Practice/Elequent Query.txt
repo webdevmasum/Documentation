@@ -1,0 +1,234 @@
+*******************
+Eloquent ORM
+*******************
+
+
+Example 1: find() specific user fetch
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getUserById($id)
+    {
+        $user = User::find($id);
+
+        return view('users.show', compact('user'));
+    }
+
+
+Example 2: firstWhere() ekta row fetch
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getActiveUser()
+    {
+        $user = User::firstWhere('status', 'active');
+
+        return view('users.show', compact('user'));
+    }
+
+
+Example 3: whereIn() multiple condition
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    use App\Models\User;
+
+    public function getSelectedUsers()
+    {
+        $users = User::whereIn('status', ['active', 'pending'])->get();
+
+        return view('users.index', compact('users'));
+    }
+
+
+
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+Model Design Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+    class Product extends Model
+    {
+        protected $fillable = ['name', 'price', 'stock'];
+    }
+
+
+
+✅ Use Meaningful & Plural Table Names
+
+    class Product extends Model
+    {
+        protected $table = 'products'; // ✅ Good Practice
+    }
+
+
+✅ Use firstOrFail() Instead of find()
+
+    $product = Product::where('id', 1)->firstOrFail();
+
+
+
+✅ Use Query Scopes for Reusable Queries
+
+    $activeProducts = Product::active()->get();
+
+
+✅ Use Eager Loading to Avoid N+1 Query Issue
+
+    🔹 Eager loading with() method use kore relational data fetch korte hoy, jar maddhome performance better hoy.
+
+    $users = User::with('posts')->get();
+    foreach ($users as $user) {
+        echo $user->posts;
+    }
+
+
+    ❌ Avoid Lazy Loading:
+
+    $users = User::all();
+    foreach ($users as $user) {
+        echo $user->posts; // N+1 Query Issue
+    }
+
+
+
+✅ Use update() Instead of Fetching & Updating Manually
+
+
+    🔹Query optimize korte direct update() use kora best practice.
+
+    Product::where('id', 1)->update(['price' => 80000]);
+
+
+    ❌ Avoid unnecessary fetch & save:
+
+    $product = Product::find(1);
+    $product->price = 80000;
+    $product->save();
+
+
+
+but....................... example in controller.............
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+
+    public function updateProductPrice(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $newPrice = $request->input('price');
+
+        // Direct update query
+        Product::where('id', $productId)->update(['price' => $newPrice]);
+
+        return response()->json(['message' => 'Price updated successfully']);
+    }
+
+
+
+
+🔹 3️⃣ Relationship Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+🔹One-to-One Relationship
+
+    class User extends Model
+    {
+        public function phone()
+        {
+            return $this->hasOne(Phone::class);
+        }
+    }
+
+
+
+🔹One-to-Many Relationship
+
+    class User extends Model
+    {
+        public function posts()
+        {
+            return $this->hasMany(Post::class);
+        }
+    }
+
+
+🔹Many-to-Many Relationship
+
+    class Student extends Model
+    {
+        public function courses()
+        {
+            return $this->belongsToMany(Course::class);
+        }
+    }
+
+
+
+
+✅ Use belongsTo Instead of hasOne in Reverse Relationship
+
+    class Phone extends Model
+    {
+        public function user()
+        {
+            return $this->belongsTo(User::class);
+        }
+    }
+
+
+
+
+🔹4️⃣ Mutators & Accessors Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+✅ Use Accessors for Formatted Data Output
+
+    class User extends Model
+    {
+        public function getFullNameAttribute()
+        {
+            return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+        }
+    }
+
+🔹 Use korar somoy:
+
+    $user = User::find(1);
+    echo $user->full_name;
+
+
+
+✅ Use Mutators for Data Transformation Before Saving
+
+    class User extends Model
+    {
+        public function setPasswordAttribute($value)
+        {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }
+
+
+🔹 Use korar somoy:
+
+    $user = new User();
+    $user->password = 'secret'; // Automatically hashed
+    $user->save();
+
+
+
+🔹 5️⃣ Soft Delete Best Practices
+>>>>>>>>>><<<<<<<<<>>>>>>>>>><<<<<<<<<
+
+✅ Enable Soft Deletes in Model
+
+    use Illuminate\Database\Eloquent\SoftDeletes;
+
+    class Product extends Model
+    {
+        use SoftDeletes;
+        protected $dates = ['deleted_at'];
+    }
+
+
+
