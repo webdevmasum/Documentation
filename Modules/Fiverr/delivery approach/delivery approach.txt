@@ -19,7 +19,7 @@ I am pleased to inform you that I have almost completed the backend part of the 
 
 To proceed further and deploy the last deployment, please sh-a-re the hosting and domain cre-den-tia-ls. With that, I will be able to deploy the project directly onto your server. 
 
-Looking forward to your response.
+Looking forward to your response. 
 
 Best wishes.
 
