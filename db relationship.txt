@@ -12,6 +12,8 @@ user:- hasOne()
 Profile:- belongsTo()
 
 
+
+
 One to Many
 category:- hasMany()
 sub-category:- belongsTo()
