@@ -1,0 +1,90 @@
+https://youtu.be/_aF_poZg5xE?si=COJnbb6v_5kdp1gY
+
+
+composer require Laravel/ breeze --dev
+
+php artsian install breeze
+blade with alpain
+dark mode??
+
+php artisan migrate
+
+npm run dev
+run build
+
+make controller
+fix the the route
+
+
+got to cashire-->>
+
+composer require Laravel/cashier
+php artisan vendor:publish --tag="cashier-migrations"
+maigrate
+php artisan vendor:publish --tag="cashier-config"
+
+models/user.php-->>
+use Laravel\Cashier\Billable
+
+.env-->
+stripe_key=
+stripe_secret=
+stripe_webhook_secret=
+
+
+go to stripe and collect -->>
+developer mode for publish key and secret key
+
+go to doc and find "handling stripe webhooks"
+
+go stripe CLI and configure stripe for webhook
+
+run command-> stripe login
+cli verification , allow access
+ stripe listen --forward-to http://stripe.test/stripe/webhook
+
+after run the command, you get webhook secret. so copy and past on .env
+
+php artisan cashier:webhook
+
+create table-> Plan
+	- name
+	- stripe_plan_id
+	- stripe_price_id
+
+
+[when you seeder data, i f you want you go to stripe,
+then, product catalog- create and click on it and get product_id from url.
+then click three dot and get price_id]
+
+create checkout controller and write checkout function for your needed
+
+-->> video 22 munite
+* go to doc, find selling subscription, copy the code from doc to controller.
+
+write index method
+
+then it will redirect on stripe and you can payment. and then check stripe,
+customer, check also database.
+
+
+go to dashboard.blade.php and wite a condition like if auth user buy subscription he can access it.
+for this go to doc
+
+php artisan make :middleware Subscribed and write subscriber condition
+and register the middleware 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
