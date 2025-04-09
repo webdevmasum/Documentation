@@ -1,0 +1,46 @@
+
+
+DB:- google_id, facebook_id [aivabe column rakha lagbe]
+
+
+step- 1 : composer 
+-----------------------------
+composer require laravel/socialite
+
+
+step- 2 : config/services.php 
+-----------------------------
+//For google login
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
+    ],
+
+    //for facebook
+    'facebook' => [
+        'client_id' => env('FACEBOOK_CLIENT_ID'),
+        'client_secret' => env('FACEBOOK_CLIENT_SECRET'),
+        'redirect' => env('FACEBOOK_REDIRECT_URI'),
+    ],
+
+
+step- 3 : .env 
+-----------------------------
+FACEBOOK_CLIENT_ID=
+FACEBOOK_CLIENT_SECRET=
+FACEBOOK_REDIRECT_URL=http://127.0.0.1:8000/facebook/callback
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:8000/api/auth/google/callback
+
+
+
+
+step- 4 : Route
+----------------
+//Continue with google and facebook login
+    Route::post('/social/login', [SocialLoginController::class, 'SocialLogin']);
+
+
