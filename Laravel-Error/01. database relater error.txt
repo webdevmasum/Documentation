@@ -1,3 +1,16 @@
 DataTables warning:table id=data-table-Exception Message:
 
 Missing required for [Route:lesson.create][URI:admin/{my_course_unit_id}/lesson/create][Missing parameter:my_course_unit_id].
+
+
+
+
+
+
+
+
+
+
+
+
+Too few arguments to function App\Http\Controllers\Web\Backend\MyCourse\MyCourseController::update(), 1 passed in C:\Users\HP\Herd\colinswolfpack\vendor\laravel\framework\src\Illuminate\Routing\Controller.php on line 54 and exactly 2 expected
