@@ -1,0 +1,3 @@
+DataTables warning:table id=data-table-Exception Message:
+
+Missing required for [Route:lesson.create][URI:admin/{my_course_unit_id}/lesson/create][Missing parameter:my_course_unit_id].
