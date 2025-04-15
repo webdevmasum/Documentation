@@ -32,3 +32,12 @@ Too few arguments to function App\Http\Controllers\Web\Backend\MyCourse\MyCourse
 
 
 Call to undefined relationship [mycourse] on model [App\Models\MyCourse].
+
+
+
+
+Missing required parameter for [Route: lesson.index] [URI: admin/{my_course_unit_id}/lesson] [Missing parameter: my_course_unit_id].
+
+
+
+
