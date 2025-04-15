@@ -24,3 +24,11 @@ Too few arguments to function App\Http\Controllers\Web\Backend\MyCourse\MyCourse
         return view( 'backend.layout.mycourse-section.create'  );
 
     }
+
+
+
+
+
+
+
+Call to undefined relationship [mycourse] on model [App\Models\MyCourse].
