@@ -8,4 +8,7 @@ Application Deploy by Git Action
 6. push on git using git action branch. (main/dev)
 7. .htaccess file add
 8. .gitignore -> public/build (delete- sometimes it's optional)
-9. C-panel -> composer update, migrate
+9. C-panel -> 
+
+    cp .env.example .env
+    composer update, migrate
