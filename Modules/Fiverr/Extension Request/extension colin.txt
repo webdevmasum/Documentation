@@ -1,0 +1,22 @@
+Hello Colin,
+I hope you and your family are safe and doing well!
+
+As per your order requirement and message request, I've completed the following tasks:
+
+- I've completed question creation.
+- I'm working on the quiz part.
+
+For your help, I have added a video explanation. 
+Please watch the video: https://app.usebubbles.com/pPFZ2jo6VHxMQyUxWG9Eko/project-update
+
+Based on your project requirements, I’ve structured the MyCourse module to follow a well-organized hierarchy. Each course consists of multiple sections, each section contains several units, and each unit includes multiple lessons. Within each lesson, there are quizzes and questions. Additionally, quiz progress tracking has been integrated as part of the flow.
+
+This structure has been carefully designed to be relational, logical, and critical, ensuring it aligns with best practices in data architecture and algorithms. So far, I have completed the backend functionality for quiz question creation. The remaining tasks are in progress and will require some additional time to be completed properly.
+
+I sincerely appreciate your patience and support. If you would kindly grant me a 10-day extension, I would be truly grateful. I assure you that I am working diligently and will complete and deliver the remaining work at the earliest possible time. Thank you once again for your understanding.
+
+If you have any questions or concerns, please let me know. I'll respond as soon as possible.
+
+Best regards.
+
+Client: Colin || Profile: Panda_Squad || Extension Request Message
