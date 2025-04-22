@@ -1,0 +1,229 @@
+custome laravel command from teammate
+
+
+step-1:
+php artisan make:command AddRouteCommand
+php artisan make:command RouteMakerCommand
+php artisan make:command SetEnvVariableCommand
+
+step-2:
+// AddRouteCommand
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+
+class AddRouteCommand extends Command
+{
+    protected $signature = 'make:route';
+    protected $description = 'Add a new route to the specified route file (custom route setup)';
+
+    public function handle()
+    {
+        $this->info("📌 Let's register a new route!");
+
+        $availableFiles = collect([
+            'web' => 'routes/web.php',
+            'api' => 'routes/api.php',
+            'fahim' => 'routes/fahim.php',
+            'custom' => 'routes/custom.php',
+        ]);
+
+        $selectedKey = $this->choice(
+            'Which route group would you like to add to?',
+            $availableFiles->keys()->toArray()
+        );
+
+        $routeFile = base_path($availableFiles[$selectedKey]);
+
+        $httpMethod = $this->anticipate('HTTP method?', ['get', 'post', 'put', 'patch', 'delete'], 'get');
+        $uri = $this->ask('Enter the route URI (e.g., appointments/store)');
+        $controller = $this->ask('Controller name (e.g., AppointmentController)');
+        $method = $this->ask('Controller method (e.g., store)');
+
+        $namespace = "App\\Http\\Controllers\\$controller";
+
+        // Ensure controller use statement exists in file
+        $fileContent = File::get($routeFile);
+        if (!str_contains($fileContent, $controller)) {
+            $fileContent = "<?php\n\nuse $namespace;\n" . substr($fileContent, 6);
+            File::put($routeFile, $fileContent);
+        }
+
+        // Generate and append the route line
+        $routeLine = "Route::" . strtolower($httpMethod) . "('$uri', [$controller::class, '$method']);\n";
+        File::append($routeFile, "\n" . $routeLine);
+
+        $this->info("✅ Route added to {$availableFiles[$selectedKey]}");
+    }
+}
+
+//RouteMakerCommand
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+
+class RouteMakerCommand extends Command
+{
+    protected $signature = 'make:route-file {name} {--web} {--api}';
+    protected $description = 'Create a new route file in the specified directory with optional nesting';
+
+    public function handle()
+    {
+        $name = $this->argument('name');
+        $directory = $this->getDirectory($name); 
+
+        $pathParts = explode('/', $directory);
+        $fileName = array_pop($pathParts);  
+        $directoryPath = implode('/', $pathParts);  
+
+
+        $routeFile = "routes/{$directoryPath}/{$fileName}.php";
+        $filePath = base_path($routeFile);
+
+
+        if (!File::exists(base_path("routes/{$directoryPath}"))) {
+            File::makeDirectory(base_path("routes/{$directoryPath}"), 0755, true);
+        }
+
+        if (File::exists($filePath)) {
+            $this->error("\n\tThe route file {$fileName}.php already exists in {$directoryPath}.\n");
+            return;
+        }
+
+
+        File::put($filePath, "<?php\n\nuse Illuminate\\Support\\Facades\\Route;\n\n// Routes for {$fileName}.php\n");
+
+        $this->info("\n\tRoute file [{$filePath}] created successfully.\n");
+
+        $this->appendLoadRouteToServiceProvider($fileName, $directoryPath);
+    }
+
+    protected function getDirectory($name)
+    {
+        if ($this->option('web')) {
+            return "web/{$name}"; 
+        }
+
+        if ($this->option('api')) {
+            return "api/{$name}";  
+        }
+
+
+        return "{$name}";
+    }
+
+    protected function appendLoadRouteToServiceProvider($fileName, $directoryPath)
+    {
+        $serviceProviderPath = app_path('Providers/AppServiceProvider.php');
+
+
+        if (!File::exists($serviceProviderPath)) {
+            $this->error("\n\tAppServiceProvider.php not found at {$serviceProviderPath}. Please make sure it's in the app/Providers directory.\n");
+            return;
+        }
+
+        $loadLine = "\n        \$this->loadRoutesFrom(base_path('routes/{$directoryPath}/{$fileName}.php'));";
+
+        $content = file_get_contents($serviceProviderPath);
+
+
+        if (strpos($content, $loadLine) !== false) {
+            $this->warn("\n\tAppServiceProvider already contains the load line for routes/{$directoryPath}/{$fileName}.php.\n");
+            return;
+        }
+
+        $content = preg_replace(
+            '/(public function boot\(\).*?\{)/s',
+            '$1' . $loadLine,
+            $content
+        );
+
+        file_put_contents($serviceProviderPath, $content);
+    }
+}
+
+
+//SetEnvVariableCommand
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
+
+class SetEnvVariableCommand extends Command
+{
+    protected $signature = 'env:variable';
+    protected $description = 'Add, update, or remove a variable from the .env file via prompts';
+
+    public function handle()
+    {
+        $this->info("🔧 Environment Variable Manager");
+
+        $filePath = base_path('.env');
+
+        if (!File::exists($filePath)) {
+            $this->error("❌ .env file not found at: $filePath");
+            return;
+        }
+
+        do {
+            $action = $this->choice('What would you like to do?', ['Add/Update', 'Remove'], 0);
+
+            if ($action === 'Add/Update') {
+                $key = strtoupper($this->ask('Enter the variable key (e.g., APP_NAME)'));
+                $value = $this->ask("Enter the value for $key");
+                $this->setEnvValue($filePath, $key, $value);
+                $this->info("✅ $key has been set to '$value' in .env.");
+            } else {
+                $key = strtoupper($this->ask('Enter the variable key to remove (e.g., APP_DEBUG)'));
+                if ($this->removeEnvKey($filePath, $key)) {
+                    $this->info("🗑️ $key has been removed from .env.");
+                } else {
+                    $this->warn("⚠️ $key was not found in the .env file.");
+                }
+            }
+
+        } while ($this->confirm('Would you like to manage another variable?', true));
+    }
+
+    protected function setEnvValue(string $filePath, string $key, string $value): void
+    {
+        $envContent = File::get($filePath);
+        $pattern = "/^$key=.*$/m";
+
+        if (preg_match($pattern, $envContent)) {
+            $envContent = preg_replace($pattern, "$key=$value", $envContent);
+        } else {
+            $envContent .= "\n$key=$value";
+        }
+
+        File::put($filePath, $envContent);
+    }
+
+    protected function removeEnvKey(string $filePath, string $key): bool
+    {
+        $envContent = File::get($filePath);
+        $pattern = "/^$key=.*$\n?/m";
+
+        if (preg_match($pattern, $envContent)) {
+            $envContent = preg_replace($pattern, '', $envContent);
+            File::put($filePath, trim($envContent) . PHP_EOL);
+            return true;
+        }
+
+        return false;
+    }
+}
+
+Step-3:Test
+php artisan make:route
+php artisan make:route-file {name} //it support folder nested  as well
+php artisan env:variable
+ 
