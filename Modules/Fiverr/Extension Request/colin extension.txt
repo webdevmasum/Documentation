@@ -1,0 +1,16 @@
+Hello Colin,
+I hope you and your family are safe and doing well!
+
+In your last message, you asked me to implement the course data. I don’t have admin access to the live web application, so I’m unable to copy-paste all the course data. Since you know best how you want the data to be structured, it would be ideal to organize it in your preferred way. That way, we won’t have to make repeated changes later.
+
+For the quiz section, I have already planned the database according to the Figma design and implemented the functionality using 'true/false' answers. If you now want to design the quiz with 4 options per question, I will need to revise the database structure and update the functionality accordingly. So please let me know how you'd like to proceed.
+
+If you ask me to implement these two topics, then you tell me yourself how many days you'll give me.
+
+I sincerely appreciate your patience and support. Please give me a 3-day extension for the remaining issues. It is my humble request—would you kindly accept the extension? Anyway, I will quickly resolve the problems
+
+If you have any questions or concerns, please let me know. I'll respond as soon as possible.
+
+Best regards.
+
+Client: Colin || Profile: Panda_Squad || Extension Request Message
