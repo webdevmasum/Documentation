@@ -81,7 +81,7 @@ Route backend
 
 
 **********************************
-Controller
+Controller backend
 **********************************
 
 
@@ -139,3 +139,72 @@ class VideoProgressController extends Controller
         ]);
     }
 }
+
+
+**********************************
+Controller Frontend
+**********************************
+
+
+
+<?php
+
+namespace App\Http\Controllers\Web\FrontEnd;
+
+use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\CourseContent;
+use App\Models\CourseModule;
+use Illuminate\Http\Request;
+
+class MyCourseModuleController extends Controller
+{
+    public function myCourse()
+    {
+        $mycourses = Course::with('modules.contents')->get();
+        return view('front_end.layout.my_course', compact('mycourses'));
+    }
+
+
+    /**
+     * Shows the details of a course.
+     *
+     * @param int $id the id of the course
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function myCourseDetails($id)
+    {
+        $mycourse = Course::with(['modules.contents'])->findOrFail($id);
+        // dd($mycourse);
+        return view('front_end.layout.my_course_details', compact('mycourse'));
+    }
+
+
+    public function myCourseLesson($id)
+    {
+        $contents = CourseContent::findOrFail($id);
+
+        return view('front_end.layout.my_course_lessondetails', compact('contents' ));
+    }
+
+
+
+}
+
+
+
+**********************************
+Controller
+**********************************
+
+**********************************
+Controller
+**********************************
+
+**********************************
+Controller
+**********************************
+
+**********************************
+Controller
+**********************************
