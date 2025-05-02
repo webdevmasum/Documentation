@@ -1,0 +1,51 @@
+**********************************
+Database:
+**********************************
+
+    Schema::create('course_contents', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('course_content_title', 250);
+            $table->text('course_content_subtitle')->nullable();
+            $table->string('course_content_asset', 200)->nullable();
+            $table->string('video', 200)->nullable();
+            $table->text('course_content_description')->nullable();
+            $table->enum('status', [0, 1])->default(1)->comment('0 = Deactive, 1 = Active');
+
+            // Relationnal Data
+            $table->foreignId('course_module_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('course_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+[content's video will fetch]
+
+
+    Schema::create('video_progress', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('course_content_id')->constrained('course_contents')->onDelete('cascade');
+            $table->float('progress')->default(0); // Store progress as a percentage (0-100)
+            $table->float('current_time')->default(0);
+            $table->timestamps();
+        });
+
+**********************************
+Model:
+**********************************
+
+
+**********************************
+Database
+**********************************
+**********************************
+Database
+**********************************
