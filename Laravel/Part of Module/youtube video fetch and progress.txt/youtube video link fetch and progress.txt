@@ -42,6 +42,27 @@ Database:
 Model:
 **********************************
 
+    📌content.php
+
+    public function videoProgress() {
+        return $this->hasMany( VideoProgress::class, 'course_content_id' );
+    }
+
+    📌VideoProgress.php
+    class VideoProgress extends Model
+    {
+        use HasFactory;
+        // protected $fillable = ['user_id', 'course_content_id', 'progress'];
+        protected $guarded = [];
+
+        public function CourseContent(){
+            return $this->belongsTo(CourseContent::class, 'course_content_id');
+        }
+
+        public function User(){
+            return $this->belongsTo(User::class, 'user_id');
+        }
+    }
 
 **********************************
 Database
