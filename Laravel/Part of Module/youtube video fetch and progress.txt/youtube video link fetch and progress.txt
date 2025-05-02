@@ -65,7 +65,7 @@ Model:
     }
 
 **********************************
-Route
+Route backend
 **********************************
 
     /**
@@ -78,6 +78,64 @@ Route
     // previous page progress bar updated
     Route::get('/video/progress/{id}', [VideoProgressController::class, 'getProgress'])->name('video.progress.get');
 
+
+
 **********************************
 Controller
 **********************************
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend;
+
+use App\Http\Controllers\Controller;
+use App\Models\VideoProgress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class VideoProgressController extends Controller
+{
+    public function store(Request $request)
+    {
+        $userId = auth()->id();
+
+        VideoProgress::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'course_content_id' => $request->course_content_id,
+            ],
+            [
+                'progress' => $request->progress,
+                'current_time' => $request->current_time
+            ]
+        );
+
+        return response()->json(['message' => 'Progress saved']);
+    }
+
+
+    public function get($courseContentId)
+    {
+        $userId = auth()->id();
+        $progress = VideoProgress::where('user_id', $userId)
+            ->where('course_content_id', $courseContentId)
+            ->first();
+
+        return response()->json([
+            'current_time' => $progress->current_time ?? 0
+        ]);
+    }
+
+
+    // previous page progress bar updated
+    public function getProgress($id)
+    {
+        $progress = VideoProgress::where('course_content_id', $id)->first();
+
+        return response()->json([
+            'current_time' => $progress->current_time ?? 0,
+            'progress' => $progress->progress ?? 0,
+        ]);
+    }
+}
