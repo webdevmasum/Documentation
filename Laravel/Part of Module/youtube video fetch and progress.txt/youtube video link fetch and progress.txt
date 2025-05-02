@@ -458,13 +458,377 @@ Blade for Progress
 
 
 **********************************
-Controller
+Controller previous page
 **********************************
 
-**********************************
-Controller
-**********************************
 
-**********************************
-Controller
-**********************************
+@extends('front_end.master')
+
+<!-- Title -->
+@section('title', 'Course Checklist || Friendly Consulting and Mentorship')
+@push('custom_css')
+    <style>
+
+    </style>
+@endpush
+
+@section('content')
+
+    <main class="container">
+        <h1 class="fr-course-details-text">{{ $mycourse->title }}</h1>
+        <div class="fr-common-border"></div>
+        <section class="course-details">
+            <div class="fr-course">
+                <div class="fr-about-course">
+                    <h3 class="fr-about-course-title">About This Course</h3>
+                    {{-- <div class="fr-course-text-size">
+                        <p>Awesome! You have completed this course.</p>
+                        <p>You can download your certificate of completion from the Completed Courses section under My
+                            Account. To return to your account, click your name in the top-right of the page, and then
+                            click, 'Exit Course'. Additionally, your certificate of completion will be emailed to you.
+                            If you are unable to access your certificate please contact customer support at
+                            888-827-0777.
+                        </p>
+                        <p><span class="fr-note-text">Note:</span> If you are taking this course through a partner
+                            school, your certificate of completion
+                            will be provided directly by them.</p>
+                    </div> --}}
+
+                    <div class="fr-course-text-size">
+                        {{-- <p>{{  $mycourse->about_course ?? 'No course about available.' }}</p> --}}
+                        <p>{{ html_entity_decode(strip_tags($mycourse->about_course)) ?? 'No course about available.' }}</p>
+
+                    </div>
+                </div>
+                <div class="fr-course-progress">
+                    {{-- <h3 class="fr-about-course-title">Course Progress</h3> --}}
+                    <div class="fr-course-progress-d">
+                        <div class="fr-course-progress-d1">
+                            <h4 class="fr-course-content">Course Progress</h4>
+                            <progress id="progress-bar" value="0" max="100"></progress>
+                            <p>Completed: <span id="percentage-watched">0%</span></p>
+                            {{-- <p class="fr-course-details-subtitle"><span class="fr-course-progress-span">95%</span> of
+                                course content completed</p> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fr-contents">
+                <div class="fr-content">
+                    <h3 class="fr-about-course-title">Table Of Contents</h3>
+                    <div class="fr-content-table">
+
+                        <div class="accordion course-details-accordion" id="accordionExample">
+                            @foreach ($mycourse->modules as $index => $module)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button {{ $index == 0 ? '' : 'collapsed' }}" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}"
+                                            aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
+                                            aria-controls="collapse{{ $index }}">
+                                            <div class="accondion-header-content">
+                                                <p class="accordion-title-text">
+                                                    {{-- Module replace unit --}}
+                                                    Unit {{ $index + 1 }}: {{ $module->module_title }}
+                                                </p>
+                                                <span>{{ $module->contents->count() }}/{{ $module->contents->count() }}</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ $index }}"
+                                        class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}"
+                                        data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            @foreach ($module->contents as $contents)
+                                                <a
+                                                    href="{{ route('my.course.content', $contents->id) }}">{{ strip_tags($contents->course_content_title) }}</a>
+                                                {{-- <a href="{{ route('my.course.content', $module->id) }}"> </a> --}}
+                                                {{-- <a href="{{ route('my.course.content', $module->id) }}"> ttttttt{{ $contents->course_content_subtitle }}</a> --}}
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <div class="accondion-header-content">
+                                        <p class="accordion-title-text">Unit Exam</p>
+                                    </div>
+
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="fr-unit-outline-div">
+                                        <div class="fr-unit-outline-div2">
+                                            <div class="fr-unit-svg-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                                        fill="url(#paint0_linear_34842_86)" />
+                                                    <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <defs>
+                                                        <linearGradient id="paint0_linear_34842_86" x1="12"
+                                                            y1="2" x2="11.998" y2="17.6094"
+                                                            gradientUnits="userSpaceOnUse">
+                                                            <stop stop-color="#9F7A31" />
+                                                            <stop offset="1" stop-color="#F7DF2D" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p>Unit Exam</p>
+                                                <p class="fr-unit-outline-p">Unlimited attempts 8 questions 70% minimum
+                                                    passing
+                                                    score
+                                                </p>
+                                                <div class="fr-unit-outline-div2">
+                                                    <p class="fr-unit-outline-p2">Unit Exam Results</p>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="17"
+                                                        viewBox="0 0 21 17" fill="none">
+                                                        <path d="M19.0415 8.68009L1.5415 8.68009"
+                                                            stroke="url(#paint0_linear_34842_331)" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.9834 1.65157L19.0417 8.67957L11.9834 15.7087"
+                                                            stroke="url(#paint1_linear_34842_331)" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <defs>
+                                                            <linearGradient id="paint0_linear_34842_331" x1="1.5415"
+                                                                y1="8.68009" x2="15.1996" y2="8.70651"
+                                                                gradientUnits="userSpaceOnUse">
+                                                                <stop stop-color="#9F7A31" />
+                                                                <stop offset="1" stop-color="#F7DF2D" />
+                                                            </linearGradient>
+                                                            <linearGradient id="paint1_linear_34842_331" x1="11.9834"
+                                                                y1="8.68016" x2="17.4922" y2="8.68051"
+                                                                gradientUnits="userSpaceOnUse">
+                                                                <stop stop-color="#9F7A31" />
+                                                                <stop offset="1" stop-color="#F7DF2D" />
+                                                            </linearGradient>
+                                                        </defs>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="fr-congratulations-button" href="#">Quiz</button>
+
+                    </div>
+                </div>
+                {{-- <div class="fr-bookmarked">
+                    <h3 class="fr-about-course-title">Bookmarked Resources</h3>
+                    <div class="fr-content-table">
+                        <!-- bookmarked Resources items-1  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-2  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-3  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-4  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+            </div>
+        </section>
+    </main>
+
+
+@endsection
+
+@push('custom_script')
+    <script>
+        function fetchProgress() {
+            fetch('{{ route('video.progress.get', $contents->id) }}')
+                .then(response => response.json())
+                .then(data => {
+                    const progress = data.progress || 0;
+                    document.getElementById('progress-bar').value = progress;
+                    document.getElementById('percentage-watched').innerText = Math.floor(progress) + '%';
+                })
+                .catch(err => console.error('Error fetching progress:', err));
+        }
+
+        // Call once on page load
+        fetchProgress();
+    </script>
+@endpush
+
