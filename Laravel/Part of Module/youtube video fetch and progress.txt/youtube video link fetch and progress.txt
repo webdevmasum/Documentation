@@ -65,8 +65,19 @@ Model:
     }
 
 **********************************
-Database
+Route
 **********************************
+
+    /**
+    * Course content -> Video Progress
+    */
+
+    Route::post('/video-progress', [VideoProgressController::class, 'store'])->name('video.progress.store');
+    Route::get('/video-progress/{courseContentId}', [VideoProgressController::class, 'get'])->name('video.progress.get');
+
+    // previous page progress bar updated
+    Route::get('/video/progress/{id}', [VideoProgressController::class, 'getProgress'])->name('video.progress.get');
+
 **********************************
-Database
+Controller
 **********************************
