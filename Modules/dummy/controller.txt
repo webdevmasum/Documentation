@@ -1,0 +1,189 @@
+<?php
+
+namespace App\Http\Controllers\Web\Backend\QuestionQuiz;
+
+use App\Http\Controllers\Controller;
+use App\Models\ContentResources;
+use App\Models\CourseContent;
+use Exception;
+use Illuminate\Http\Request;
+
+class ContentResourcesController extends Controller
+{
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = ContentResources::latest()->get();
+
+            return datatables()->of($data)
+                ->addIndexColumn()
+
+                ->addColumn('status', function ($data) {
+                    $status = ' <div class="form-check form-switch">';
+                    $status .= ' <input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+                    if ($data->status == 1) {
+                        $status .= "checked";
+                    }
+                    $status .= '><label for="customSwitch' . $data->id . '" class="form-check-label" for="customSwitch"></label></div>';
+
+                    return $status;
+                })
+
+                ->addColumn('action', function ($data) {
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+
+                              <a href="' . route('contentresources.edit', $data->id) . '" type="button" class="btn btn-success text-white" title="Edit">
+                                <i class="bx bxs-edit"></i>
+                              </a>
+
+                               <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="btn btn-danger text-white" title="Delete">
+                                <i class="bx bxs-trash"></i>
+                              </a>
+
+                            </div>';
+                })
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+        }
+
+        return view('backend.layout.content-resources.index');
+    }
+
+
+    public function create()
+    {
+        $contents = CourseContent::all();
+        $resources = ContentResources::all();
+        return view('backend.layout.content-resources.create', compact('resources', 'contents'));
+    }
+
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'course_content_id' => 'required|exists:course_contents,id',
+            'title' => 'required|string|max:255',
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx',
+            'video_link' => 'nullable|url',
+            'description' => 'nullable|string',
+        ]);
+
+        $filePath = null;
+        if ($request->hasFile('file_path')) {
+            $file = $request->file('file_path');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME); // notes
+            $extension = $file->getClientOriginalExtension(); // pdf
+            $fileName = $originalName . '_' . time() . '.' . $extension;
+
+            $file->move(public_path('resources/files'), $fileName);
+            $filePath = 'resources/files/' . $fileName;
+        }
+
+        ContentResources::create([
+            'course_content_id' => $request->course_content_id,
+            'title' => $request->title,
+            'file_path' => $filePath,
+            'video_link' => $request->video_link,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('contentresources.index')->with('success', 'Resource added successfully.');
+    }
+
+
+    public function edit($id)
+    {
+        $resource = ContentResources::findOrFail($id);
+        $contents = CourseContent::all();
+
+        return view('backend.layout.content-resources.edit', compact('resource', 'contents'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $resource = ContentResources::findOrFail($id);
+        // dd($request->all());
+        $request->validate([
+            'course_content_id' => 'required|exists:course_contents,id',
+            'title' => 'required|string|max:255',
+            'file_path' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx',
+            'video_link' => 'nullable|url',
+            'description' => 'nullable|string',
+        ]);
+
+        $filePath = $resource->file_path;
+
+        if ($request->hasFile('file_path')) {
+            // delete previous file if exists
+            if ($filePath && file_exists(public_path($filePath))) {
+                unlink(public_path($filePath));
+            }
+
+            $file = $request->file('file_path');
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $fileName = $originalName . '_' . time() . '.' . $extension;
+
+            $file->move(public_path('resources/files'), $fileName);
+            $filePath = 'resources/files/' . $fileName;
+        }
+
+        $resource->update([
+            'course_content_id' => $request->course_content_id,
+            'title' => $request->title,
+            'file_path' => $filePath,
+            'video_link' => $request->video_link,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('contentresources.index')->with('success', 'Resource updated successfully.');
+    }
+
+
+    public function destroy(Request $request, $id)
+    {
+        if ($request->ajax()) {
+            $data = ContentResources::findOrFail($id);
+
+            try {
+                // Delete Company
+                $data->delete();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'MyCourse Deleted Successfully.',
+                ]);
+            } catch (Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You cannot delete this MyCourse because it contains some Modules.',
+                ]);
+            }
+        }
+    }
+
+
+    public function status($id)
+    {
+        $data = ContentResources::where('id', $id)->first();
+
+        // return $data;
+        // Check Item Current Status
+        if ($data->status == 1) {
+            $data->status = '0';
+            $data->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Unpublished Successfully.',
+            ]);
+        } else {
+            $data->status = '1';
+            $data->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Published Successfully.',
+            ]);
+        }
+    }
+}
