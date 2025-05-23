@@ -18,5 +18,45 @@ Schema::create( 'courses', function ( Blueprint $table ) {
         } );
     
 
-    
+Schema::create('course_modules', function (Blueprint $table) {
+            $table->id();
 
+            $table->string('module_title', 200);
+            $table->text('module_subtitle')->nullable();
+            $table->enum('status', [0, 1])->default(1)->comment('0 = Deactive, 1 = Active');
+
+            // Relational Data
+            $table->foreignId('course_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+
+Schema::create('course_contents', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('course_content_title', 250);
+            $table->text('course_content_subtitle')->nullable();
+            $table->string('course_content_asset', 200)->nullable();
+            $table->string('video', 200)->nullable();
+            $table->text('course_content_description')->nullable();
+            $table->enum('status', [0, 1])->default(1)->comment('0 = Deactive, 1 = Active');
+
+            // Relationnal Data
+            $table->foreignId('course_module_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('course_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
