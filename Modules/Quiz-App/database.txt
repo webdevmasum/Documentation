@@ -1,0 +1,22 @@
+
+
+**********************
+Database:
+**********************
+
+
+
+Schema::create( 'courses', function ( Blueprint $table ) {
+            $table->id();
+            $table->string( 'title', 250 );
+            $table->string( 'slug', 200 )->unique();
+            $table->text( 'description' )->nullable();
+            $table->enum( 'status', [0, 1] )->default( 1 )->comment( '0 = Deactive, 1 = Active' );
+            $table->integer('order')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        } );
+    
+
+    
+
