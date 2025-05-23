@@ -60,3 +60,27 @@ Schema::create('course_contents', function (Blueprint $table) {
             $table->timestamps();
             $table->softDeletes();
         });
+
+
+
+
+// db for question
+Schema::create('module_questions', function (Blueprint $table) {
+            $table->id();
+            $table->enum('question_type', ['mcq', 'true_false'])->default('mcq');
+            $table->foreignId('course_module_id')->constrained()->onDelete('cascade');
+            $table->text('question_text');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+
+
+Schema::create('module_questions', function (Blueprint $table) {
+            $table->id();
+            $table->enum('question_type', ['mcq', 'true_false'])->default('mcq');
+            $table->foreignId('course_module_id')->constrained()->onDelete('cascade');
+            $table->text('question_text');
+            $table->timestamps();
+            $table->softDeletes();
+        });
