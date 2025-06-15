@@ -11,5 +11,12 @@ Extention: code runner
 
 -> preference -> keyboard shortcut
 
+in my mac fo code un 'cmd+shift+k'
+
+** code-> system preferance-> seeting-> coderunner-> 
+check 'code runner:clear previous output'
+check 'code runner:save all file before run'
+
+
 
 
