@@ -1,8 +1,0 @@
-
-
--> variable hocce ekta patro
--> mane ram er moddhe ekta jayga jekhane kicu data tenporary vabe rakhte pari.
--> variable changeable.
-.. but constant changable nah.
-
--> php hocce losely type language, se nijey type bujte pare.
