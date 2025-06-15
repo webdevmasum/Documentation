@@ -1,0 +1,15 @@
+***************
+VS Code Editor:
+***************
+
+Extention: code runner
+1.
+    crtl+shift+p
+    cmd+shift+p
+
+2. run code (code run in outout )
+
+-> preference -> keyboard shortcut
+
+
+
