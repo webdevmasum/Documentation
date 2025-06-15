@@ -1,0 +1,834 @@
+**********************************
+Database:
+**********************************
+
+    Schema::create('course_contents', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('course_content_title', 250);
+            $table->text('course_content_subtitle')->nullable();
+            $table->string('course_content_asset', 200)->nullable();
+            $table->string('video', 200)->nullable();
+            $table->text('course_content_description')->nullable();
+            $table->enum('status', [0, 1])->default(1)->comment('0 = Deactive, 1 = Active');
+
+            // Relationnal Data
+            $table->foreignId('course_module_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+            $table->foreignId('course_id')
+                ->constrained()
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+[content's video will fetch]
+
+
+    Schema::create('video_progress', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('course_content_id')->constrained('course_contents')->onDelete('cascade');
+            $table->float('progress')->default(0); // Store progress as a percentage (0-100)
+            $table->float('current_time')->default(0);
+            $table->timestamps();
+        });
+
+**********************************
+Model:
+**********************************
+
+    📌content.php
+
+    public function videoProgress() {
+        return $this->hasMany( VideoProgress::class, 'course_content_id' );
+    }
+
+    📌VideoProgress.php
+    class VideoProgress extends Model
+    {
+        use HasFactory;
+        // protected $fillable = ['user_id', 'course_content_id', 'progress'];
+        protected $guarded = [];
+
+        public function CourseContent(){
+            return $this->belongsTo(CourseContent::class, 'course_content_id');
+        }
+
+        public function User(){
+            return $this->belongsTo(User::class, 'user_id');
+        }
+    }
+
+**********************************
+Route backend
+**********************************
+
+    /**
+    * Course content -> Video Progress
+    */
+
+    Route::post('/video-progress', [VideoProgressController::class, 'store'])->name('video.progress.store');
+    Route::get('/video-progress/{courseContentId}', [VideoProgressController::class, 'get'])->name('video.progress.get');
+
+    // previous page progress bar updated
+    Route::get('/video/progress/{id}', [VideoProgressController::class, 'getProgress'])->name('video.progress.get');
+
+
+
+**********************************
+Controller backend
+**********************************
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend;
+
+use App\Http\Controllers\Controller;
+use App\Models\VideoProgress;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class VideoProgressController extends Controller
+{
+    public function store(Request $request)
+    {
+        $userId = auth()->id();
+
+        VideoProgress::updateOrCreate(
+            [
+                'user_id' => $userId,
+                'course_content_id' => $request->course_content_id,
+            ],
+            [
+                'progress' => $request->progress,
+                'current_time' => $request->current_time
+            ]
+        );
+
+        return response()->json(['message' => 'Progress saved']);
+    }
+
+
+    public function get($courseContentId)
+    {
+        $userId = auth()->id();
+        $progress = VideoProgress::where('user_id', $userId)
+            ->where('course_content_id', $courseContentId)
+            ->first();
+
+        return response()->json([
+            'current_time' => $progress->current_time ?? 0
+        ]);
+    }
+
+
+    // previous page progress bar updated
+    public function getProgress($id)
+    {
+        $progress = VideoProgress::where('course_content_id', $id)->first();
+
+        return response()->json([
+            'current_time' => $progress->current_time ?? 0,
+            'progress' => $progress->progress ?? 0,
+        ]);
+    }
+}
+
+
+**********************************
+Controller Frontend
+**********************************
+
+
+
+<?php
+
+namespace App\Http\Controllers\Web\FrontEnd;
+
+use App\Http\Controllers\Controller;
+use App\Models\Course;
+use App\Models\CourseContent;
+use App\Models\CourseModule;
+use Illuminate\Http\Request;
+
+class MyCourseModuleController extends Controller
+{
+    public function myCourse()
+    {
+        $mycourses = Course::with('modules.contents')->get();
+        return view('front_end.layout.my_course', compact('mycourses'));
+    }
+
+
+    /**
+     * Shows the details of a course.
+     *
+     * @param int $id the id of the course
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function myCourseDetails($id)
+    {
+        $mycourse = Course::with(['modules.contents'])->findOrFail($id);
+        // dd($mycourse);
+        return view('front_end.layout.my_course_details', compact('mycourse'));
+    }
+
+
+    public function myCourseLesson($id)
+    {
+        $contents = CourseContent::findOrFail($id);
+
+        return view('front_end.layout.my_course_lessondetails', compact('contents' ));
+    }
+
+
+
+}
+
+
+
+**********************************
+Blade for Progress
+**********************************
+
+
+@extends('front_end.master')
+
+<!-- Title -->
+@section('title', 'Course Checklist || Friendly Consulting and Mentorship')
+@push('custom_css')
+    <style>
+
+    </style>
+@endpush
+
+@section('content')
+
+
+    {{-- <header class="fr-header container">
+        <div class="fr-header-logo-wrapper">
+            <div class="fr-header-link-wrapper">
+                <a class="fr-header-my-course" href="{{ route('my.course') }}">My Course</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16" fill="none">
+                    <path
+                        d="M2.39648 15.5837L9.41732 8.58366C9.50065 8.50033 9.55954 8.41005 9.59398 8.31283C9.62898 8.2156 9.64648 8.11144 9.64648 8.00033C9.64648 7.88921 9.62898 7.78505 9.59398 7.68783C9.55954 7.5906 9.50065 7.50033 9.41732 7.41699L2.39648 0.396159C2.20204 0.201714 1.95898 0.104492 1.66732 0.104492C1.37565 0.104492 1.12565 0.208659 0.917318 0.416992C0.708985 0.625326 0.604818 0.868381 0.604818 1.14616C0.604818 1.42394 0.708985 1.66699 0.917318 1.87533L7.04232 8.00033L0.917318 14.1253C0.722874 14.3198 0.625651 14.5592 0.625651 14.8437C0.625651 15.1287 0.729818 15.3753 0.938151 15.5837C1.14648 15.792 1.38954 15.8962 1.66732 15.8962C1.9451 15.8962 2.18815 15.792 2.39648 15.5837Z"
+                        fill="white" fill-opacity="0.76" />
+                </svg>
+                <a class="fr-header-my-course" href="{{ route('my.course.details' , $mycourses->id) }}">Course Details</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="16" viewBox="0 0 10 16" fill="none">
+                    <path
+                        d="M2.39648 15.5837L9.41732 8.58366C9.50065 8.50033 9.55954 8.41005 9.59398 8.31283C9.62898 8.2156 9.64648 8.11144 9.64648 8.00033C9.64648 7.88921 9.62898 7.78505 9.59398 7.68783C9.55954 7.5906 9.50065 7.50033 9.41732 7.41699L2.39648 0.396159C2.20204 0.201714 1.95898 0.104492 1.66732 0.104492C1.37565 0.104492 1.12565 0.208659 0.917318 0.416992C0.708985 0.625326 0.604818 0.868381 0.604818 1.14616C0.604818 1.42394 0.708985 1.66699 0.917318 1.87533L7.04232 8.00033L0.917318 14.1253C0.722874 14.3198 0.625651 14.5592 0.625651 14.8437C0.625651 15.1287 0.729818 15.3753 0.938151 15.5837C1.14648 15.792 1.38954 15.8962 1.66732 15.8962C1.9451 15.8962 2.18815 15.792 2.39648 15.5837Z"
+                        fill="white" fill-opacity="0.76" />
+                </svg>
+                <a class="fr-header-my-course" href="{{ route('my.course.unit') }}">Unit Details</a>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path
+                        d="M7.396 17.5837L14.4168 10.5837C14.5002 10.5003 14.5591 10.41 14.5935 10.3128C14.6285 10.2156 14.646 10.1114 14.646 10.0003C14.646 9.88921 14.6285 9.78505 14.5935 9.68783C14.5591 9.5906 14.5002 9.50033 14.4168 9.41699L7.396 2.39616C7.20155 2.20171 6.9585 2.10449 6.66683 2.10449C6.37516 2.10449 6.12516 2.20866 5.91683 2.41699C5.7085 2.62533 5.60433 2.86838 5.60433 3.14616C5.60433 3.42394 5.7085 3.66699 5.91683 3.87533L12.0418 10.0003L5.91683 16.1253C5.72239 16.3198 5.62516 16.5592 5.62516 16.8437C5.62516 17.1287 5.72933 17.3753 5.93766 17.5837C6.146 17.792 6.38905 17.8962 6.66683 17.8962C6.94461 17.8962 7.18766 17.792 7.396 17.5837Z"
+                        fill="#FFBD00" />
+                </svg>
+                <a class="fr-course-details-a-text" href="{{ route('my.course.lesson') }}">Lesson Details</a>
+            </div>
+        </div>
+        <i class="fa-solid fa-bars fa-2xl fr_toggle_btn"></i>
+    </header> --}}
+    <!-- main area starts -->
+    <main class="container">
+        <section class="fr-lesson-section">
+
+            <div class="fr-lesson-license">
+                <div class="fr-license">
+                    <div class="fr_lesson_wrapper">
+                        <h4 class="fr-lesson-h">{{ $contents->course_content_title }}</h4>
+                        <h4 class="fr-lesson-h">{{ strip_tags($contents->course_content_subtitle) }}</h4>
+                        <p class="fr-lesson-p">{{ html_entity_decode(strip_tags($contents->course_content_description)) }}
+                        </p>
+
+                        <div class="content-card">
+                            @if ($contents->course_content_asset)
+                                <img src="{{ asset($contents->course_content_asset) }}" alt="Course Asset"
+                                    style="width: 100%; max-width: 650px;">
+                            @else
+                                <p>No asset uploaded.</p>
+                            @endif
+                        </div>
+
+                        <div class="video-container">
+
+                            @php
+                                // get the full video link from database
+                                $videoUrl = $contents->video;
+
+                                // extract the video ID from YouTube URL
+                                preg_match('/(?:youtu\.be\/|v=)([a-zA-Z0-9_-]+)/', $videoUrl, $matches);
+                                $videoId = $matches[1] ?? null;
+                            @endphp
+
+                            @if ($videoId)
+                                <div class="video-container"
+                                    style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+                                    <div id="player"
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                                    </div>
+                                </div>
+                            @else
+                                <p>No valid YouTube video found.</p>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
+
+                <button class="fr-congratulations-button" >Next</button>
+                {{-- <button class="fr-congratulations-button"
+                    onclick="window.location.href='{{ route('my.course.lesson.exam', $lesson->id) }}'">Next</button> --}}
+            </div>
+
+
+            <div class="fr-unit-course-progress">
+                {{-- <h3 class="fr-about-course-title">Course Progress</h3> --}}
+                <div class="fr-course-progress-d">
+
+                    <div class="fr-course-progress-d1">
+                        <h4 class="fr-course-content">Course Progress</h4>
+                        <progress id="progress-bar" value="0" max="100"></progress>
+                        <p> Total Duration: <span id="video-duration">Loading video duration...</span> . Complete
+                            minimum 50%</p>
+                        <p>Percentage Watched: <span id="percentage-watched"></span></p>
+                    </div>
+
+                </div>
+                {{-- <h3 class="fr-about-course-title fr-lesson-resources-m">Lesson Resources</h3>
+                <div class="fr-unit-resource">
+                    <!-- bookmarked Resources items-1  -->
+                    <div class="fr-bookmarked-content1">
+                        <div class="fr-bookmarked-content2">
+                            <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="22" viewBox="0 0 24 22"
+                                fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M13.2883 1.87315L15.4203 6.13236C15.6292 6.55049 16.0325 6.84043 16.5002 6.90753L21.2696 7.59403C22.4479 7.76416 22.9168 9.19228 22.064 10.0106L18.6152 13.3245C18.2763 13.6504 18.122 14.1188 18.2022 14.5789L19.0161 19.2574C19.2165 20.4148 17.9847 21.2978 16.9315 20.7503L12.6687 18.5398C12.2509 18.3229 11.7504 18.3229 11.3313 18.5398L7.0685 20.7503C6.01527 21.2978 4.78346 20.4148 4.98512 19.2574L5.79782 14.5789C5.878 14.1188 5.72372 13.6504 5.38479 13.3245L1.93596 10.0106C1.08317 9.19228 1.55208 7.76416 2.73044 7.59403L7.49976 6.90753C7.96746 6.84043 8.37199 6.55049 8.58094 6.13236L10.7117 1.87315C11.2389 0.820033 12.7611 0.820033 13.2883 1.87315Z"
+                                    stroke="url(#paint0_linear_34842_181)" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_34842_181" x1="12" y1="1.08331"
+                                        x2="11.9981" y2="16.5626" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#9F7A31" />
+                                        <stop offset="1" stop-color="#F7DF2D" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="fr-bookmarked-border"></div>
+                        <div class="fr-bookmarked-div">
+                            <div class="fr-bookmarked-standard">
+                                <p>Standard</p>
+                            </div>
+                            <div class="fr-bookmarked-standard-d">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path
+                                        d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                        fill="url(#paint0_linear_34842_370)" />
+                                    <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                            x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <p>You’ve Receive this</p>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+            </div>
+        </section>
+    </main>
+
+
+@endsection
+
+@push('custom_script')
+
+
+    {{-- Video duration, tracking percentage, and progress bar working perfectly,
+    if you pause the video it will store the progress time and if you end the video it will store the progress time as well --}}
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+        let durationInSeconds = 0;
+
+        // Single consolidated YouTube API ready function
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                videoId: '{{ $videoId }}',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Get duration and format it
+            durationInSeconds = player.getDuration();
+            updateVideoDurationDisplay(durationInSeconds);
+
+            // Load saved progress if available
+            loadSavedProgress(durationInSeconds);
+
+            // Start tracking percentage
+            setInterval(trackWatchPercentage, 1000);
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PAUSED) {
+                sendProgress(false);
+            }
+
+            if (event.data == YT.PlayerState.ENDED) {
+                sendProgress(true);
+            }
+        }
+
+        function updateVideoDurationDisplay(duration) {
+            const minutes = Math.floor(duration / 60);
+            const seconds = Math.floor(duration % 60);
+            const formattedDuration = `${minutes}m ${seconds < 10 ? '0' + seconds : seconds}s`;
+            document.getElementById('video-duration').textContent = formattedDuration;
+        }
+
+        function loadSavedProgress(duration) {
+            fetch('{{ route('video.progress.get', $contents->id) }}')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.current_time) {
+                        player.seekTo(data.current_time, true);
+                        const savedProgress = (data.current_time / duration) * 100;
+                        updateProgressDisplay(savedProgress);
+                    }
+                })
+                .catch(error => console.error('Error loading progress:', error));
+        }
+
+        function trackWatchPercentage() {
+            if (player && player.getCurrentTime) {
+                const currentTime = player.getCurrentTime();
+                const percentageWatched = (currentTime / durationInSeconds) * 100;
+                updateProgressDisplay(percentageWatched);
+            }
+        }
+
+        function updateProgressDisplay(percentage) {
+            document.getElementById('percentage-watched').innerText = Math.floor(percentage) + '%';
+            document.getElementById('progress-bar').value = percentage;
+        }
+
+        function sendProgress(isEnded) {
+            if (!player || !player.getCurrentTime) return;
+
+            const currentTime = Math.floor(player.getCurrentTime());
+            const progress = isEnded ? 100 : (currentTime / durationInSeconds) * 100;
+
+            fetch('{{ route('video.progress.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    course_content_id: '{{ $contents->id }}',
+                    current_time: currentTime,
+                    progress: progress.toFixed(2)
+                })
+            }).catch(error => console.error('Error saving progress:', error));
+        }
+    </script>
+@endpush
+
+
+
+**********************************
+Controller previous page
+**********************************
+
+
+@extends('front_end.master')
+
+<!-- Title -->
+@section('title', 'Course Checklist || Friendly Consulting and Mentorship')
+@push('custom_css')
+    <style>
+
+    </style>
+@endpush
+
+@section('content')
+
+    <main class="container">
+        <h1 class="fr-course-details-text">{{ $mycourse->title }}</h1>
+        <div class="fr-common-border"></div>
+        <section class="course-details">
+            <div class="fr-course">
+                <div class="fr-about-course">
+                    <h3 class="fr-about-course-title">About This Course</h3>
+                    {{-- <div class="fr-course-text-size">
+                        <p>Awesome! You have completed this course.</p>
+                        <p>You can download your certificate of completion from the Completed Courses section under My
+                            Account. To return to your account, click your name in the top-right of the page, and then
+                            click, 'Exit Course'. Additionally, your certificate of completion will be emailed to you.
+                            If you are unable to access your certificate please contact customer support at
+                            888-827-0777.
+                        </p>
+                        <p><span class="fr-note-text">Note:</span> If you are taking this course through a partner
+                            school, your certificate of completion
+                            will be provided directly by them.</p>
+                    </div> --}}
+
+                    <div class="fr-course-text-size">
+                        {{-- <p>{{  $mycourse->about_course ?? 'No course about available.' }}</p> --}}
+                        <p>{{ html_entity_decode(strip_tags($mycourse->about_course)) ?? 'No course about available.' }}</p>
+
+                    </div>
+                </div>
+                <div class="fr-course-progress">
+                    {{-- <h3 class="fr-about-course-title">Course Progress</h3> --}}
+                    <div class="fr-course-progress-d">
+                        <div class="fr-course-progress-d1">
+                            <h4 class="fr-course-content">Course Progress</h4>
+                            <progress id="progress-bar" value="0" max="100"></progress>
+                            <p>Completed: <span id="percentage-watched">0%</span></p>
+                            {{-- <p class="fr-course-details-subtitle"><span class="fr-course-progress-span">95%</span> of
+                                course content completed</p> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fr-contents">
+                <div class="fr-content">
+                    <h3 class="fr-about-course-title">Table Of Contents</h3>
+                    <div class="fr-content-table">
+
+                        <div class="accordion course-details-accordion" id="accordionExample">
+                            @foreach ($mycourse->modules as $index => $module)
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button {{ $index == 0 ? '' : 'collapsed' }}" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapse{{ $index }}"
+                                            aria-expanded="{{ $index == 0 ? 'true' : 'false' }}"
+                                            aria-controls="collapse{{ $index }}">
+                                            <div class="accondion-header-content">
+                                                <p class="accordion-title-text">
+                                                    {{-- Module replace unit --}}
+                                                    Unit {{ $index + 1 }}: {{ $module->module_title }}
+                                                </p>
+                                                <span>{{ $module->contents->count() }}/{{ $module->contents->count() }}</span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse{{ $index }}"
+                                        class="accordion-collapse collapse {{ $index == 0 ? 'show' : '' }}"
+                                        data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            @foreach ($module->contents as $contents)
+                                                <a
+                                                    href="{{ route('my.course.content', $contents->id) }}">{{ strip_tags($contents->course_content_title) }}</a>
+                                                {{-- <a href="{{ route('my.course.content', $module->id) }}"> </a> --}}
+                                                {{-- <a href="{{ route('my.course.content', $module->id) }}"> ttttttt{{ $contents->course_content_subtitle }}</a> --}}
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                    <div class="accondion-header-content">
+                                        <p class="accordion-title-text">Unit Exam</p>
+                                    </div>
+
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="fr-unit-outline-div">
+                                        <div class="fr-unit-outline-div2">
+                                            <div class="fr-unit-svg-icon">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                                        fill="url(#paint0_linear_34842_86)" />
+                                                    <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white"
+                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <defs>
+                                                        <linearGradient id="paint0_linear_34842_86" x1="12"
+                                                            y1="2" x2="11.998" y2="17.6094"
+                                                            gradientUnits="userSpaceOnUse">
+                                                            <stop stop-color="#9F7A31" />
+                                                            <stop offset="1" stop-color="#F7DF2D" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p>Unit Exam</p>
+                                                <p class="fr-unit-outline-p">Unlimited attempts 8 questions 70% minimum
+                                                    passing
+                                                    score
+                                                </p>
+                                                <div class="fr-unit-outline-div2">
+                                                    <p class="fr-unit-outline-p2">Unit Exam Results</p>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="17"
+                                                        viewBox="0 0 21 17" fill="none">
+                                                        <path d="M19.0415 8.68009L1.5415 8.68009"
+                                                            stroke="url(#paint0_linear_34842_331)" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.9834 1.65157L19.0417 8.67957L11.9834 15.7087"
+                                                            stroke="url(#paint1_linear_34842_331)" stroke-width="2"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+                                                        <defs>
+                                                            <linearGradient id="paint0_linear_34842_331" x1="1.5415"
+                                                                y1="8.68009" x2="15.1996" y2="8.70651"
+                                                                gradientUnits="userSpaceOnUse">
+                                                                <stop stop-color="#9F7A31" />
+                                                                <stop offset="1" stop-color="#F7DF2D" />
+                                                            </linearGradient>
+                                                            <linearGradient id="paint1_linear_34842_331" x1="11.9834"
+                                                                y1="8.68016" x2="17.4922" y2="8.68051"
+                                                                gradientUnits="userSpaceOnUse">
+                                                                <stop stop-color="#9F7A31" />
+                                                                <stop offset="1" stop-color="#F7DF2D" />
+                                                            </linearGradient>
+                                                        </defs>
+                                                    </svg>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="fr-congratulations-button" href="#">Quiz</button>
+
+                    </div>
+                </div>
+                {{-- <div class="fr-bookmarked">
+                    <h3 class="fr-about-course-title">Bookmarked Resources</h3>
+                    <div class="fr-content-table">
+                        <!-- bookmarked Resources items-1  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-2  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-3  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- bookmarked Resources items-4  -->
+                        <div class="fr-bookmarked-content1">
+                            <div class="fr-bookmarked-content2">
+                                <p class="fr-bookmarked-content2-p">Adjusting for Differences</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                    viewBox="0 0 28 28" fill="none">
+                                    <path
+                                        d="M19.6233 2.33331H8.37662C5.89162 2.33331 3.87329 4.36331 3.87329 6.83665V23.275C3.87329 25.375 5.37829 26.2616 7.22162 25.2466L12.915 22.085C13.5216 21.7466 14.5016 21.7466 15.0966 22.085L20.79 25.2466C22.6333 26.2733 24.1383 25.3866 24.1383 23.275V6.83665C24.1266 4.36331 22.1083 2.33331 19.6233 2.33331ZM16.9166 13.3H11.0833C10.605 13.3 10.2083 12.9033 10.2083 12.425C10.2083 11.9466 10.605 11.55 11.0833 11.55H16.9166C17.395 11.55 17.7916 11.9466 17.7916 12.425C17.7916 12.9033 17.395 13.3 16.9166 13.3Z"
+                                        fill="url(#paint0_linear_34694_1499)" />
+                                    <defs>
+                                        <linearGradient id="paint0_linear_34694_1499" x1="14.0058" y1="2.33331"
+                                            x2="14.0031" y2="20.5501" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#9F7A31" />
+                                            <stop offset="1" stop-color="#F7DF2D" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="fr-bookmarked-border"></div>
+                            <div class="fr-bookmarked-div">
+                                <div class="fr-bookmarked-standard">
+                                    <p>Standard</p>
+                                </div>
+                                <div class="fr-bookmarked-standard-d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none">
+                                        <path
+                                            d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z"
+                                            fill="url(#paint0_linear_34842_370)" />
+                                        <path d="M7.75 12L10.58 14.83L16.25 9.17004" stroke="white" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" />
+                                        <defs>
+                                            <linearGradient id="paint0_linear_34842_370" x1="12" y1="2"
+                                                x2="11.998" y2="17.6094" gradientUnits="userSpaceOnUse">
+                                                <stop stop-color="#9F7A31" />
+                                                <stop offset="1" stop-color="#F7DF2D" />
+                                            </linearGradient>
+                                        </defs>
+                                    </svg>
+                                    <p>You’ve Receive this</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
+            </div>
+        </section>
+    </main>
+
+
+@endsection
+
+@push('custom_script')
+    <script>
+        function fetchProgress() {
+            fetch('{{ route('video.progress.get', $contents->id) }}')
+                .then(response => response.json())
+                .then(data => {
+                    const progress = data.progress || 0;
+                    document.getElementById('progress-bar').value = progress;
+                    document.getElementById('percentage-watched').innerText = Math.floor(progress) + '%';
+                })
+                .catch(err => console.error('Error fetching progress:', err));
+        }
+
+        // Call once on page load
+        fetchProgress();
+    </script>
+@endpush
+

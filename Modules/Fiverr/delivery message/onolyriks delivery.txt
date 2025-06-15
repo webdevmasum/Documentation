@@ -1,0 +1,34 @@
+Hello Onolyriks,
+
+I hope you and your family are safe and sound.
+
+As per your order requirements, I have completed the following tasks:
+
+- I've developed the Blog module with Tags.
+- I've developed the REST API for the Blog and Tag module.
+- I've developed the Service module with Service Category.
+- I've developed the REST API for the Service and Service Category module.
+- I've developed the Co-n-ta-ct module.
+- I've developed the REST API for the Co-n-ta-ct module.
+- I've developed the Application Form upload module.
+- I've developed the REST API for the Application Form upload module.
+- I've developed the Applicant module.
+- I've developed a Re-vi-e-w module.
+- I've developed the REST API for the Re-vi-e-w module.
+- I've developed a Profile settings.
+- I've developed a System settings.
+- I've developed a M-a-il setting.
+
+For your help, I have added a video explanation. 
+Please have a look at:  https://app.usebubbles.com/wSeQ1DASqC7AhUFQc3kMbA 
+
+Please have a look at the admin dashboard using the link below. 
+
+Admin Dashboard Link: [https://onolyriks.softvencefsd.xyz]
+Login cre-den-ti-al:
+[https://docs.google.com/document/d/1cMCfZ5Dwn0NajhnAsdaxgYD94plT2yIY-vBy4-bIYao/edit?usp=sharing]
+
+
+Best wishes.
+
+Client name:  Onolyriks || Profile name: Rank_Champ || Fiverr || Update Message

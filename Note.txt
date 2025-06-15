@@ -1,0 +1,45 @@
+
+If Else,
+short hand if else,
+count function,
+sizeof function,
+geettype function,
+ucwords,
+strtolower, upper,
+htmlentities,
+explode er kaj ki?
+
+strrev function,
+md 5 function, (encription){md5 3d party website deye decript kora jay}
+str_replace() function,
+str_split(),
+for loop ->> {even number , odd number, prime number}{***array deye for loop...!!}
+while loop,
+
+
+
+
+
+
+
+
+
+
+
+<?php
+
+$age    =   45;
+$gender =   "Male"
+
+if($age == 45 && #gender == "Male"){
+    echo "You are middle age Male";
+}elseif{
+
+}else{
+
+}
+
+
+
+
+?>

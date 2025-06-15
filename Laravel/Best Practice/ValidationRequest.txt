@@ -1,0 +1,85 @@
+
+🔹🔹Form Request Class Create 
+
+    php artisan make:request StoreProductRequest
+
+
+
+🔹🔹Validation Rules Define:
+
+    namespace App\Http\Requests;
+
+    use Illuminate\Foundation\Http\FormRequest;
+
+
+    class StoreProductRequest extends FormRequest
+    {
+        public function rules()
+        {
+            return [
+                'name' => 'required|string|max:255',
+                'price' => 'required|numeric|min:1', // added min validation for price
+            ];
+        }
+
+        // Optional: Custom Validation Messages
+        public function messages()
+        {
+            return [
+                'name.required' => 'Product name is required.',
+                'price.required' => 'Price should not be empty.',
+                'price.numeric' => 'Price must be a number.',
+                'price.min' => 'Price must be at least 1.',
+            ];
+        }
+    }
+
+
+
+🔹🔹Controller e Form Request Use 
+
+    namespace App\Http\Controllers;
+
+    use App\Http\Requests\StoreProductRequest;
+    use App\Models\Product;
+
+    class ProductController extends Controller
+    {
+        public function store(StoreProductRequest $request)
+        {
+            // Form request validation automatically run hoye jabe
+            // Jodi validation pass kore, request->validated() ke use kore validated data access kora jay
+
+            $validatedData = $request->validated(); // only validated data
+            Product::create($validatedData);
+
+            return redirect()->route('products.index')->with('success', 'Product added successfully!');
+        }
+    }
+
+
+
+🔹🔹 What Happens When Validation Fails?
+
+    // Example of the error response in view
+    @foreach ($errors->all() as $error)
+        <div class="alert alert-danger">{{ $error }}</div>
+    @endforeach
+
+
+
+
+
+
+🔹🔹 Advantages of Using Form Request
+
+    🔹Cleaner Controller: Validation logic controller theke alada hoye jay, jehetu validation Form Request class e thake.
+
+    🔹Reusability: Form request ke ekadhik controller ba method e use kora jay. Suppose, StoreProductRequest request ta same validation logic rakhbe product update ar create duto action e.
+
+    🔹Custom Error Messages: Form Request class e custom error messages define kora jai, ja user ke better feedback dey. Jemon name.required r price.required ke apnar business requirement moto customize kora jabe.
+
+    🔹Automatic Redirect: Validation fail hole Laravel automatically input back kore ar error messages show kore, jehetu controller e manually redirect likhte hoy na.
+
+
+

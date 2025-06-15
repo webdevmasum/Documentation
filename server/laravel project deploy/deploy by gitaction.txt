@@ -1,0 +1,14 @@
+Application Deploy by Git Action
+
+1. Domain Create.
+2. FTP Create.
+3. DB and User Create and Connection.
+4. yml file -> define git branch, server, user, pass credential add.
+5. .env -> credential change.
+6. push on git using git action branch. (main/dev)
+7. .htaccess file add
+8. .gitignore -> public/build (delete- sometimes it's optional)
+9. C-panel -> 
+
+    cp .env.example .env
+    composer update, migrate

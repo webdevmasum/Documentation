@@ -1,0 +1,148 @@
+https://youtu.be/_aF_poZg5xE?si=COJnbb6v_5kdp1gY
+
+
+    📌-> composer require Laravel/ breeze --dev
+
+    📌-> php artsian install breeze
+    blade with alpain
+    dark mode??
+
+    📌-> php artisan migrate
+
+    npm run dev
+    run build
+
+    make controller
+    fix the the route
+
+
+💥💥 got to cashire-->>
+
+    📌-->> composer require laravel/cashier
+    📌-->> php artisan vendor:publish --tag="cashier-migrations"
+    ==>> maigrate
+    📌-->> php artisan vendor:publish --tag="cashier-config"
+
+
+
+    💥💥 models/user.php-->>
+    use Laravel\Cashier\Billable
+    use HasFactory, Notifiable, Billable;
+
+
+    💥💥 .env-->
+    STRIPE_KEY=pk_test_51QJoHQGEF1Q9fsWzBhRRj418NdfC361iMdLYC28AU5COfpKTJsoanbBeyBA58kiZHv33jSrW5rqfaaoyqLNIjEoe00nbv2V9Y2
+    STRIPE_SECRET=sk_test_51QJoHQGEF1Q9fsWzYKExuOTG0Yn5qka0uK4tl0y34zZga1YQnPsJVxxj5REYUZjYD1NQu2xx2i9gOhImRRiAu9a100vwgGQTFt
+    STRIPE_WEBHOOK_SECRET=whsec_bab060d37d8a72882a1c50dd31a1cb719260f892232ab01155ef257be0848539
+
+
+
+    go to stripe and collect -->>
+    developer mode for publish key and secret key
+
+
+go to doc and find -->> "handling stripe webhooks" -->> stripe CLI -->> configure stripe for webhook
+
+
+****************🔥🔥 💥💥 📌📌************************
+most important think is stripe install for local
+
+Windows Key + X press -->> Command Prompt (Admin)
+
+-->> Chocolatey install
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+-->> check version
+choco --version
+
+
+-->> Stripe CLI install
+
+choco install stripe-cli
+
+-->> check version
+stripe --version
+
+[ ai 2ta mal environment variable e set koro and powershell restart koro]
+-->> stripe installed here
+C:\ProgramData\chocolatey\lib\stripe-cli\tools
+
+C:\ProgramData\chocolatey\bin
+
+
+
+-->> stripe login [run the command]
+and get like this --> https://dashboard.stripe.com/stripecli/confirm_auth?t=bxMUGzh2LYzEEaic4HQS2oxMAqwD7WVl
+
+
+[ ai link ta copy kore onno tab e past koro, and gmail theke code neye verify koro]
+
+
+****************🔥🔥 💥💥 📌📌************************
+
+
+Stream real-time events with the Stripe CLI [click here]
+
+stripe listen --forward-to localhost:4242/webhook
+APP_URL [from .env]
+/stripe/webhook [from doc]
+create link and run terminal -->> stripe listen --forward-to http://localhost/stripe/webhook 
+
+
+and get then set up .env 'STRIPE_WEBHOOK_SECRET' here -->> https://dashboard.stripe.com/stripecli/confirm_auth?t=TgDSw9mEE6wAYtKMLwhf6GRdTlp19Nk1
+
+
+http://subscription_app.test/stripe/webhook
+stripe listen --forward-to http://subscription_app.test/stripe/webhook
+
+stripe logout
+stripe login
+
+herd e "HTTPS" active korte hobe
+
+APP_URL=https://subscription_app.test/
+ensure it then run the command.
+php artisan cashier:webhook
+
+create table-> Plan
+	- name
+	- stripe_plan_id
+	- stripe_price_id
+
+
+[when you seeder data, i f you want you go to stripe,
+then, product catalog- create and click on it and get product_id from url.
+then click three dot and get price_id]
+
+create checkout controller and write checkout function for your needed
+
+-->> video 22 munite
+* go to doc, find selling subscription, copy the code from doc to controller.
+
+write index method
+
+then it will redirect on stripe and you can payment. and then check stripe,
+customer, check also database.
+
+
+go to dashboard.blade.php and wite a condition like if auth user buy subscription he can access it.
+for this go to doc
+
+php artisan make :middleware Subscribed and write subscriber condition
+and register the middleware 
+ 
+
+
+https://devdocs.helcim.com/docs/welcome-to-helcim
+
+
+
+
+
+
+
+
+
+
+

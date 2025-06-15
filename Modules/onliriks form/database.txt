@@ -1,0 +1,313 @@
+Schema::create('applicants', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('middle_name')->nullable();
+            $table->string('social_security_number');
+            $table->date('dob');
+            $table->string('street_address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('zip_code');
+            $table->string('phone')->nullable();
+            $table->string('alternate_phone')->nullable();
+            $table->string('applying_position')->nullable();
+            $table->string('travel_side')->nullable();
+            $table->date('available_date')->nullable();
+            $table->enum('employment_type', ['full-time', 'part-time'])->nullable();
+            $table->decimal('salary_requested', 10, 2)->nullable();
+
+            $table->string('emergency_name')->nullable();
+            $table->string('emergency_relationship')->nullable();
+            $table->string('emergency_address')->nullable();
+            $table->string('emergency_phone')->nullable();
+
+            $table->text('acquaintances')->nullable();
+            $table->string('refer_details', 255)->nullable();
+            $table->string('refer_email', 255)->nullable();
+
+            $table->enum('previously_employed', ['yes', 'no'])->default('no');
+            $table->enum('military', ['yes', 'no'])->default('no');
+            $table->enum('reserve', ['yes', 'no'])->default('no');
+            $table->enum('felony', ['yes', 'no'])->default('no');
+            $table->timestamps();
+        });
+
+
+
+
+Schema::create('education', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+            $table->string('school_name')->nullable();
+            $table->string('location')->nullable();
+            $table->integer('years_attended')->nullable();
+            $table->enum('graduated', ['yes', 'no'])->default('no');
+            $table->text('subjects_studied')->nullable();
+            $table->timestamps();
+        });
+
+
+Schema::create('professional_licenses', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+            $table->json('types')->nullable();  // Multiple values stored ['RN', 'LVN', 'CNA', 'other']
+            $table->string('license_number')->nullable();
+            $table->string('state')->nullable();
+            $table->date('expiration_date')->nullable();
+
+            $table->boolean('typing_skill')->default(0);
+            $table->boolean('computer_skill')->default(0);
+            $table->timestamps();
+        });
+
+
+Schema::create('employment_histories', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+            $table->date('employment_date_from')->nullable();
+            $table->date('employment_date_to')->nullable();
+
+            $table->string('company')->nullable();
+            $table->decimal('salary', 10, 2);
+            $table->string('address')->nullable();
+            $table->string('supervisor')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('job_title')->nullable();
+            $table->text('job_duties')->nullable();
+            $table->text('reason_for_leaving')->nullable();
+            $table->timestamps();
+        });
+
+
+
+Schema::create('references', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+            $table->string('reference_name')->nullable();
+            $table->string('reference_address')->nullable();
+            $table->string('reference_phone')->nullable();
+            $table->integer('reference_years')->nullable();
+            $table->text('reference_relation')->nullable();
+            $table->timestamps();
+        });
+
+
+
+Schema::create('health_infos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('position_applied_for')->nullable();
+            $table->string('date_of_birth')->nullable();
+
+            // Using a JSON column for medical history and related conditions
+            $table->json('medical_conditions')->nullable(); // For storing conditions like asthma, diabetes, etc.
+
+            $table->text('illness_explanation')->nullable();
+            $table->text('accommodation_details')->nullable();
+            $table->boolean('knowledge_correct')->default(false)->nullable();
+            $table->string('applicant_signature');
+            $table->string('date')->nullable();
+
+            $table->timestamps();
+	});
+
+
+
+Schema::create('assurance_services', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->json('checkbox_data'); // JSON column to store checkboxes I UNDERSTAND AND AGREE THAT:
+
+            $table->string('name')->nullable();
+            $table->string('applicant_signature')->nullable();
+            $table->date('date')->nullable();
+
+            $table->string('applicant_name')->nullable();       // PAS Attendant
+            $table->string('dateof_hire')->nullable();          // PAS Attendant
+            $table->boolean('checkbox')->default(false);        // I UNDERSTAND AND AGREE THAT: (checkbox)
+
+            $table->string('pas_employee')->nullable();         // PAS Attendant
+            $table->date('pas_date_employee')->nullable();      // PAS Attendant
+            $table->string('pas_supervisor')->nullable();       // PAS Attendant
+            $table->date('pas_date_supervisor')->nullable();    // PAS Attendant
+            $table->string('report_to')->nullable();            // PAS Attendant
+            $table->string('employee_initial')->nullable();     // PAS Attendant
+            $table->string('supervisor_initial')->nullable();   // PAS Attendant
+            $table->date('initial_date')->nullable();           // PAS Attendant
+            $table->timestamps();
+        });
+
+
+Schema::create('job_responsibilities', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->string('employee_name')->nullable();
+            $table->json('topics');  // Initials of Preceptor, Employee and date store by Json
+
+            $table->string('supervisor')->nullable();
+            $table->date('supervisor_date')->nullable();
+            $table->string('employee')->nullable();
+            $table->date('employee_date')->nullable();
+
+            $table->timestamps();
+        });
+
+
+
+
+Schema::create('provider_orientations', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->string('name');
+            $table->json('task_details')->nullable(); // JSON field to store all task details
+
+            $table->string('employee_name')->nullable();
+            $table->date('employee_date')->nullable();
+            $table->string('administrative_name')->nullable();
+            $table->date('administrative_date')->nullable();
+
+            $table->string('applicant_name')->nullable();           // past employment reference
+            $table->string('social_security_number')->nullable();   // past employment reference
+            $table->string('supervisor')->nullable();               // past employment reference
+            $table->date('date_employed')->nullable();              // past employment reference
+            $table->string('previous_company')->nullable();         // past employment reference
+            $table->string('company_address')->nullable();          // past employment reference
+            $table->string('city')->nullable();                     // past employment reference
+            $table->string('state')->nullable();                    // past employment reference
+            $table->string('zip_code')->nullable();                 // past employment reference
+            $table->string('company_telephone')->nullable();        // past employment reference
+
+            $table->timestamps();
+        });
+
+
+
+Schema::create('authorization_ones', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->boolean('consent')->default(false);  // for checkbox
+            $table->string('applicant_name')->nullable();
+            $table->string('date')->nullable();
+
+            $table->enum('dependability', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('attendance', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('knowledge', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('cooperation', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('initiative', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('performance', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('overall_rating', ['Above Average', 'Average', 'Poor'])->nullable();
+
+            $table->text('duties_performed')->nullable();
+            $table->text('reason_for_leaving')->nullable();
+            $table->enum('rehire', ['Yes', 'No'])->nullable();
+            $table->text('remarks')->nullable();
+
+            $table->string('name')->nullable();
+            $table->string('position')->nullable();
+            $table->string('date')->nullable();
+
+            $table->string('applicant_name')->nullable();
+            $table->string('company_previous_employed')->nullable();
+            $table->string('social_security_number')->nullable();
+            $table->string('supervisor')->nullable();
+            $table->string('company_address')->nullable();
+            $table->string('city')->nullable();
+            $table->string('state')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('date_employed')->nullable();
+            $table->string('company_telephone')->nullable();
+
+            $table->timestamps();
+        });
+
+Schema::create('authorization_twos', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+
+            $table->boolean('consent')->default(false);             // for checkbox
+            $table->string('applicant_name')->nullable();
+            $table->string('date')->nullable();
+
+            $table->enum('dependability', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('attendance', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('knowledge', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('cooperation', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('initiative', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('performance', ['Above Average', 'Average', 'Poor'])->nullable();
+            $table->enum('overall_rating', ['Above Average', 'Average', 'Poor'])->nullable();
+
+            $table->text('duties_performed')->nullable();
+            $table->text('reason_for_leaving')->nullable();
+            $table->enum('rehire', ['Yes', 'No'])->nullable();
+            $table->text('remarks')->nullable();
+
+            $table->string('employee_name')->nullable();
+            $table->string('position')->nullable();
+            $table->string('orientation_date')->nullable();
+
+            $table->json('technical_skill')->nullable();                // for checkboxes {Philosophy,Benefits,Assignment}
+
+            $table->text('job_description')->nullable();
+            $table->boolean('received_handbook')->default(false);       // Store as a boolean value
+
+            $table->string('applicant_signature')->nullable();
+            $table->string('date')->nullable();
+            $table->string('oriented_by')->nullable();
+            $table->string('date')->nullable();
+            
+            $table->timestamps();
+        });
+
+
+Schema::create('hepatitis_vaccines', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('applicant_id')->constrained('applicants')->onDelete('cascade');
+            
+            $table->boolean('received_handbook')->default(false);       // HEPATITIS B VACCINATION
+            $table->boolean('received_vaccine_one')->default(false);    // HEPATITIS B VACCINATION
+            $table->boolean('received_vaccine_two')->default(false);    // HEPATITIS B VACCINATION
+            $table->date('last_vaccine_received_date')->nullable();     // HEPATITIS B VACCINATION
+            $table->boolean('decline_vaccine')->default(false);         // HEPATITIS B VACCINATION
+
+            $table->string('applicant_name')->nullable();               // HEPATITIS B VACCINATION
+            $table->string('applicant_signature')->nullable();          // HEPATITIS B VACCINATION
+            $table->string('witness')->nullable();                      // HEPATITIS B VACCINATION
+            $table->date('applicant_date')->nullable();                 // HEPATITIS B VACCINATION
+
+            $table->string('employee_name')->nullable();                // employee statement regarding
+            $table->string('employee_signature')->nullable();           // employee statement regarding
+            $table->date('employee_date')->nullable();                  // employee statement regarding
+            $table->string('agency_supervisor')->nullable();            // employee statement regarding
+            $table->date('agency_supervisor_date')->nullable();         // employee statement regarding
+
+            $table->string('compliance_name')->nullable();              // Statement of Compliance
+            $table->string('compliance_employee_name')->nullable();     // Statement of Compliance
+            $table->date('compliance_date')->nullable();                // Statement of Compliance
+            $table->string('compliance_time')->nullable();              // Statement of Compliance
+
+            $table->string('name')->nullable();                         // Statement of Employability Consent
+            $table->string('other_names')->nullable();                  // Statement of Employability Consent
+            $table->string('date')->nullable();                         // Statement of Employability Consent
+            $table->string('social_security_number')->nullable();       // Statement of Employability Consent
+            $table->date('applicant_name')->nullable();                  // Statement of Employability Consent
+            $table->date('application_date')->nullable();               // Statement of Employability Consent
+
+            $table->boolean('agreement')->default(false);               // Pledge for Confidentiality of Protected Health Information
+            $table->date('pledge_date')->nullable();                    // Pledge for Confidentiality of Protected Health Information
+            $table->string('individual_name')->nullable();              // Pledge for Confidentiality of Protected Health Information
+            $table->string('department')->nullable();                   // Pledge for Confidentiality of Protected Health Information
+            $table->boolean('discussion_agreement')->default(false);    // Pledge for Confidentiality of Protected Health Information
+            $table->string('administering_name')->nullable();           // Pledge for Confidentiality of Protected Health Information
+            $table->date('administering_date')->nullable();             // Pledge for Confidentiality of Protected Health Information
+
+            $table->timestamps();
+        });

@@ -1,0 +1,8 @@
+
+
+egger load 
+lazy load
+
+eloquent and db query
+
+

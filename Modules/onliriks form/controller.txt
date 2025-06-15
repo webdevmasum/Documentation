@@ -1,0 +1,691 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Applicant;
+use App\Models\AssuranceService;
+use App\Models\AuthorizationOne;
+use App\Models\AuthorizationTwo;
+use App\Models\Education;
+use App\Models\EmploymentHistory;
+use App\Models\HealthInfo;
+use App\Models\HepatitisVaccine;
+use App\Models\JobResponsibilities;
+use App\Models\ProfessionalLicenses;
+use App\Models\ProviderOrientation;
+use App\Models\References;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use League\CommonMark\Reference\Reference;
+
+class CareerController extends Controller
+{
+    public function store(Request $request)
+    {
+        // Validate the request data
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'nullable|string|max:255',  //!! applicant.....
+            'last_name' => 'nullable|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'social_security_number' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'street_address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip_code' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:255',
+            'alternate_phone' => 'nullable|string|max:255',
+            'applying_position' => 'nullable|string|max:255',
+            'travel_side' => 'nullable|string|max:255',
+            'available_date' => 'nullable|date',
+            'employment_type' => 'nullable|in:full-time,part-time',
+            'salary_requested' => 'nullable|numeric',
+
+            'emergency_name' => 'nullable|string|max:255',  //!! applicant emergency info
+            'emergency_relationship' => 'nullable|string|max:255',
+            'emergency_address' => 'nullable|string|max:255',
+            'emergency_phone' => 'nullable|string|max:255',
+
+            'acquaintances' => 'nullable|string',
+            'refer_details' => 'nullable|string|max:255',
+            'refer_email' => 'nullable|email|max:255',
+
+            'previously_employed' => 'nullable|in:yes,no',
+            'military' => 'nullable|in:yes,no',
+            'reserve' => 'nullable|in:yes,no',
+            'felony' => 'nullable|in:yes,no',
+
+            //!! Education Validation
+            'education' => 'nullable|array',
+            // 'education.*.applicant_id' => 'required|exists:applicants,id',
+            'education.*.school_name' => 'nullable|string|max:255',
+            'education.*.location' => 'nullable|string|max:255',
+            'education.*.years_attended' => 'nullable|integer',
+            'education.*.graduated' => 'nullable|in:yes,no',
+            'education.*.subjects_studied' => 'nullable|string',
+
+
+            //!! Professional Licenses Validation (for one license per applicant)
+            'professional_licenses' => 'nullable|array',
+            'professional_licenses.types' => 'nullable|array',
+            'professional_licenses.types.*' => 'nullable|string|in:RN,LVN,CNA,other',
+            'professional_licenses.license_number' => 'nullable|string|max:255',
+            'professional_licenses.state' => 'nullable|string|max:255',
+            'professional_licenses.expiration_date' => 'nullable|date',
+            'professional_licenses.typing_skill' => 'nullable|boolean',
+            'professional_licenses.computer_skill' => 'nullable|boolean',
+
+
+            //!! Employment Histories Validation (array of employment records)
+            'employment_histories' => 'nullable|array',
+            // 'employment_histories.*.applicant_id' => 'required|exists:applicants,id',
+            'employment_histories.*.employment_date_from' => 'nullable|date',
+            'employment_histories.*.employment_date_to' => 'nullable|date|after_or_equal:employment_histories.*.employment_date_from',
+            'employment_histories.*.company' => 'nullable|string|max:255',
+            'employment_histories.*.salary' => 'nullable|numeric',
+            'employment_histories.*.address' => 'nullable|string|max:255',
+            'employment_histories.*.supervisor' => 'nullable|string|max:255',
+            'employment_histories.*.phone' => 'nullable|string|max:255',
+            'employment_histories.*.job_title' => 'nullable|string|max:255',
+            'employment_histories.*.job_duties' => 'nullable|string',
+            'employment_histories.*.reason_for_leaving' => 'nullable|string',
+
+
+            //!! References Validation (array of references for each applicant)
+            'references' => 'nullable|array',
+            // 'references.*.applicant_id' => 'required|exists:applicants,id',
+            'references.*.reference_name' => 'nullable|string|max:255',
+            'references.*.reference_address' => 'nullable|string|max:255',
+            'references.*.reference_phone' => 'nullable|string|max:255',
+            'references.*.reference_years' => 'nullable|integer',
+            'references.*.reference_relation' => 'nullable|string',
+
+
+            //!! Assurance Services Validation (checkbox data and related fields)
+            'assurance_services' => 'nullable|array',
+            // 'assurance_services.*.applicant_id' => 'required|exists:applicants,id',
+            'assurance_services.checkbox_data' => 'nullable|json',
+            'assurance_services.name' => 'nullable|string|max:255',
+            'assurance_services.applicant_signature' => 'nullable|string|max:255',
+            'assurance_services.date' => 'nullable|date',
+
+            'assurance_services.applicant_name' => 'nullable|string|max:255',
+            'assurance_services.dateof_hire' => 'nullable|date',
+            'assurance_services.checkbox' => 'nullable|boolean',
+            'assurance_services.pas_employee' => 'nullable|string|max:255',
+            'assurance_services.pas_date_employee' => 'nullable|date',
+            'assurance_services.pas_supervisor' => 'nullable|string|max:255',
+            'assurance_services.pas_date_supervisor' => 'nullable|date',
+            'assurance_services.report_to' => 'nullable|string|max:255',
+            'assurance_services.employee_initial' => 'nullable|string|max:255',
+            'assurance_services.supervisor_initial' => 'nullable|string|max:255',
+            'assurance_services.initial_date' => 'nullable|date',
+
+            //!! Job Responsibilities Validation
+            'job_responsibilities' => 'nullable|array',
+            // 'job_responsibilities.*.applicant_id' => 'required|exists:applicants,id',
+            'job_responsibilities.*.employee_name' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics' => 'nullable|array',
+            'job_responsibilities.*.topics.*.preceptor_initials' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics.*.employee_initials' => 'nullable|string|max:255',
+            'job_responsibilities.*.topics.*.date' => 'nullable|date',
+
+            'job_responsibilities.*.supervisor' => 'nullable|string|max:255',
+            'job_responsibilities.*.supervisor_date' => 'nullable|date',
+            'job_responsibilities.*.employee' => 'nullable|string|max:255',
+            'job_responsibilities.*.employee_date' => 'nullable|date',
+
+
+            //!! Provider_Orientations Validation
+            // 'applicant_id' => 'required|exists:applicants,id',
+            'provider_orientations' => 'nullable|array',
+            'provider_orientations.name' => 'nullable|string|max:255',
+
+            // Task Details Validation (JSON format)
+            'provider_orientations.task_details' => 'nullable|array',
+            'provider_orientations.task_details.*.status' => 'nullable|array',
+            'provider_orientations.task_details.*.status.*' => 'nullable|in:Completed,Reviewed',
+            'provider_orientations.task_details.*.initials' => 'nullable|string|max:255',
+
+            'provider_orientations.employee_name' => 'nullable|string|max:255',
+            'provider_orientations.employee_date' => 'nullable|date',
+            'provider_orientations.administrative_name' => 'nullable|string|max:255',
+            'provider_orientations.administrative_date' => 'nullable|date',
+
+            // Past Employment fields (nullable)
+            'provider_orientations.applicant_name' => 'nullable|string|max:255',
+            'provider_orientations.social_security_number' => 'nullable|string|max:20',
+            'provider_orientations.supervisor' => 'nullable|string|max:255',
+            'provider_orientations.date_employed' => 'nullable|date',
+            'provider_orientations.previous_company' => 'nullable|string|max:255',
+            'provider_orientations.company_address' => 'nullable|string|max:255',
+            'provider_orientations.city' => 'nullable|string|max:255',
+            'provider_orientations.state' => 'nullable|string|max:255',
+            'provider_orientations.zip_code' => 'nullable|string|max:10',
+            'provider_orientations.company_telephone' => 'nullable|string|max:15',
+
+            //!! Authorization Ones Validation
+            'authorization_ones' => 'nullable|array',
+            'authorization_ones.consent' => 'nullable|boolean',
+
+            'authorization_ones.applicant_name' => 'nullable|string|max:255',
+            'authorization_ones.applicant_date' => 'nullable|date',
+
+            'authorization_ones.dependability' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.attendance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.knowledge' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.cooperation' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.initiative' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.performance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_ones.overall_rating' => 'nullable|in:Above Average,Average,Poor',
+
+            'authorization_ones.duties_performed' => 'nullable|string',
+            'authorization_ones.reason_for_leaving' => 'nullable|string',
+            'authorization_ones.rehire' => 'nullable|in:Yes,No',
+            'authorization_ones.remarks' => 'nullable|string',
+
+            'authorization_ones.name' => 'nullable|string|max:255',
+            'authorization_ones.position' => 'nullable|string|max:255',
+            'authorization_ones.date' => 'nullable|date',
+
+            'authorization_ones.applicant_name_again' => 'nullable|string|max:255', //dubble applicant
+            'authorization_ones.company_previous_employed' => 'nullable|string|max:255',
+            'authorization_ones.social_security_number' => 'nullable|string|max:255',
+            'authorization_ones.supervisor' => 'nullable|string|max:255',
+            'authorization_ones.company_address' => 'nullable|string|max:255',
+            'authorization_ones.city' => 'nullable|string|max:255',
+            'authorization_ones.state' => 'nullable|string|max:255',
+            'authorization_ones.zip_code' => 'nullable|string|max:255',
+            'authorization_ones.date_employed' => 'nullable|string|max:255',
+            'authorization_ones.company_telephone' => 'nullable|string|max:255',
+
+
+
+
+            //!! Authorization Twos Validation
+            // 'applicant_id' => 'required|exists:applicants,id',
+            'authorization_twos.consent' => 'nullable|boolean',
+            'authorization_twos.applicant_name' => 'nullable|string|max:255',
+            'authorization_twos.date' => 'nullable|date',
+
+            // Enum validation for ratings (dependability, performance, etc.)
+            'authorization_twos.dependability' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.attendance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.knowledge' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.cooperation' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.initiative' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.performance' => 'nullable|in:Above Average,Average,Poor',
+            'authorization_twos.overall_rating' => 'nullable|in:Above Average,Average,Poor',
+
+            // Optional text fields
+            'authorization_twos.duties_performed' => 'nullable|string',
+            'authorization_twos.reason_for_leaving' => 'nullable|string',
+            'authorization_twos.rehire' => 'nullable|in:Yes,No',
+            'authorization_twos.remarks' => 'nullable|string',
+
+            'authorization_twos.employee_name' => 'nullable|string|max:255',
+            'authorization_twos.position' => 'nullable|string|max:255',
+            'authorization_twos.orientation_date' => 'nullable|date',
+
+            // JSON array of technical skills (checkboxes validation)
+            'authorization_twos.technical_skill' => 'nullable|array',  // Ensure it's an array
+            'authorization_twos.technical_skill.*' => 'nullable|string', // Ensure each value is valid
+            'authorization_twos.job_description' => 'nullable|string',
+            'authorization_twos.received_handbook' => 'nullable|boolean',
+
+            'authorization_twos.applicant_signature' => 'nullable|string|max:255',
+            'authorization_twos.applicant_date' => 'nullable|date',
+            'authorization_twos.oriented_by' => 'nullable|string|max:255',
+            'authorization_twos.oriented_date' => 'nullable|date',
+
+
+            //!! Health Information
+            'health_infos' => 'nullable|array',
+            // 'health_infos.*.applicant_id' => 'required|exists:applicants,id',
+            'health_infos.name' => 'nullable|string|max:255',
+            'health_infos.address' => 'nullable|string|max:255',
+            'health_infos.phone' => 'nullable|string|max:255',
+            'health_infos.position_applied_for' => 'nullable|string|max:255',
+            'health_infos.date_of_birth' => 'nullable|date',
+
+            // Validate medical_conditions as an array of objects
+            'health_infos.medical_conditions' => 'nullable|array',
+            'health_infos.medical_conditions.*.condition' => 'required|string',
+            'health_infos.medical_conditions.*.status' => 'required|in:yes,no',
+
+            'health_infos.illness_explanation' => 'nullable|string',
+            'health_infos.accommodation_details' => 'nullable|string',
+            'health_infos.knowledge_correct' => 'nullable|boolean',
+            'health_infos.applicant_signature' => 'nullable|string|max:255',
+            'health_infos.date' => 'nullable|date',
+
+
+            //!! Hepatitis B Vaccine related fields
+            'hepatitis_vaccines' => 'nullable|array',
+            // 'hepatitis_vaccines.*.applicant_id' => 'required|exists:applicants,id',
+            'hepatitis_vaccines.received_handbook' => 'nullable|boolean',
+            'hepatitis_vaccines.received_vaccine_one' => 'nullable|boolean',
+            'hepatitis_vaccines.received_vaccine_two' => 'nullable|boolean',
+            'hepatitis_vaccines.last_vaccine_received_date' => 'nullable|date',
+            'hepatitis_vaccines.decline_vaccine' => 'nullable|boolean',
+
+            // Applicant details
+            'hepatitis_vaccines.applicant_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_signature' => 'nullable|string|max:255',
+            'hepatitis_vaccines.witness' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_date' => 'nullable|date',
+
+            // Employee statement fields
+            'hepatitis_vaccines.employee_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.employee_signature' => 'nullable|string|max:255',
+            'hepatitis_vaccines.employee_date' => 'nullable|date',
+            'hepatitis_vaccines.agency_supervisor' => 'nullable|string|max:255',
+            'hepatitis_vaccines.agency_supervisor_date' => 'nullable|date',
+
+            // Compliance statement fields
+            'hepatitis_vaccines.compliance_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.compliance_employee_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.compliance_date' => 'nullable|date',
+            'hepatitis_vaccines.compliance_time' => 'nullable|string|max:50',
+
+            // Employability consent statement fields
+            'hepatitis_vaccines.name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.other_names' => 'nullable|string|max:255',
+            'hepatitis_vaccines.date' => 'nullable|date',
+            'hepatitis_vaccines.social_security_number' => 'nullable|string|max:255',
+            'hepatitis_vaccines.applicant_name_again' => 'nullable|string|max:255',
+            'hepatitis_vaccines.application_date' => 'nullable|date',
+
+            // Confidentiality pledge fields
+            'hepatitis_vaccines.agreement' => 'nullable|boolean',
+            'hepatitis_vaccines.pledge_date' => 'nullable|date',
+            'hepatitis_vaccines.individual_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.department' => 'nullable|string|max:255',
+            'hepatitis_vaccines.discussion_agreement' => 'nullable|boolean',
+            'hepatitis_vaccines.administering_name' => 'nullable|string|max:255',
+            'hepatitis_vaccines.administering_date' => 'nullable|date',
+
+        ]);
+
+
+        DB::beginTransaction();
+
+        try {
+
+            // Return validation errors if any
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Validation failed',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
+
+            //!! Applicant Create
+            $applicant = Applicant::create([
+                'first_name'                => $request->first_name,
+                'last_name'                 => $request->last_name,
+                'middle_name'               => $request->middle_name,
+                'social_security_number'    => $request->social_security_number,
+                'dob'                       => $request->dob,
+                'street_address'            => $request->street_address,
+                'city'                      => $request->city,
+                'state'                     => $request->state,
+                'zip_code'                  => $request->zip_code,
+                'phone'                     => $request->phone,
+                'alternate_phone'           => $request->alternate_phone,
+                'applying_position'         => $request->applying_position,
+                'travel_side'               => $request->travel_side,
+                'available_date'            => $request->available_date,
+                'employment_type'           => $request->employment_type,
+                'salary_requested'          => $request->salary_requested,
+
+                'emergency_name'            => $request->emergency_name,
+                'emergency_relationship'    => $request->emergency_relationship,
+                'emergency_address'         => $request->emergency_address,
+                'emergency_phone'           => $request->emergency_phone,
+
+                'acquaintances'             => $request->acquaintances,
+                'refer_details'             => $request->refer_details,
+                'refer_email'               => $request->refer_email,
+
+                'previously_employed'       => $request->previously_employed,
+                'military'                  => $request->military,
+                'reserve'                   => $request->reserve,
+                'felony'                    => $request->felony,
+            ]);
+            //dd($applicant->id);
+
+
+            //!! Insert Education Data
+            if ($request->has('education') && is_array($request->education)) {
+                foreach ($request->education as $edu) {
+                    Education::create([
+                        'applicant_id'      => $applicant->id,
+                        'school_name'       => $edu['school_name'] ?? null,
+                        'location'          => $edu['location'] ?? null,
+                        'years_attended'    => $edu['years_attended'] ?? null,
+                        'graduated'         => $edu['graduated'] ?? null,
+                        'subjects_studied'  => $edu['subjects_studied'] ?? null,
+                    ]);
+                }
+            }
+            // dd(Education::all());
+
+
+
+            //!! Professional Licenses Store
+            if ($request->has('professional_licenses')) {
+                $applicant->professionalLicenses()->create([
+                    'types'             => json_encode($request->professional_licenses['types']),
+                    'license_number'    => $request->professional_licenses['license_number'],
+                    'state'             => $request->professional_licenses['state'],
+                    'expiration_date'   => $request->professional_licenses['expiration_date'],
+                    'typing_skill'      => $request->professional_licenses['typing_skill'] ?? 0,
+                    'computer_skill'    => $request->professional_licenses['computer_skill'] ?? 0,
+                ]);
+            }
+            // dd($request->professional_licenses);
+
+
+
+            //!! Employment History Store
+            if ($request->has('employment_history') && is_array($request->employment_history)) {
+                foreach ($request->employment_history as $emp) {
+                    EmploymentHistory::create([
+                        'applicant_id'          => $applicant->id,
+                        'employment_date_from'  => $emp['employment_date_from'] ?? null,
+                        'employment_date_to'    => $emp['employment_date_to'] ?? null,
+                        'company'               => $emp['company'] ?? null,
+                        'salary'                => $emp['salary'] ?? null,
+                        'address'               => $emp['address'] ?? null,
+                        'supervisor'            => $emp['supervisor'] ?? null,
+                        'phone'                 => $emp['phone'] ?? null,
+                        'job_title'             => $emp['job_title'] ?? null,
+                        'job_duties'            => $emp['job_duties'] ?? null,
+                        'reason_for_leaving'    => $emp['reason_for_leaving'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->employment_history);
+
+
+
+
+            // Check if references are provided and loop through the array to insert data
+            if ($request->has('references') && is_array($request->references)) {
+                foreach ($request->references as $reference) {
+                    References::create([
+                        'applicant_id'          => $applicant->id,
+                        'reference_name'        => $reference['reference_name'] ?? null,
+                        'reference_address'     => $reference['reference_address'] ?? null,
+                        'reference_phone'       => $reference['reference_phone'] ?? null,
+                        'reference_years'       => $reference['reference_years'] ?? null,
+                        'reference_relation'    => $reference['reference_relation'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->references);
+
+
+            //!! assurance_services Store
+            if ($request->has('assurance_services')) {
+                $applicant->assuranceServices()->create([
+                    'checkbox_data'         => json_encode($request->assurance_services['checkbox_data']),
+                    'name'                  => $request->assurance_services['name'],
+                    'applicant_signature'   => $request->assurance_services['applicant_signature'],
+                    'date'                  => $request->assurance_services['date'],
+
+                    'applicant_name'        => $request->assurance_services['applicant_name'],
+                    'dateof_hire'           => $request->assurance_services['dateof_hire'],
+                    'checkbox'              => $request->assurance_services['checkbox'],
+                    'pas_employee'          => $request->assurance_services['pas_employee'],
+                    'pas_date_employee'     => $request->assurance_services['pas_date_employee'],
+                    'pas_supervisor'        => $request->assurance_services['pas_supervisor'],
+                    'pas_date_supervisor'   => $request->assurance_services['pas_date_supervisor'],
+                    'report_to'             => $request->assurance_services['report_to'],
+                    'employee_initial'      => $request->assurance_services['employee_initial'],
+                    'supervisor_initial'    => $request->assurance_services['supervisor_initial'],
+                    'initial_date'          => $request->assurance_services['initial_date'],
+                ]);
+            }
+            // dd($request->assurance_services);
+
+
+
+            //!! Check if job_responsibilities are provided and loop through the array to insert data
+            if ($request->has('job_responsibilities') && is_array($request->job_responsibilities)) {
+                foreach ($request->job_responsibilities as $job) {
+                    JobResponsibilities::create([
+                        'applicant_id'      => $applicant->id,
+                        'employee_name'     => $job['employee_name'] ?? null,
+                        // If topics are provided, insert them as well
+                        'topics'            => json_encode($job['topics'] ?? []),
+                        'supervisor'        => $job['supervisor'] ?? null,
+                        'supervisor_date'   => $job['supervisor_date'] ?? null,
+                        'employee'          => $job['employee'] ?? null,
+                        'employee_date'     => $job['employee_date'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->job_responsibilities);
+
+
+
+            //!! Check if professional_licenses are provided and loop through the array to insert data
+            if ($request->has('provider_orientations') && is_array($request->provider_orientations)) {
+                foreach ($request->provider_orientations as $provider) {
+
+                    ProviderOrientation::create([
+                        'applicant_id'          => $provider['applicant_id'] ?? $applicant->id ?? null,
+                        'name'                  => $provider['name'] ?? null,
+                        'task_details'          => !empty($provider['task_details']) ? json_encode($provider['task_details']) : json_encode([]),
+                        'employee_name'         => $provider['employee_name'] ?? null,
+                        'employee_date'         => $provider['employee_date'] ?? null,
+                        'administrative_name'   => $provider['administrative_name'] ?? null,
+                        'administrative_date'   => $provider['administrative_date'] ?? null,
+
+                        'applicant_name'        => $provider['applicant_name'] ?? null,
+                        'social_security_number' => $provider['social_security_number'] ?? null,
+                        'supervisor'            => $provider['supervisor'] ?? null,
+                        'date_employed'         => $provider['date_employed'] ?? null,
+                        'previous_company'      => $provider['previous_company'] ?? null,
+                        'company_address'       => $provider['company_address'] ?? null,
+                        'city'                  => $provider['city'] ?? null,
+                        'state'                 => $provider['state'] ?? null,
+                        'zip_code'              => $provider['zip_code'] ?? null,
+                        'company_telephone'     => $provider['company_telephone'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->provider_orientations);
+
+
+            // Check if 'authorization_ones' is provided and loop through the array to insert data
+            if ($request->has('authorization_ones') && is_array($request->authorization_ones)) {
+                foreach ($request->authorization_ones as $authorization) {
+
+                    AuthorizationOne::create([
+                        'applicant_id'          => $authorization['applicant_id'] ?? $applicant->id ?? null,
+                        'consent'               => $authorization['consent'] ?? null,
+                        'applicant_name'        => $authorization['applicant_name'] ?? null,
+                        'applicant_date'        => $authorization['applicant_date'] ?? null,
+
+                        'dependability'         => $authorization['dependability'] ?? null,
+                        'attendance'            => $authorization['attendance'] ?? null,
+                        'knowledge'             => $authorization['knowledge'] ?? null,
+                        'cooperation'           => $authorization['cooperation'] ?? null,
+                        'initiative'            => $authorization['initiative'] ?? null,
+                        'performance'           => $authorization['performance'] ?? null,
+                        'overall_rating'        => $authorization['overall_rating'] ?? null,
+
+                        'duties_performed'      => $authorization['duties_performed'] ?? null,
+                        'reason_for_leaving'    => $authorization['reason_for_leaving'] ?? null,
+                        'rehire'                => $authorization['rehire'] ?? null,
+                        'remarks'               => $authorization['remarks'] ?? null,
+
+                        'name'                  => $authorization['name'] ?? null,
+                        'position'              => $authorization['position'] ?? null,
+                        'date'                  => $authorization['date'] ?? null,
+
+                        'applicant_name_again'  => $authorization['applicant_name_again'] ?? null,
+                        'company_previous_employed' => $authorization['company_previous_employed'] ?? null,
+                        'social_security_number' => $authorization['social_security_number'] ?? null,
+                        'supervisor'            => $authorization['supervisor'] ?? null,
+                        'company_address'       => $authorization['company_address'] ?? null,
+                        'city'                  => $authorization['city'] ?? null,
+                        'state'                 => $authorization['state'] ?? null,
+                        'zip_code'              => $authorization['zip_code'] ?? null,
+                        'date_employed'         => $authorization['date_employed'] ?? null,
+                        'company_telephone'     => $authorization['company_telephone'] ?? null,
+
+                        // 'consent' => $authorization['consent'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->authorization_ones);
+
+
+
+            // Check if 'authorization_twos' is provided and loop through the array to insert data
+            if ($request->has('authorization_twos') && is_array($request->authorization_twos)) {
+                foreach ($request->authorization_twos as $authorization) {
+
+                    AuthorizationTwo::create([
+                        'applicant_id'      => $authorization['applicant_id'] ?? $applicant->id ?? null,
+                        'consent'           => $authorization['consent'] ?? null,
+                        'applicant_name'    => $authorization['applicant_name'] ?? null,
+                        'date'              => $authorization['date'] ?? null,
+
+                        'dependability'     => $authorization['dependability'] ?? null,
+                        'attendance'        => $authorization['attendance'] ?? null,
+                        'knowledge'         => $authorization['knowledge'] ?? null,
+                        'cooperation'       => $authorization['cooperation'] ?? null,
+                        'initiative'        => $authorization['initiative'] ?? null,
+                        'performance'       => $authorization['performance'] ?? null,
+                        'overall_rating'    => $authorization['overall_rating'] ?? null,
+
+                        'duties_performed'  => $authorization['duties_performed'] ?? null,
+                        'reason_for_leaving' => $authorization['reason_for_leaving'] ?? null,
+                        'rehire'            => $authorization['rehire'] ?? null,
+                        'remarks'           => $authorization['remarks'] ?? null,
+
+                        'employee_name'     => $authorization['employee_name'] ?? null,
+                        'position'          => $authorization['position'] ?? null,
+                        'orientation_date'  => $authorization['orientation_date'] ?? null,
+
+                        'technical_skill'   => isset($authorization['technical_skill']) ? json_encode($authorization['technical_skill']) : null,
+                        'job_description'   => $authorization['job_description'] ?? null,
+                        'received_handbook' => $authorization['received_handbook'] ?? null,
+
+                        'applicant_signature' => $authorization['applicant_signature'] ?? null,
+                        'applicant_date'    => $authorization['applicant_date'] ?? null,
+                        'oriented_by'       => $authorization['oriented_by'] ?? null,
+                        'oriented_date'     => $authorization['oriented_date'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->authorization_twos);
+
+
+
+            // Check if 'health_infos' is provided and loop through the array to insert data
+            if ($request->has('health_infos') && is_array($request->health_infos)) {
+                foreach ($request->health_infos as $healthInfo) {
+
+                    HealthInfo::create([
+                        'applicant_id'          => $healthInfo['applicant_id'] ?? $applicant->id ?? null,
+                        'name'                  => $healthInfo['name'] ?? null,
+                        'address'               => $healthInfo['address'] ?? null,
+                        'phone'                 => $healthInfo['phone'] ?? null,
+                        'position_applied_for'  => $healthInfo['position_applied_for'] ?? null,
+                        'date_of_birth'         => $healthInfo['date_of_birth'] ?? null,
+                        'medical_conditions'    => isset($healthInfo['medical_conditions']) ? json_encode($healthInfo['medical_conditions']) : null,
+
+                        'illness_explanation'   => $healthInfo['illness_explanation'] ?? null,
+                        'accommodation_details' => $healthInfo['accommodation_details'] ?? null,
+                        'knowledge_correct'     => $healthInfo['knowledge_correct'] ?? null,
+                        'applicant_signature'   => $healthInfo['applicant_signature'] ?? null,
+                        'date'                  => $healthInfo['date'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->health_infos);
+
+
+
+            // Check if 'hepatitis_vaccines' is provided and loop through the array to insert data
+            if ($request->has('hepatitis_vaccines') && is_array($request->hepatitis_vaccines)) {
+                foreach ($request->hepatitis_vaccines as $hepatitisVaccine) {
+
+                    // Insert hepatitis vaccine info into the database
+                    HepatitisVaccine::create([
+                        'applicant_id'              => $hepatitisVaccine['applicant_id'] ?? $applicant->id ?? null,
+                        'received_handbook'         => $hepatitisVaccine['received_handbook'] ?? null,
+                        'received_vaccine_one'      => $hepatitisVaccine['received_vaccine_one'] ?? null,
+                        'received_vaccine_two'      => $hepatitisVaccine['received_vaccine_two'] ?? null,
+                        'last_vaccine_received_date' => $hepatitisVaccine['last_vaccine_received_date'] ?? null,
+                        'decline_vaccine'           => $hepatitisVaccine['decline_vaccine'] ?? null,
+
+                        // Applicant details
+                        'applicant_name'            => $hepatitisVaccine['applicant_name'] ?? null,
+                        'applicant_signature'       => $hepatitisVaccine['applicant_signature'] ?? null,
+                        'witness'                   => $hepatitisVaccine['witness'] ?? null,
+                        'applicant_date'            => $hepatitisVaccine['applicant_date'] ?? null,
+
+                        // Employee statement fields
+                        'employee_name'             => $hepatitisVaccine['employee_name'] ?? null,
+                        'employee_signature'        => $hepatitisVaccine['employee_signature'] ?? null,
+                        'employee_date'             => $hepatitisVaccine['employee_date'] ?? null,
+                        'agency_supervisor'         => $hepatitisVaccine['agency_supervisor'] ?? null,
+                        'agency_supervisor_date'    => $hepatitisVaccine['agency_supervisor_date'] ?? null,
+
+                        // Compliance statement fields
+                        'compliance_name'           => $hepatitisVaccine['compliance_name'] ?? null,
+                        'compliance_employee_name'  => $hepatitisVaccine['compliance_employee_name'] ?? null,
+                        'compliance_date'           => $hepatitisVaccine['compliance_date'] ?? null,
+                        'compliance_time'           => $hepatitisVaccine['compliance_time'] ?? null,
+
+                        // Employability consent statement fields
+                        'name'                      => $hepatitisVaccine['name'] ?? null,
+                        'other_names'               => $hepatitisVaccine['other_names'] ?? null,
+                        'date'                      => $hepatitisVaccine['date'] ?? null,
+                        'social_security_number'    => $hepatitisVaccine['social_security_number'] ?? null,
+                        'applicant_name_again'      => $hepatitisVaccine['applicant_name_again'] ?? null,
+                        'application_date'          => $hepatitisVaccine['application_date'] ?? null,
+
+                        // Confidentiality pledge fields
+                        'agreement'                 => $hepatitisVaccine['agreement'] ?? null,
+                        'pledge_date'               => $hepatitisVaccine['pledge_date'] ?? null,
+                        'individual_name'           => $hepatitisVaccine['individual_name'] ?? null,
+                        'department'                => $hepatitisVaccine['department'] ?? null,
+                        'discussion_agreement'      => $hepatitisVaccine['discussion_agreement'] ?? null,
+                        'administering_name'        => $hepatitisVaccine['administering_name'] ?? null,
+                        'administering_date'        => $hepatitisVaccine['administering_date'] ?? null,
+                    ]);
+                }
+            }
+            // dd($request->hepatitis_vaccines);
+
+
+            DB::commit();
+
+            return response()->json([
+                'status'        => 'success',
+                'message'       => 'Applicant created successfully',
+                'applicant'     => $applicant
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Something went wrong, please try again later',
+                'error'     => $e->getMessage()
+            ], 500);
+        }
+    }
+}

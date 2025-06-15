@@ -1,0 +1,19 @@
+Ftp server create to access on FileZilla
+
+
+FTP Accounts
+Select Domain
+generate strong password and copy it
+check Directory and remove last path (.xyz/removed)
+create FTP Account
+
+search FTP and get credentials like user, server, port and collect that pass
+
+FTP Username: softvencefsd@mariamsha.softvencefsd.xyz
+FTP server: ftp.softvencefsd.xyz
+FTP & explicit FTPS port:  21
+password:WP7X3qX!AEhI
+
+
+
+tlz*c86-nN)Z

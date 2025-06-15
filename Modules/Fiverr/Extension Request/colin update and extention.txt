@@ -1,0 +1,23 @@
+Hello Colin,
+I hope you and your family are safe and doing well!
+
+As per your order requirement, message request, and last discussion, I've developed the following tasks:
+
+- I've developed a course-section-unit-lesson module.
+- I've developed the Course progress part dynamically.
+- I've deployed the backend part.
+- I've deployed old course data in live.
+
+For your help, I have added a video explanation. 
+Please have a look at: https://www.loom.com/share/167e732d904f42f6a196cec57d758484?sid=9e1128f6-6388-48d6-9b2e-8f7248e3d32a
+
+Note: [ I have discussed everything in the video, so please take a moment to watch it and verify if everything is in order. Once you confirm, I will deploy the data on your server. If it doesn’t meet your expectations, deploying the data repeatedly may not be ideal for your server.
+
+After your confirmation, we can discuss the questions and quizzes on Saturday and proceed with the next steps. Based on our last discussion, I’ve nearly completed the work and am now waiting for your confirmation. Therefore, I’m requesting a 3-day extension until our next meeting—kindly consider accepting it.]
+
+
+If you have any questions or concerns, please let me know. I'll respond as soon as possible.
+
+Best regards.
+
+Client: Colin || Profile: Panda_Squad || Update and extention Message

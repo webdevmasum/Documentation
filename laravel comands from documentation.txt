@@ -1,4 +1,5 @@
 	*=*=*=*=*=* Laravel Commands *=*=*=*=*
+💎🚀✅ 💥 🔥 📌
 
 1. composer create-project Laravel/Laravel example-app
  ( than fixe your DB in env file and run migrate command )
@@ -30,6 +31,8 @@ php artisan cache:clear
 php artisan config:cache
 php artisan optimize:clear
 composer update
+composer dump-autoload
+
 
 php artisan about 			( show environment, cache, driver )
 php artisan queue:work 			( for mail sending )

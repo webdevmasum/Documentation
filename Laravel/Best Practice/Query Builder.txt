@@ -1,0 +1,198 @@
+*********
+Query Builder
+*********
+
+
+Basic Query Builder Syntax
+	->> use Illuminate\Support\Facades\DB;
+
+Select Query:
+	->> $users = DB::table('users')->get(); // Sob data anbe
+
+Specific columns:
+	->> $users = DB::table('users')->select('id', 'name', 'email')->get();
+
+First row:
+	->> $user = DB::table('users')->first();
+
+
+Where condition:
+	->> $user = DB::table('users')->where('email', 'example@gmail.com')->first();
+
+Multiple conditions:
+	->>> $users = DB::table('users')
+    		->where('status', 'active')
+    		->where('role', 'admin')
+    		->get();
+
+
+
+
+Example 1: pluck() diye specific column fetch
+----------------->>>>>>>>>><<<<<<<<<-----------------
+
+    use Illuminate\Support\Facades\DB;
+
+    public function getUserNames()
+    {
+        $userNames = DB::table('users')->where('status', 'active')->pluck('name');
+
+        return view('users.index', compact('userNames'));
+    }
+
+
+Example 2: select() diye specific columns
+----------------->>>>>>>>>><<<<<<<<<-----------------
+
+    use Illuminate\Support\Facades\DB;
+
+    public function getUserDetails()
+    {
+        $users = DB::table('users')
+                    ->select('id', 'name', 'email')
+                    ->where('status', 'active')
+                    ->orderBy('name', 'asc')
+                    ->get();
+
+        return view('users.index', compact('users'));
+    }
+
+
+
+Example 3: first() diye single row fetch
+----------------->>>>>>>>>><<<<<<<<<-----------------
+
+    use Illuminate\Support\Facades\DB;
+
+    public function getFirstActiveUser()
+    {
+        $user = DB::table('users')->where('status', 'active')->first();
+
+        return view('users.show', compact('user'));
+    }
+
+
+
+(2)
+Insert Query ->>>
+	
+    DB::table('users')->insert([
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'password' => bcrypt('123456')
+    ]);
+
+
+Insert and Get ID: ->>>
+
+    $id = DB::table('users')->insertGetId([
+        'name' => 'Jane Doe',
+        'email' => 'jane@example.com',
+        'password' => bcrypt('password')
+    ]);
+
+
+(3)
+Update Query ->>>
+
+    DB::table('users')
+        ->where('id', 1)
+        ->update(['name' => 'Updated Name']);
+
+
+(4)
+Delete Query ->>>
+
+    DB::table('users')->where('id', 1)->delete();
+
+
+
+
+>>>>>>>>>><<<<<<<<<
+2. Advanced Queries
+>>>>>>>>>><<<<<<<<<
+
+(1) Order By & Limit->>>
+
+    $users = DB::table('users')
+        ->orderBy('created_at', 'desc')
+        ->limit(5)
+        ->get();
+
+
+
+(2) Joins->>>
+
+    $users = DB::table('users')
+        ->join('posts', 'users.id', '=', 'posts.user_id')
+        ->select('users.name', 'posts.title')
+        ->get();
+
+
+Left Join:-->>
+
+    $users = DB::table('users')
+        ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+        ->get();
+
+
+Right Join:-->>
+
+    $users = DB::table('users')
+        ->rightJoin('posts', 'users.id', '=', 'posts.user_id')
+        ->get();
+
+
+AND Condition:-->>
+
+    $users = DB::table('users')
+        ->where('status', 'active')
+        ->where('role', 'admin')
+        ->get();
+
+
+OR Condition:-->>
+
+    $users = DB::table('users')
+        ->where('status', 'active')
+        ->orWhere('role', 'admin')
+        ->get();
+
+
+Where In:-->>
+
+    $users = DB::table('users')
+        ->whereIn('role', ['admin', 'editor', 'moderator'])
+        ->get();
+
+
+
+(3) Group By & Having
+
+    $orders = DB::table('orders')
+        ->select('user_id', DB::raw('COUNT(*) as total_orders'))
+        ->groupBy('user_id')
+        ->having('total_orders', '>', 5)
+        ->get();
+
+
+(4) Raw Queries
+
+    $users = DB::select("SELECT * FROM users WHERE email = ?", ['example@gmail.com']);
+
+
+    $users = DB::table('users')
+        ->whereRaw("created_at >= NOW() - INTERVAL 7 DAY")
+        ->get();
+
+
+
+
+(5) Pagination
+
+    $users = DB::table('users')->paginate(10); // 10 data per page
+
+
+    $users = DB::table('users')->paginate(10); // 10 data per page
+
+

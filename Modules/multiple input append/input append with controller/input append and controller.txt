@@ -1,0 +1,118 @@
+****************
+Blade
+****************
+
+
+
+<form action="{{ route('store.data') }}" method="POST">
+    @csrf
+
+    <div>
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" name="email" required>
+    </div>
+
+    <div>
+        <label for="phone">Phone:</label>
+        <input type="text" name="phone" required>
+    </div>
+
+    <!-- Dynamic Designation Fields -->
+    <div id="designation_wrapper">
+        <label>Designation:</label>
+        <div class="designation_group">
+            <input type="text" name="designations[]" required>
+            <button type="button" class="add_designation">+</button>
+        </div>
+    </div>
+
+    <!-- Dynamic Hobby Fields -->
+    <div id="hobby_wrapper">
+        <label>Hobby:</label>
+        <div class="hobby_group">
+            <input type="text" name="hobbies[]" required>
+            <button type="button" class="add_hobby">+</button>
+        </div>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Designation Field Add/Remove
+        $(document).on("click", ".add_designation", function() {
+            $("#designation_wrapper").append(`
+                <div class="designation_group">
+                    <input type="text" name="designations[]" required>
+                    <button type="button" class="remove_designation">-</button>
+                </div>
+            `);
+        });
+
+        $(document).on("click", ".remove_designation", function() {
+            $(this).closest(".designation_group").remove();
+        });
+
+        // Hobby Field Add/Remove
+        $(document).on("click", ".add_hobby", function() {
+            $("#hobby_wrapper").append(`
+                <div class="hobby_group">
+                    <input type="text" name="hobbies[]" required>
+                    <button type="button" class="remove_hobby">-</button>
+                </div>
+            `);
+        });
+
+        $(document).on("click", ".remove_hobby", function() {
+            $(this).closest(".hobby_group").remove();
+        });
+    });
+</script>
+
+
+
+****************
+Controller
+****************
+
+
+use Illuminate\Http\Request;
+
+public function storeData(Request $request) {
+    $validated = $request->validate([
+        'name' => 'required|string',
+        'email' => 'required|email',
+        'phone' => 'required|string',
+        'designations' => 'required|array',
+        'designations.*' => 'required|string',
+        'hobbies' => 'required|array',
+        'hobbies.*' => 'required|string',
+    ]);
+
+    // Store Data (Example)
+    $data = [
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'designations' => json_encode($request->designations),
+        'hobbies' => json_encode($request->hobbies),
+    ];
+
+    \DB::table('your_table')->insert($data);
+
+    return back()->with('success', 'Data stored successfully!');
+}
+
+
+
+

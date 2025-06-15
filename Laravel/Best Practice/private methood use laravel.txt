@@ -1,0 +1,106 @@
+🛒 Scenario: E-commerce Order Management
+
+🔹 User ekta order place korbe.
+🔹 Total price calculation automatically hobe.
+🔹 Encapsulation ensure korar jonno private properties use kora hobe.
+🔹 protected properties use korbo jate model data properly maintain hoy.
+🛠 Step 1: Order Model (Encapsulation Maintain Korbo)
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Order extends Model
+{
+    protected $fillable = ['user_id', 'status'];
+    private $totalPrice = 0; // Private rakhlam jate directly access na hoy
+
+    public function setTotalPrice($amount) {
+        if ($amount < 0) {
+            throw new \Exception("Total price cannot be negative.");
+        }
+        $this->totalPrice = $amount;
+    }
+
+    public function getTotalPrice() {
+        return $this->totalPrice;
+    }
+}
+
+🔹 Explanation:
+
+✅ protected $fillable = ['user_id', 'status']; → Jate only specific field gulo fillable thake.
+✅ private $totalPrice = 0; → totalPrice directly modify kora jabe na.
+✅ setTotalPrice($amount) → Negative price prevent korte parbo.
+✅ getTotalPrice() → Safe way te price retrieve korte parbo.
+🛠 Step 2: Order Controller (Object Create Kore Use Korbo)
+
+namespace App\Http\Controllers;
+
+use App\Models\Order;
+use Illuminate\Http\Request;
+
+class OrderController extends Controller
+{
+    public function createOrder(Request $request)
+    {
+        $order = new Order();
+        $order->user_id = auth()->id();
+        $order->status = 'pending';
+
+        // Total Price Set with Encapsulation
+        $totalAmount = $this->calculateTotal($request->items);
+        $order->setTotalPrice($totalAmount); // Encapsulation follow korchi
+
+        $order->save();
+
+        return response()->json([
+            'message' => 'Order placed successfully!',
+            'total_price' => $order->getTotalPrice()
+        ]);
+    }
+
+    private function calculateTotal($items)
+    {
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item['price'] * $item['quantity'];
+        }
+        return $total;
+    }
+}
+
+🛠 Step 3: Frontend theke API Call
+
+Jodi Postman ba Frontend theke order place korte chai, tahole ei API call hobe:
+
+POST /api/orders
+Content-Type: application/json
+Authorization: Bearer {user_token}
+
+{
+    "items": [
+        {"price": 500, "quantity": 2},
+        {"price": 300, "quantity": 1}
+    ]
+}
+
+🔹 Backend Calculation:
+
+    500 * 2 + 300 * 1 = 1300
+    setTotalPrice(1300) diye encapsulation follow kore save korbe.
+    getTotalPrice() diye safe way te retrieve korbo.
+
+🔹 Response JSON (Backend theke frontend e send hobe):
+
+{
+    "message": "Order placed successfully!",
+    "total_price": 1300
+}
+
+🚀 Real-Life Project e Encapsulation er Benefit
+
+1️⃣ 🔒 Security: totalPrice direct modify kora jabe na.
+2️⃣ ✅ Maintainability: Order price calculation centralized rakha gese.
+3️⃣ 🛠 Scalability: Easily aro logic add kora jabe (e.g., discount, tax).
+4️⃣ 🚀 Laravel Best Practice: Model er sensitive data protected rakha hoyeche.

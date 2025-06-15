@@ -1,0 +1,118 @@
+@extends('backend.app')
+
+@section('title', 'Add Content Resource')
+
+@push('style')
+    <style>
+        select.form-control.bg-dark {
+            background-color: #000 !important;
+            color: #fff !important;
+            border: 1px solid #fff;
+        }
+    </style>
+@endpush
+
+@section('content')
+    <main class="content--wrapper p-5">
+        <section class="container">
+            <div class="card backend-form-wrapper">
+                <div class="card-header">
+                    <h4>Add Content Resource</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('contentresources.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label for="course_content_id" class="form-label text-white">Select Course Lesson</label>
+                            <select name="course_content_id"
+                                class="form-control bg-dark text-white border-white @error('course_content_id') is-invalid @enderror">
+                                <option value="">-- Select lesson --</option>
+                                @foreach ($contents as $content)
+                                    <option value="{{ $content->id }}"
+                                        {{ old('course_content_id') == $content->id ? 'selected' : '' }}>
+                                        {{ $content->course_content_title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('course_content_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label for="title" class="form-label text-white">Resource Title</label>
+                            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror"
+                                value="{{ old('title') }}">
+                            @error('title')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="file_path" class="form-label text-white">Upload File (PDF/DOC/Sheet)</label>
+                            <input type="file" name="file_path"
+                                class="form-control @error('file_path') is-invalid @enderror">
+                            @error('file_path')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="video_link" class="form-label text-white">Video Link</label>
+                            <input type="url" name="video_link"
+                                class="form-control @error('video_link') is-invalid @enderror"
+                                value="{{ old('video_link') }}">
+                            @error('video_link')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+
+                        <div class="col-md-12 mb-3">
+                            <label for="des" class="form-label text-light">Description:</label>
+                            <div class="form-outline">
+                                <textarea name="description" id="des" cols="30" rows="10"
+                                    class="ckeditor-textarea-main-dis {{ $errors->has('description') ? 'is-invalid' : '' }} text-light form-control ">{{ old('description') }}</textarea>
+                                @if ($errors->has('description'))
+                                    <div class="invalid-feedback my-2">
+                                        {{ $errors->first('description') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-start gap-2">
+                            <button type="submit" class="btn btn-sm primary-bg">Save Resource</button>
+                            <a href="{{ route('contentresources.index') }}" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+@endsection
+
+<!-- Start:Script -->
+@push('script')
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.1.0/classic/ckeditor.js"></script>
+
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#des'), {
+                toolbar: {
+                    items: [
+                        'heading', '|',
+                        'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|',
+                        'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
+                    ]
+                },
+                height: '300px'
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+@endpush
+<!-- End:Script -->

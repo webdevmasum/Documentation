@@ -1,0 +1,79 @@
+Laravel 12 -->>
+
+
+* Installation:	composer create-project --prefer-dist laravel/laravel my-app
+
+* Kit Choose: Laravel 12 e React, Vue, Livewire
+
+	-->> php artisan make:auth
+
+* Run Application: php artisan serve
+
+
+
+
+
+Laravel 12 new Features:
+
+
+1. PHP 8.2 Support:
+    Laravel 12 PHP 8.2 er sathe fully compatible, ja better performance o security improvements asche.
+
+2. Enhanced Query Builder:
+    Query builder e onek notun features add kora hoyeche, ja query likhte aro sohoj o efficient kore. Filter, sort, o paginate kora aro flexible hoye geche.
+
+3. Improved Validation:
+    Laravel 12 e validation system aro powerful kora hoyeche. New validation rules add kora hoyeche, ja custom validation logic use korte sahajjo kore.
+
+4. Notifiable Migrations:
+    Notification system e notifiable migrations add kora hoyeche, jehetu apni easily migrations diye notifications ke manage korte parben.
+
+5. Laravel Jetstream Improvements:
+    Laravel Jetstream e authentication system er kisu improvements asche, ja front-end frameworks (React, Vue) o Livewire er sathe integrated thakbe.
+
+6. Better Password Management:
+    Laravel 12 te password hashing o encryption system aro secure o efficient kora hoyeche. New hashing algorithms support kora hoyeche.
+
+7. New Artisan Commands:
+    Artisan commands e notun options o subcommands add kora hoyeche, ja development process ke aro fast o efficient banabe.
+
+8. Laravel Scout Enhancements:
+    Laravel Scout e full-text search optimization o new indexing techniques add kora hoyeche. Eita performance aro bhalo koreche search functionality te.
+
+9. Improved Testing Support:
+    Testing tools e aro beshi customization o flexibility asche. PHPUnit integration aro bhalo kora hoyeche.
+
+10. Custom Blade Directives:
+    Blade templating engine e custom directives create kora onek sohoj hoye geche, ja code reusability o readability increase kore.
+
+11. New Mailables & Notifications Features:
+    Mailables system e customization o flexibility aro increase kora hoyeche, ja email o notification sending process ke aro customizable banabe.
+
+12. Job Batching:
+    Laravel 12 e job batching er feature asche, jeta apni multiple jobs ek sathe process korte parben, jeta background tasks ke efficiently handle kore.
+
+13. Session Improvements:
+    Laravel 12 e session handling aro flexible koreche, ja data store o retrieve korar process ke onek efficient kore.
+
+14. Database Transactions:
+    Database transactions er support aro bhalo kora hoyeche, jate apni ek sathe multiple database queries handle korte parben safely.
+
+
+Another things:->
+
+1. Inertia 2.0 Integration:
+    Laravel 12 e Inertia 2.0 integrate kora hoyeche, ja frontend development ke aro powerful koreche. Inertia 2.0 async requests, deferred props, prefetching, o polling er moto features support kore, ja application ke aro responsive o fast banay.
+
+2. WorkOS AuthKit Integration:
+    Laravel 12 e WorkOS AuthKit integration er maddhome social authentication, passkeys, o SSO support add kora hoyeche. Eita apnar application e user authentication ke aro secure o flexible banay.
+
+3. PHP 8.4 Support:
+    Laravel 12 PHP 8.4 ke support kore, ja latest PHP features o improvements apnar application e use korte subidha kore.
+
+4. New Artisan Commands:
+    Artisan commands e notun options o subcommands add kora hoyeche, ja development process ke aro fast o efficient banabe.
+
+5. Improved Testing Support:
+
+
+

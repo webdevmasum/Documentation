@@ -1,0 +1,98 @@
+Continue with google:
+
+step - 1  : composer require laravel/socialite
+
+step -2 : config >service.php :
+  'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+    'redirect' => env('GOOGLE_REDIRECT'),
+],
+
+
+
+ধাপ ২: Google API Console এ Project তৈরি করুন
+Google API Console এ যান: https://console.cloud.google.com/
+
+নতুন একটি Project তৈরি করুন।
+
+OAuth consent screen সেট আপ করুন:
+
+App name, User support email ইত্যাদি ফিল আপ করুন।
+
+Scopes এ email এবং profile যুক্ত করুন।
+
+Credentials তৈরি করুন:
+OAuth 2.0 Client IDs সিলেক্ট করুন।
+Application Type: Web Application নির্বাচন করুন।
+
+
+
+ধাপ ৩: .env ফাইলে Google Credential যুক্ত করুন
+.env ফাইলে নিচের লাইনগুলো যুক্ত করুন:
+
+env
+Copy code
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://your-app-domain.com/auth/google/callback
+
+
+ধাপ ৪: Socialite সেটআপ করুন
+routes/web.php এ Route তৈরি করুন:
+use App\Http\Controllers\SocialAuthController;
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
+
+
+
+ধাপ ৫: Controller তৈরি করুন
+SocialAuthController তৈরি করুন এবং নিচের কোড লিখুন:
+
+php
+Copy code
+namespace App\Http\Controllers;
+
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
+class SocialAuthController extends Controller
+{
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'password' => bcrypt(uniqid()), // Random password
+                ]
+            );
+
+            Auth::login($user);
+
+            return redirect()->route('home'); // Redirect to your desired route
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Something went wrong.');
+        }
+    }
+}
+
+
+
+ধাপ ৬: বাটন যুক্ত করুন (Frontend)
+Google Login বাটন তৈরি করুন এবং Route যুক্ত করুন:
+
+html
+Copy code
+<a href="{{ route('google.login') }}" class="btn btn-google">
+    Continue with Google
+</a>
