@@ -193,3 +193,40 @@ var_dump($file);
 fclose($file); // resource close kora valo
 
 ?>
+
+
+
+
+
+✅ Syntax:
+
+printf(format_string, arg1, arg2, ...);
+format_string — ekta string ja te special placeholders thake (e.g. %s, %d, %f)
+
+arg1, arg2 — je value gulo oi placeholder-er jaygay boshbe
+
+
+
+🧪 Examples:
+
+1. String output
+<?php
+$name = "Masum";
+printf("Hello %s", $name);
+// Output: Hello Masum
+
+// 2. Integer format
+$age = 25;
+printf("I am %d years old", $age);
+// Output: I am 25 years old
+
+// 3. Float with decimals
+$price = 49.999;
+printf("Price: %.2f", $price);
+// Output: Price: 50.00
+
+
+// 4. Zero-padding
+$invoice = 7;
+printf("Invoice No: %04d", $invoice);
+// Output: Invoice No: 0007
