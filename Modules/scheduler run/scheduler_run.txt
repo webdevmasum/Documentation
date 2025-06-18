@@ -1,0 +1,79 @@
+
+
+************
+Route:
+************
+
+<?php
+
+use App\Console\Commands\ExpireSubscriptions;
+
+use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Artisan;
+
+
+// Schedule::call( function () {
+//     logger()->info('test it');
+// })->everySecond();
+Schedule::command(ExpireSubscriptions::class)->hourly();
+// Schedule::command(ExpireSubscriptions::class)->everyMinute();
+
+
+
+
+************
+ExpireSubscriptions:
+************
+
+app\Console\Commands
+ExpireSubscriptions.php ->
+
+
+
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\UserSubcriptionPlan;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
+
+class ExpireSubscriptions extends Command
+{
+    protected $signature = 'subscriptions:expire-check';
+    protected $description = 'Daily check to mark expired subscriptions as inactive';
+
+    public function handle()
+    {
+        Log::info("subscriptions:expire-check executed");
+        $now = now();
+
+        $expiredCount = UserSubcriptionPlan::where('ends_at', '<', $now)
+            ->where('subscription_status', 'active')
+            ->update(['subscription_status' => 'inactive']);
+
+        $this->info("Total expired subscriptions updated: $expiredCount");
+
+        // Reactivate kore dewa
+        $reactivatedCount = UserSubcriptionPlan::where('ends_at', '>', $now)
+            ->where('subscription_status', 'inactive')
+            ->update(['subscription_status' => 'active']);
+
+        $this->info("Expired: $expiredCount | Reactivated: $reactivatedCount");
+
+        Log::info("subscriptions:expire-check executed at {$now}, expired updated: {$expiredCount}");
+    }
+}
+
+
+
+Scheduler run command: (ekbar run hoy)
+php artisan schedule:run
+
+live server e set: (time onojaye run hoy)
+* * * * * cd /home/username/project && php artisan schedule:run >> /dev/null 2>&1
+
+
+
+
+
