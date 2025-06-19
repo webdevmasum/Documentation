@@ -41,3 +41,27 @@ saeed327356	        Rahin		        18-06-2025                  20-06-2025
 fahadrazoqi	        Rahin		        18-06-2025
 lalanikhurram	    Masum + Rahin		18-06-2025                  28-06-2025
 
+
+
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        19-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    19-06-2025      done        deliverd
+colinhartlieb	    Masum		        19-06-2025                  deliverd
+onolyriks	        Masum		        19-06-2025      need        deliverd
+gianmarcosalett     Masum		        19-06-2025      no need     UI working
+sogeoo              Masum		        19-06-2025      no need     UI working
+malikdoc	        Masum		        19-06-2025                  22-06-2025
+mariamshah	        Masum + Tanvier	    19-06-2025      done        19-06-2025
+meister_eckart	    Tanvir		        19-06-2025                  29-06-2025
+checkwaly   	    Tanvir		        19-06-2025                  stack
+afreed17 	        Tanvir		        19-06-2025                  deliverd
+dukeautorepair      Nasrat		        19-06-2025	                29-06-2025
+happiitude	        Nasrat		        19-06-2025      done        deliverd
+lex     	        Nasrat		        19-06-2025      done        deliverd
+saeed327356	        Rahin		        19-06-2025      done        20-06-2025
+fahadrazoqi	        Rahin		        19-06-2025
+lalanikhurram	    Masum + Rahin		19-06-2025      done        28-06-2025
