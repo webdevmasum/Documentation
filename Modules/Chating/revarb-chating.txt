@@ -515,19 +515,36 @@ class ChatController extends Controller
 
 
 
+********
+step-4: Route/channels.php
+********
 
+<?php
 
+use Illuminate\Support\Facades\Broadcast;
+use App\Models\Room;
 
+/*
+# chat
+*/
 
+Broadcast::channel('chat-room.{room_id}', function ($user, $room_id) {
+    $room = Room::find($room_id);
+    return (int) $user->id === (int) $room?->user_one_id || (int) $user->id === (int) $room?->user_two_id;
+});
 
+Broadcast::channel('chat-receiver.{receiver_id}', function ($user, $receiver_id) {
+    return (int) $user->id === (int) $receiver_id;
+});
+
+Broadcast::channel('chat-sender.{sender_id}', function ($user, $sender_id) {
+    return (int) $user->id === (int) $sender_id;
+});
 
 
 
 ********
-step-4:
-********
-********
-step-5:
+step-5: Route/api.php
 ********
 ********
 step-6:
