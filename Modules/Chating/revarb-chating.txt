@@ -615,3 +615,197 @@ VITE_REVERB_APP_KEY="${REVERB_APP_KEY}"
 VITE_REVERB_HOST="${REVERB_HOST}"
 VITE_REVERB_PORT="${REVERB_PORT}"
 VITE_REVERB_SCHEME="${REVERB_SCHEME}"
+
+
+********
+step-7: API test on postman -> like json
+********
+
+
+{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "All User List (Chatted with)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/list",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search (All User)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/search?search=admin",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"search"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "admin"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Room Check",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/room/2",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"room",
+								"2"
+							]
+						},
+						"description": "/messages/group/reciver_id"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "what is my name",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "postman-cloud:///1f011330-0607-40d0-bcc4-69c643fa4385"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base}}/auth/chat/send/2",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"send",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Conversation",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/conversation/2",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"conversation",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seen (all)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/seen/all/2",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"seen",
+								"all",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Seen (single)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base}}/auth/chat/seen/single/7",
+							"host": [
+								"{{base}}"
+							],
+							"path": [
+								"auth",
+								"chat",
+								"seen",
+								"single",
+								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
