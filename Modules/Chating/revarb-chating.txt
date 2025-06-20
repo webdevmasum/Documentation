@@ -596,3 +596,22 @@ class MessageSendEvent implements ShouldBroadcastNow {
     }
 }
 
+
+
+********
+step-7: .env
+********
+
+
+REVERB_APP_ID=190521
+REVERB_APP_KEY=5bcus2pmxhiwlo28uzz3
+REVERB_APP_SECRET=1ao4pzayobvpkpydj65b
+REVERB_HOST="reverb.softvencefsd.xyz"
+REVERB_PORT=443
+REVERB_SERVER_PORT=8082
+REVERB_SCHEME=https
+
+VITE_REVERB_APP_KEY="${REVERB_APP_KEY}"
+VITE_REVERB_HOST="${REVERB_HOST}"
+VITE_REVERB_PORT="${REVERB_PORT}"
+VITE_REVERB_SCHEME="${REVERB_SCHEME}"
