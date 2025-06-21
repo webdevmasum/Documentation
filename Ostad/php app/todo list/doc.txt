@@ -38,3 +38,64 @@ Example:
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
     }
+
+
+
+********************
+Concept: DSN 
+********************
+
+🔶 DSN (Data Source Name) ki?
+
+DSN holo ekta string, ja PDO (PHP Data Objects) ke bole dey kothay, ki type er database ache, ar kon database er shathe connect hote hobe.
+
+Eta ekdhoroner connection string — jekhane database er configuration details thake.
+
+
+🔶 DSN er Structure (General Format):
+<driver>:host=<hostname>;dbname=<database_name>;port=<port>;charset=<charset>
+
+
+For example (MySQL DSN):
+$dsn = "mysql:host=localhost;dbname=todo_app";
+
+
+
+🔶 DSN ke PDO kivabe use kore?
+PDO class e jokhon tumi object create koro, DSN string, username, password dite hoy.
+
+
+$dsn = "mysql:host=localhost;dbname=todo_app";
+$username = "root";
+$password = "";
+
+$pdo = new PDO($dsn, $username, $password);
+
+
+Eta PDO ke bole:
+
+    "MySQL driver use kore, localhost server e connect hoye, todo_app database use korte hobe. Login e root user and blank password use korte hobe."
+
+
+
+🔶 DSN er Importance:
+
+    1. Multiple Database Support:
+    PDO onek driver support kore (MySQL, PostgreSQL, SQLite, MSSQL etc.). DSN string diye tumi je kono driver easily switch korte paro.
+
+    2. Central Configuration:
+    DSN er moddhe sob important info thakar jonno connection setup centralized and clean thake.
+
+    3. Connection Customization:
+    Charset, port, SSL option er moto onek kichu DSN er moddhei define kora jay.
+
+
+
+
+
+
+
+
+
+
+
