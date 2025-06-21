@@ -124,3 +124,47 @@ utf8mb4 mane holo:
 
 charset=utf8mb4 mane holo tumi database ke bolcho:
     "Ami 4-byte UTF-8 encoding use korte chai jate emoji, onno language, special character gulo perfect vabe store & retrieve kora jay."
+
+
+
+
+
+
+********************
+Concept: try-catch 
+********************
+
+
+🔶 Part 1: try-catch and Exception in PHP
+
+🧠 Exception ki?
+    Exception holo ek dhoroner error ja runtime e ghotey.
+    Kintu regular error er cheye exception ke handle kora jay — mane program completely crash na kore gracefully error manage kora jay.
+
+🔸 Real-life analogy:
+    Imagine tumi ekta bus e driver.
+    Suddenly braker problem holo.
+    Tumi brake fail er message peye control handle kore bus ke safely stop korla — crash korle na.
+
+    Ekhane:
+        Brake fail = Exception
+        Tumi bus handle koreche = try-catch block
+        Bus crash = fatal error (jodi exception handle na kora hoy)
+
+🔶 Part 2: die() Function in PHP
+
+🧠 die() ki kore?
+    die() mane program ekdom sekhanei bondho hoye jay, ebong jeta tumi message hisebe dibey, seta output hoy.
+
+
+🔶 Summary:
+🔸 Exception holo unexpected error jeita handle kora jaye try-catch diye.
+🔸 PDOException use hoy PDO connection error handle korar jonno.
+🔸 die() holo ekta function jeita message print kore script ke instantly bondho kore dey.
+🔸 Eita use kora hoy jate error holeo meaningful message dekhano jay, r onno code r na chole.
+
+
+
+
+
+
