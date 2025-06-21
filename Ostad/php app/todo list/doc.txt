@@ -20,3 +20,21 @@ Security	    Prepared statement er maddhome SQL Injection er protection.
 Flexibility	    Ek code base diye onek DB er shathe kaj kora jay.
 Error Handling	Try-catch er maddhome clean error message dekhano jay.
 OOP Based	    Object-oriented, tai clean and manageable code structure.
+
+
+Example:
+
+<?php
+
+    $host = 'localhost';
+    $dbname = 'test_db';
+    $user = 'root';
+    $pass = '';
+
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        echo "Database connected successfully!";
+    } catch (PDOException $e) {
+        echo "Connection failed: " . $e->getMessage();
+    }
