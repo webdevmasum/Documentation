@@ -1,0 +1,22 @@
+********************
+Concept: PDO
+********************
+
+-->> PDO (PHP Data Objects) hocche PHP er moddhe ekta database access layer jeita use kore multiple database er shathe easy, secure, and consistent vabe connection kora jay.
+
+
+🔧 PDO er kaj gulo holo:
+
+1. Database e connect kora
+2. Query run kora
+3. Prepared Statements support: Eitar maddhome SQL Injection attack theke protection paoya jay
+4. Exception Handling: Try-catch block use kore error handle kora jay PDO diye.
+5. Multiple DB support
+
+
+✅ PDO er benefit gulo:
+
+Security	    Prepared statement er maddhome SQL Injection er protection.
+Flexibility	    Ek code base diye onek DB er shathe kaj kora jay.
+Error Handling	Try-catch er maddhome clean error message dekhano jay.
+OOP Based	    Object-oriented, tai clean and manageable code structure.
