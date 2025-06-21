@@ -94,8 +94,33 @@ Eta PDO ke bole:
 
 
 
+********************
+Concept: charset=utf8mb4 
+********************
 
 
+🔷 charset=utf8mb4 bujay ki?
+
+Eta holo character encoding — mane, tumi jokhon database e text (string) data insert/update/select korba, tokhon kon encoding system use hobe ta define kore.
+
+utf8mb4 mane holo:
+    UTF-8 encoding er ekta improved version,
+    ja 4-byte porjonto character support kore.
 
 
+🔷 Kothay use hoy?
+    Database Connection DSN e:
+    $dsn = "mysql:host=localhost;dbname=todo_app;charset=utf8mb4";
 
+    Database table define korar somoy:
+
+    CREATE TABLE messages (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        text TEXT
+    ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+
+🔷 Summary:
+
+charset=utf8mb4 mane holo tumi database ke bolcho:
+    "Ami 4-byte UTF-8 encoding use korte chai jate emoji, onno language, special character gulo perfect vabe store & retrieve kora jay."
