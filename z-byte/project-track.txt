@@ -102,7 +102,7 @@ gianmarcosalett     Masum		        23-06-2025      no need     UI working
 sogeoo              Masum		        23-06-2025      no need     UI working
 malikdoc	        Masum		        23-06-2025                  22-06-2025
 mariamshah	        Masum + Tanvier	    23-06-2025                  deliverd
-meister_eckart	    Tanvir		        23-06-2025                  29-06-2025
+meister_eckart	    Tanvir		        23-06-2025      done        29-06-2025
 checkwaly   	    Tanvir		        23-06-2025                  stack
 afreed17 	        Tanvir		        23-06-2025                  deliverd
 dukeautorepair      Nasrat		        23-06-2025	                29-06-2025
