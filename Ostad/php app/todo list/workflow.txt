@@ -161,6 +161,62 @@ CREATE TABLE tasks (
 
 
 
+**********************
+✅ Step 8: public/index.php
+**********************
+
+
+<?php
+require_once '../classes/Task.php';
+require_once '../views/header.php';
+
+$taskObj = new Task();
+
+// Task add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title'])) {
+    $taskObj->addTask($_POST['title']);
+    header("Location: index.php");
+    exit;
+}
+
+// Delete task
+if (isset($_GET['delete'])) {
+    $taskObj->deleteTask($_GET['delete']);
+    header("Location: index.php");
+    exit;
+}
+
+// Complete task
+if (isset($_GET['complete'])) {
+    $taskObj->markCompleted($_GET['complete']);
+    header("Location: index.php");
+    exit;
+}
+
+// Show all tasks
+$tasks = $taskObj->getTasks();
+?>
+
+<form method="POST" action="">
+    <input type="text" name="title" placeholder="Enter task" required>
+    <button type="submit">Add</button>
+</form>
+
+<hr>
+
+<?php include '../views/tasks.php'; ?>
+<?php include '../views/footer.php'; ?>
+
+
+
+
+**********************
+✅ Step 9: .htaccess (Optional for pretty URLs)
+**********************
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
 
 
 
