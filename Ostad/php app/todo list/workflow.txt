@@ -82,3 +82,87 @@ CREATE TABLE tasks (
 
 
 
+
+**********************
+✅ Step 5: classes/Task.php
+**********************
+
+
+<?php
+    require_once 'Database.php';
+
+    class Task {
+        private $conn;
+
+        public function __construct() {
+            $db = new Database();
+            $this->conn = $db->connect();
+        }
+
+        public function getTasks() {
+            $stmt = $this->conn->prepare("SELECT * FROM tasks ORDER BY id DESC");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function addTask($title) {
+            $stmt = $this->conn->prepare("INSERT INTO tasks (title) VALUES (:title)");
+            $stmt->bindParam(':title', $title);
+            return $stmt->execute();
+        }
+
+        public function deleteTask($id) {
+            $stmt = $this->conn->prepare("DELETE FROM tasks WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        }
+
+        public function markCompleted($id) {
+            $stmt = $this->conn->prepare("UPDATE tasks SET is_completed = 1 WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        }
+    }
+?>
+
+
+
+**********************
+✅ Step 6: views/header.php and footer.php
+**********************
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+</head>
+<body>
+    <h1>My Todo List</h1>
+</body>
+</html>
+
+
+
+**********************
+✅ Step 7: views/tasks.php
+**********************
+
+<?php foreach ($tasks as $task): ?>
+    <div style="margin-bottom: 10px;">
+        <strong style="<?= $task['is_completed'] ? 'text-decoration: line-through;' : '' ?>">
+            <?= htmlspecialchars($task['title']) ?>
+        </strong>
+        <?php if (!$task['is_completed']): ?>
+            <a href="?complete=<?= $task['id'] ?>">Complete</a>
+        <?php endif; ?>
+        <a href="?delete=<?= $task['id'] ?>">Delete</a>
+    </div>
+<?php endforeach; ?>
+
+
+
+
+
+
+
+
