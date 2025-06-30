@@ -158,3 +158,40 @@ lex     	        Nasrat		        29-06-2025                  deliverd
 saeed327356	        Rahin		        29-06-2025                  deliverd
 fahadrazoqi	        Rahin		        29-06-2025
 lalanikhurram	    Masum + Rahin		29-06-2025      done        28-06-2025
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        30-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    30-06-2025                  deliverd
+colinhartlieb	    Masum		        30-06-2025      replied     deliverd
+onolyriks	        Masum		        30-06-2025      need but    deliverd
+gianmarcosalett     Masum		        30-06-2025      no need     deliverd 
+sogeoo              Masum		        30-06-2025      no need     UI working
+malikdoc	        Masum		        30-06-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    30-06-2025                  deliverd
+meister_eckart	    Tanvir		        30-06-2025                  29-06-2025
+checkwaly   	    Tanvir		        30-06-2025                  stack
+afreed17 	        Tanvir		        30-06-2025                  deliverd
+dukeautorepair      Nasrat		        30-06-2025	    done        29-06-2025
+happiitude	        Nasrat		        30-06-2025      done        deliverd
+lex     	        Nasrat		        30-06-2025                  deliverd
+saeed327356	        Rahin		        30-06-2025                  deliverd
+fahadrazoqi	        Rahin		        30-06-2025
+lalanikhurram	    Rahin       		30-06-2025      done        28-06-2025
+sogeoo	            Masum       		----------      ----        -----------
+browgod	            Masum       		----------      ----        -----------
+happiitude	        Masum       		----------      ----        -----------
+asoneth1	        -----       		----------      ----        -----------
+ciyeone	            -----       		----------      ----        -----------
+
+
+
+
+
+
+
+
+
+
