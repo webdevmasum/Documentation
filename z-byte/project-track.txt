@@ -214,6 +214,31 @@ asoneth1	        -----       		----------      ----        -----------
 ciyeone	            -----       		----------      ----        -----------
 
 
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        02-07-2025	    no need     deliverd
+hirecardrive	    Masum       	    02-07-2025      updated     deliverd
+colinhartlieb	    Masum		        02-07-2025      replied     deliverd
+onolyriks	        Masum		        02-07-2025      updated      deliverd
+gianmarcosalett     Masum		        02-07-2025      no need     deliverd 
+malikdoc	        Masum		        02-07-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    02-07-2025      no need     deliverd
+meister_eckart	    Tanvir		        02-07-2025                  29-06-2025
+checkwaly   	    Tanvir		        02-07-2025                  stack
+afreed17 	        Tanvir		        02-07-2025                  deliverd
+dukeautorepair      Nasrat		        02-07-2025	    updated     29-06-2025
+happiitude	        Nasrat		        02-07-2025                  deliverd
+lex     	        Nasrat		        02-07-2025                  deliverd
+saeed327356	        Rahin		        02-07-2025                  deliverd
+fahadrazoqi	        Rahin		        02-07-2025
+lalanikhurram	    Rahin       		02-07-2025      updated     28-06-2025
+sogeoo              Masum		        02-07-2025      no need     UI working
+browgod	            Masum       		02-07-2025      updated     -----------
+happiitude	        Masum       		02-07-2025      ----        -----------
+ciyeone	            Tanvir       		02-07-2025      ----        -----------
+troyob  	        Rahin       		02-07-2025      ----        -----------
+
+
 
 
 
