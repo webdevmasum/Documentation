@@ -295,4 +295,33 @@ mick15  	        -----       		06-07-2025      ----        24-07-2025
 
 
 
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        07-07-2025	    ----        deliverd
+hirecardrive	    Masum       	    07-07-2025      need        deliverd
+colinhartlieb	    Masum		        07-07-2025      need        deliverd
+onolyriks	        Masum		        07-07-2025      need        deliverd
+gianmarcosalett     Masum		        07-07-2025      ----        deliverd 
+malikdoc	        Masum		        07-07-2025      done        deliverd
+mariamshah	        Masum + Tanvier	    07-07-2025      ----        deliverd
+sogeoo              Masum		        07-07-2025      ----        15-07-2025
+browgod	            Masum       		07-07-2025      ----        07-08-2025
+happiitude	        Masum		        07-07-2025      done        23-07-2025 <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		07-07-2025	    ----        29-06-2025
+checkwaly   	    Tanvir		        07-07-2025      ----        stack
+afreed17 	        Tanvir		        07-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        07-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		07-07-2025      ----        16-07-2025
+ciyeone	            Tanvir       		07-07-2025      ----        16-07-2025
+lex     	        Nasrat		        07-07-2025      ----        deliverd
+saeed327356	        Rahin		        07-07-2025      ----        deliverd
+lalanikhurram	    Rahin       		07-07-2025      ----        28-06-2025
+hatemverymuch  	    Rahin       		07-07-2025      done        24-07-2025
+norbertellmt  	    Rahin       		07-07-2025      ----        24-07-2025
+troyob  	        -----       		07-07-2025      ----        24-07-2025
+mick15  	        -----       		07-07-2025      ----        24-07-2025
+
+
+
+
 
