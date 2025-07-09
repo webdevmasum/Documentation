@@ -1,0 +1,24 @@
+***************
+mimi map
+***************
+ setting -> enable minimap. dan pase map thakabe.
+
+ cmd+shift+p> :32 -> laine number e jaawa jaabe.
+ cmd+l> :32 -> laine number e jaawa jaabe.
+ shift+mouse while round -> horizontally run
+ cmd+shift+o -> go to function
+ setting theke preview enable -> tab permanently open hobe
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
