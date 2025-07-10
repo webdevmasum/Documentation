@@ -1,0 +1,62 @@
+
+🟢 Phase 1: Server Basics (Beginner level)
+
+    🔹 1. Linux Fundamentals (Ubuntu based)
+
+        Commands:           cd, ls, mkdir, rm, cp, mv, nano, sudo, chmod, chown, etc.
+        File permissions:   755, 777, 644, etc.
+        Package manager:    apt, apt-get, snap
+
+    📚 Learn from:
+        LinuxCommand.org
+        Ubuntu Beginner Guide (DigitalOcean)
+
+
+    🔹 2. SSH Access
+        Generate SSH key: ssh-keygen
+        Connect to server: ssh user@ip
+        Upload files via SCP: scp file.zip user@ip:/var/www
+
+    📚 Resource:
+        SSH Basics - DigitalOcean
+
+
+🟡 Phase 2: Laravel Deployment Core
+    🔹 3. Setting up a LAMP/LEMP Stack
+        Apache or Nginx
+        MySQL/MariaDB
+        PHP (v8.1+)
+
+    📚 Learn:
+        LAMP Stack on Ubuntu
+        LEMP Stack (Nginx) guide
+
+    🔹 4. Deploy Laravel App Manually
+        Upload files (via SCP, FTP, Git pull)
+        Set permissions: storage, bootstrap/cache
+        .env setup
+        composer install --no-dev
+        php artisan migrate --force
+        Configure virtual host (Apache/Nginx)
+
+    📚 Tutorials:
+        Deploy Laravel on Ubuntu with Apache
+        Laravel on Nginx
+
+    🔹 5. Domain Setup (DNS)
+        Point domain to server IP
+        Use A record (e.g., A @ 123.45.67.89)
+        Configure virtual host to handle domain
+
+    📚 Resource:
+        Namecheap DNS + DigitalOcean Guide
+
+
+
+
+
+
+
+
+
+
