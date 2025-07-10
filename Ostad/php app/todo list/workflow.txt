@@ -1,0 +1,224 @@
+**********************
+✅ Step 1: Project Folder Structure
+**********************
+
+todo-app/
+│
+├── config/
+│   └── config.php
+│
+├── classes/
+│   ├── Database.php
+│   └── Task.php
+│
+├── views/
+│   ├── header.php
+│   ├── footer.php
+│   └── tasks.php
+│
+├── public/
+│   └── index.php
+│
+└── .htaccess
+
+
+**********************
+✅ Step 2: Database Setup
+**********************
+
+
+CREATE DATABASE todo_oop;
+
+USE todo_oop;
+
+CREATE TABLE tasks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    is_completed TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+**********************
+✅ Step 3: config/config.php
+**********************
+
+<?php
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'todo_oop');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+?>
+
+
+**********************
+✅ Step 4: classes/Database.php
+**********************
+
+<?php
+    require_once __DIR__ . '/../config/config.php';
+
+    class Database {
+        private $host = DB_HOST;
+        private $dbname = DB_NAME;
+        private $user = DB_USER;
+        private $pass = DB_PASS;
+        public $conn;
+
+        public function connect() {
+            try {
+                $this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", 
+                                    $this->user, 
+                                    $this->pass);
+                $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return $this->conn;
+            } catch(PDOException $e) {
+                echo "Connection failed: " . $e->getMessage();
+                return null;
+            }
+        }
+    }
+?>
+
+
+
+
+**********************
+✅ Step 5: classes/Task.php
+**********************
+
+
+<?php
+    require_once 'Database.php';
+
+    class Task {
+        private $conn;
+
+        public function __construct() {
+            $db = new Database();
+            $this->conn = $db->connect();
+        }
+
+        public function getTasks() {
+            $stmt = $this->conn->prepare("SELECT * FROM tasks ORDER BY id DESC");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function addTask($title) {
+            $stmt = $this->conn->prepare("INSERT INTO tasks (title) VALUES (:title)");
+            $stmt->bindParam(':title', $title);
+            return $stmt->execute();
+        }
+
+        public function deleteTask($id) {
+            $stmt = $this->conn->prepare("DELETE FROM tasks WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        }
+
+        public function markCompleted($id) {
+            $stmt = $this->conn->prepare("UPDATE tasks SET is_completed = 1 WHERE id = :id");
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        }
+    }
+?>
+
+
+
+**********************
+✅ Step 6: views/header.php and footer.php
+**********************
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+</head>
+<body>
+    <h1>My Todo List</h1>
+</body>
+</html>
+
+
+
+**********************
+✅ Step 7: views/tasks.php
+**********************
+
+<?php foreach ($tasks as $task): ?>
+    <div style="margin-bottom: 10px;">
+        <strong style="<?= $task['is_completed'] ? 'text-decoration: line-through;' : '' ?>">
+            <?= htmlspecialchars($task['title']) ?>
+        </strong>
+        <?php if (!$task['is_completed']): ?>
+            <a href="?complete=<?= $task['id'] ?>">Complete</a>
+        <?php endif; ?>
+        <a href="?delete=<?= $task['id'] ?>">Delete</a>
+    </div>
+<?php endforeach; ?>
+
+
+
+**********************
+✅ Step 8: public/index.php
+**********************
+
+
+<?php
+require_once '../classes/Task.php';
+require_once '../views/header.php';
+
+$taskObj = new Task();
+
+// Task add
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['title'])) {
+    $taskObj->addTask($_POST['title']);
+    header("Location: index.php");
+    exit;
+}
+
+// Delete task
+if (isset($_GET['delete'])) {
+    $taskObj->deleteTask($_GET['delete']);
+    header("Location: index.php");
+    exit;
+}
+
+// Complete task
+if (isset($_GET['complete'])) {
+    $taskObj->markCompleted($_GET['complete']);
+    header("Location: index.php");
+    exit;
+}
+
+// Show all tasks
+$tasks = $taskObj->getTasks();
+?>
+
+<form method="POST" action="">
+    <input type="text" name="title" placeholder="Enter task" required>
+    <button type="submit">Add</button>
+</form>
+
+<hr>
+
+<?php include '../views/tasks.php'; ?>
+<?php include '../views/footer.php'; ?>
+
+
+
+
+**********************
+✅ Step 9: .htaccess (Optional for pretty URLs)
+**********************
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
+
+
+
+
+

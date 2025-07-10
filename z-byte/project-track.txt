@@ -89,3 +89,239 @@ lex     	        Nasrat		        20-06-2025                  deliverd
 saeed327356	        Rahin		        20-06-2025                  deliverd
 fahadrazoqi	        Rahin		        20-06-2025
 lalanikhurram	    Masum + Rahin		20-06-2025      done        28-06-2025
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        23-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    23-06-2025                  deliverd
+colinhartlieb	    Masum		        23-06-2025                  deliverd
+onolyriks	        Masum		        23-06-2025                  deliverd
+gianmarcosalett     Masum		        23-06-2025      no need     UI working
+sogeoo              Masum		        23-06-2025      no need     UI working
+malikdoc	        Masum		        23-06-2025                  22-06-2025
+mariamshah	        Masum + Tanvier	    23-06-2025                  deliverd
+meister_eckart	    Tanvir		        23-06-2025      done        29-06-2025
+checkwaly   	    Tanvir		        23-06-2025                  stack
+afreed17 	        Tanvir		        23-06-2025                  deliverd
+dukeautorepair      Nasrat		        23-06-2025	                29-06-2025
+happiitude	        Nasrat		        23-06-2025                  deliverd
+lex     	        Nasrat		        23-06-2025      done        deliverd
+saeed327356	        Rahin		        23-06-2025                  deliverd
+fahadrazoqi	        Rahin		        23-06-2025
+lalanikhurram	    Masum + Rahin		23-06-2025                  28-06-2025
+
+
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        28-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    28-06-2025                  deliverd
+colinhartlieb	    Masum		        28-06-2025                  deliverd
+onolyriks	        Masum		        28-06-2025      need        deliverd
+gianmarcosalett     Masum		        28-06-2025      no need     deliverd 
+sogeoo              Masum		        28-06-2025      no need     UI working
+malikdoc	        Masum		        28-06-2025                  deliverd
+mariamshah	        Masum + Tanvier	    28-06-2025                  deliverd
+meister_eckart	    Tanvir		        28-06-2025                  29-06-2025
+checkwaly   	    Tanvir		        28-06-2025                  stack
+afreed17 	        Tanvir		        28-06-2025                  deliverd
+dukeautorepair      Nasrat		        28-06-2025	    done        29-06-2025
+happiitude	        Nasrat		        28-06-2025                  deliverd
+lex     	        Nasrat		        28-06-2025      done        deliverd
+saeed327356	        Rahin		        28-06-2025                  deliverd
+fahadrazoqi	        Rahin		        28-06-2025
+lalanikhurram	    Masum + Rahin		28-06-2025                  28-06-2025
+
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        29-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    29-06-2025                  deliverd
+colinhartlieb	    Masum		        29-06-2025      replied     deliverd
+onolyriks	        Masum		        29-06-2025      need but    deliverd
+gianmarcosalett     Masum		        29-06-2025      no need     deliverd 
+sogeoo              Masum		        29-06-2025      no need     UI working
+malikdoc	        Masum		        29-06-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    29-06-2025                  deliverd
+meister_eckart	    Tanvir		        29-06-2025                  29-06-2025
+checkwaly   	    Tanvir		        29-06-2025                  stack
+afreed17 	        Tanvir		        29-06-2025                  deliverd
+dukeautorepair      Nasrat		        29-06-2025	    done        29-06-2025
+happiitude	        Nasrat		        29-06-2025      done        deliverd
+lex     	        Nasrat		        29-06-2025                  deliverd
+saeed327356	        Rahin		        29-06-2025                  deliverd
+fahadrazoqi	        Rahin		        29-06-2025
+lalanikhurram	    Masum + Rahin		29-06-2025      done        28-06-2025
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        30-06-2025	    no need     deliverd
+hirecardrive	    Masum       	    30-06-2025                  deliverd
+colinhartlieb	    Masum		        30-06-2025      replied     deliverd
+onolyriks	        Masum		        30-06-2025      need but    deliverd
+gianmarcosalett     Masum		        30-06-2025      no need     deliverd 
+sogeoo              Masum		        30-06-2025      no need     UI working
+malikdoc	        Masum		        30-06-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    30-06-2025                  deliverd
+meister_eckart	    Tanvir		        30-06-2025                  29-06-2025
+checkwaly   	    Tanvir		        30-06-2025                  stack
+afreed17 	        Tanvir		        30-06-2025                  deliverd
+dukeautorepair      Nasrat		        30-06-2025	    done        29-06-2025
+happiitude	        Nasrat		        30-06-2025      done        deliverd
+lex     	        Nasrat		        30-06-2025                  deliverd
+saeed327356	        Rahin		        30-06-2025                  deliverd
+fahadrazoqi	        Rahin		        30-06-2025
+lalanikhurram	    Rahin       		30-06-2025      done        28-06-2025
+sogeoo	            Masum       		----------      ----        -----------
+browgod	            Masum       		----------      ----        -----------
+happiitude	        Masum       		----------      ----        -----------
+asoneth1	        -----       		----------      ----        -----------
+ciyeone	            -----       		----------      ----        -----------
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        01-07-2025	    no need     deliverd
+hirecardrive	    Masum       	    01-07-2025                  deliverd
+colinhartlieb	    Masum		        01-07-2025      replied     deliverd
+onolyriks	        Masum		        01-07-2025      update      deliverd
+gianmarcosalett     Masum		        01-07-2025      no need     deliverd 
+sogeoo              Masum		        01-07-2025      no need     UI working
+malikdoc	        Masum		        01-07-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    01-07-2025                  deliverd
+meister_eckart	    Tanvir		        01-07-2025                  29-06-2025
+checkwaly   	    Tanvir		        01-07-2025                  stack
+afreed17 	        Tanvir		        01-07-2025                  deliverd
+dukeautorepair      Nasrat		        01-07-2025	    done        29-06-2025
+happiitude	        Nasrat		        01-07-2025      done        deliverd
+lex     	        Nasrat		        01-07-2025                  deliverd
+saeed327356	        Rahin		        01-07-2025                  deliverd
+fahadrazoqi	        Rahin		        01-07-2025
+lalanikhurram	    Rahin       		01-07-2025      done        28-06-2025
+sogeoo	            Masum       		----------      ----        -----------
+browgod	            Masum       		----------      ----        -----------
+happiitude	        Masum       		----------      ----        -----------
+asoneth1	        -----       		----------      ----        -----------
+ciyeone	            -----       		----------      ----        -----------
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        02-07-2025	    no need     deliverd
+hirecardrive	    Masum       	    02-07-2025      updated     deliverd
+colinhartlieb	    Masum		        02-07-2025      replied     deliverd
+onolyriks	        Masum		        02-07-2025      updated      deliverd
+gianmarcosalett     Masum		        02-07-2025      no need     deliverd 
+malikdoc	        Masum		        02-07-2025      no need     deliverd
+mariamshah	        Masum + Tanvier	    02-07-2025      no need     deliverd
+meister_eckart	    Tanvir		        02-07-2025                  29-06-2025
+checkwaly   	    Tanvir		        02-07-2025                  stack
+afreed17 	        Tanvir		        02-07-2025                  deliverd
+dukeautorepair      Nasrat		        02-07-2025	    updated     29-06-2025
+happiitude	        Nasrat		        02-07-2025                  deliverd
+lex     	        Nasrat		        02-07-2025                  deliverd
+saeed327356	        Rahin		        02-07-2025                  deliverd
+fahadrazoqi	        Rahin		        02-07-2025
+lalanikhurram	    Rahin       		02-07-2025      updated     28-06-2025
+sogeoo              Masum		        02-07-2025      no need     UI working
+browgod	            Masum       		02-07-2025      updated     -----------
+happiitude	        Masum       		02-07-2025      ----        -----------
+ciyeone	            Tanvir       		02-07-2025      ----        -----------
+troyob  	        Rahin       		02-07-2025      ----        -----------
+
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        05-07-2025	    ----        deliverd
+hirecardrive	    Masum       	    05-07-2025      need        deliverd
+colinhartlieb	    Masum		        05-07-2025      need        deliverd
+onolyriks	        Masum		        05-07-2025      need        deliverd
+gianmarcosalett     Masum		        05-07-2025      ----        deliverd 
+malikdoc	        Masum		        05-07-2025      ----        deliverd
+mariamshah	        Masum + Tanvier	    05-07-2025      ----        deliverd
+sogeoo              Masum		        05-07-2025      ----        15-07-2025
+browgod	            Masum       		05-07-2025      need        07-08-2025
+happiitude	        Masum		        05-07-2025      meeting     23-07-2025 <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		05-07-2025	    ----        29-06-2025
+checkwaly   	    Tanvir		        05-07-2025      ----        stack
+afreed17 	        Tanvir		        05-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        05-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		05-07-2025      ----        16-07-2025
+ciyeone	            Tanvir       		05-07-2025      ----        16-07-2025
+lex     	        Nasrat		        05-07-2025      ----        deliverd
+saeed327356	        Rahin		        05-07-2025      ----        deliverd
+lalanikhurram	    Rahin       		05-07-2025      need        28-06-2025
+hatemverymuch  	    Rahin       		05-07-2025      ----        24-07-2025
+troyob  	        -----       		05-07-2025      ----        24-07-2025
+mick15  	        -----       		05-07-2025      ----        24-07-2025
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        06-07-2025	    ----        deliverd
+hirecardrive	    Masum       	    06-07-2025      need        deliverd
+colinhartlieb	    Masum		        06-07-2025      need        deliverd
+onolyriks	        Masum		        06-07-2025      need        deliverd
+gianmarcosalett     Masum		        06-07-2025      ----        deliverd 
+malikdoc	        Masum		        06-07-2025      done        deliverd
+mariamshah	        Masum + Tanvier	    06-07-2025      ----        deliverd
+sogeoo              Masum		        06-07-2025      ----        15-07-2025
+browgod	            Masum       		06-07-2025      ----        07-08-2025
+happiitude	        Masum		        06-07-2025      done        23-07-2025 <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		06-07-2025	    ----        29-06-2025
+checkwaly   	    Tanvir		        06-07-2025      ----        stack
+afreed17 	        Tanvir		        06-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        06-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		06-07-2025      ----        16-07-2025
+ciyeone	            Tanvir       		06-07-2025      ----        16-07-2025
+lex     	        Nasrat		        06-07-2025      ----        deliverd
+saeed327356	        Rahin		        06-07-2025      ----        deliverd
+lalanikhurram	    Rahin       		06-07-2025      ----        28-06-2025
+hatemverymuch  	    Rahin       		06-07-2025      need        24-07-2025
+troyob  	        -----       		06-07-2025      ----        24-07-2025
+mick15  	        -----       		06-07-2025      ----        24-07-2025
+
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+Methow		        Masum		        07-07-2025	    ----        deliverd
+hirecardrive	    Masum       	    07-07-2025      need        deliverd
+colinhartlieb	    Masum		        07-07-2025      need        deliverd
+onolyriks	        Masum		        07-07-2025      need        deliverd
+gianmarcosalett     Masum		        07-07-2025      ----        deliverd 
+malikdoc	        Masum		        07-07-2025      done        deliverd
+mariamshah	        Masum + Tanvier	    07-07-2025      ----        deliverd
+sogeoo              Masum		        07-07-2025      ----        15-07-2025
+browgod	            Masum       		07-07-2025      ----        07-08-2025
+happiitude	        Masum		        07-07-2025      done        23-07-2025 <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		07-07-2025	    ----        29-06-2025
+checkwaly   	    Tanvir		        07-07-2025      ----        stack
+afreed17 	        Tanvir		        07-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        07-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		07-07-2025      ----        16-07-2025
+ciyeone	            Tanvir       		07-07-2025      ----        16-07-2025
+lex     	        Nasrat		        07-07-2025      ----        deliverd
+saeed327356	        Rahin		        07-07-2025      ----        deliverd
+lalanikhurram	    Rahin       		07-07-2025      ----        28-06-2025
+hatemverymuch  	    Rahin       		07-07-2025      done        24-07-2025
+norbertellmt  	    Rahin       		07-07-2025      ----        24-07-2025
+troyob  	        -----       		07-07-2025      ----        24-07-2025
+mick15  	        -----       		07-07-2025      ----        24-07-2025
+
+
+
+
+

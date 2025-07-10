@@ -1,0 +1,51 @@
+
+
+
+Step:1->  https://who.is/
+    Domain name ta input dao.
+    WHOIS Domain Lookup er kaj holo kono domain name er full registration details ber kora.
+
+
+
+Step:2-> https://ipinfo.io/
+        * https://whatismyipaddress.com/ip-lookup
+
+    Result e Hosting Provider show korbe:
+        Jodi dekho Amazon, AWS likha ase → AWS hosting
+        Jodi dekho GoDaddy likha ase → Godaddy hosting
+        Jodi Contabo, OVH, DigitalOcean etc. thake → VPS provider
+
+    For example->
+    IP Details For: 76.223.105.230
+        Decimal:1289710054
+        Hostname:a16e665f42988324c.awsglobalaccelerator.com
+        ASN:16509
+        ISP:Amazon.com Inc.
+        Services:Datacenter
+        Country:United States
+        State/Region:Washington
+        City:Seattle
+        Latitude:47.6043 (47° 36′ 15.51″ N)
+        Longitude:-122.3298 (122° 19′ 47.43″ W)
+
+Step:3-> Server Access Thakle
+
+    Jodi tumi server e access pao (via SSH or cPanel), tahole:
+    👉 For cPanel:
+        Server Information ba Hosting Provider section e dekho.
+        Godaddy shared/VPS hosting e mostly cPanel thake.
+
+    👉 For SSH (Linux server):
+        Run this command:
+        curl -s https://ipinfo.io
+
+❌ Why Shared Hosting Doesn't Support Reverb ❌
+
+Step:4-> 
+Step:5-> 
+
+
+
+
+
+
