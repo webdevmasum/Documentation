@@ -13,7 +13,6 @@
         ls -l                    # permission + size shoho list
         ls -a                    # hidden file gulo shoho
 
-
 🔹 B. File & Folder Management
 
         mkdir project            # notun folder banano
@@ -25,21 +24,66 @@
         rm file.txt              # file delete
         rm -r foldername         # folder + vitorer sob kichu delete
 
+🔹 C. File Reading & Viewing
+
+        cat file.txt             # file read (short file)
+        less file.txt            # long file scroll kore porar jonno
+        head file.txt            # file er first 10 line
+        tail file.txt            # file er last 10 line
+
+🔹 D. Permissions & Ownership
+
+        chmod 755 file.sh        # permission set (executable)
+        chmod -R 775 storage     # laravel storage folder permission fix
+
+        chown user:group file    # file er owner change
+        chown -R www-data:www-data /var/www/project
 
 
+🔹 E. System Info & Monitoring
+
+        whoami                   # current user ke
+        date                     # current server time
+        uptime                   # server uptime
+        df -h                    # disk space info
+        free -m                  # memory usage
+
+🔹 F. Process Management
+
+        ps aux                   # running processes list
+        ps aux | grep nginx      # nginx process khujhe dekha
+        top                      # live CPU/memory usage dekhano
+        kill 12345               # process ID diye stop kora
 
 
+🔹 G. Network Related
+
+        ping google.com          # internet ache kina check kora
+        curl ifconfig.me         # server er public IP dekha
+        netstat -tuln            # kon port gulo open
 
 
+🔹 H. User & Permission
+
+        adduser masum            # notun user create
+        usermod -aG sudo masum   # sudo access add kora
+        passwd masum             # password change kora
+
+        su masum                 # onno user e switch kora
+        logout                   # logout kora (ssh session)
+
+🔹 I. Package Installation & Update
+
+        sudo apt update          # package list update
+        sudo apt upgrade         # sob installed package update
+        sudo apt install nginx   # nginx install
+        sudo apt remove nginx    # nginx uninstall
 
 
+🔹 J. Others
 
-
-
-
-
-
-
-
+        history                  # previous command list
+        clear                    # terminal screen clear
+        exit                     # terminal session theke ber hoy
 
 
