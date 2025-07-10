@@ -1,0 +1,45 @@
+
+✅ Linux Basic Commands
+
+🔹 A. Navigation (Directory)
+
+        pwd                      # present working directory dekhao
+        cd /path/to/folder       # absolute path e folder e jawar jonno
+        cd foldername            # relative path e folder e jawa
+        cd ..                    # ek level up jawa
+        cd                       # home folder e jawa
+
+        ls                       # folder er vitorer file/folder list
+        ls -l                    # permission + size shoho list
+        ls -a                    # hidden file gulo shoho
+
+
+🔹 B. File & Folder Management
+
+        mkdir project            # notun folder banano
+        touch file.txt           # notun empty file banano
+        nano file.txt            # file edit terminal theke (ctrl+X to save)
+
+        cp file1.txt file2.txt   # file copy
+        mv old.txt new.txt       # file rename
+        rm file.txt              # file delete
+        rm -r foldername         # folder + vitorer sob kichu delete
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
