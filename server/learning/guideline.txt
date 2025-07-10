@@ -53,7 +53,58 @@
 
 
 
+🔵 Phase 3: Security, Performance & Monitoring
+    🔹 6. SSL Setup (HTTPS)
+        Use Let’s Encrypt
+        Install Certbot: sudo apt install certbot
+        Auto-renewal: certbot renew --dry-run
 
+    📚 Guide:
+        Let's Encrypt with Apache
+
+    Nginx version
+
+    🔹 7. Supervisor for Queues
+        Run php artisan queue:work continuously
+        Create config file: /etc/supervisor/conf.d/laravel-worker.conf
+
+    📚 Guide:
+        Laravel Queues with Supervisor
+
+    🔹 8. Scheduled Tasks (Cron Jobs)
+        * * * * * php /path-to-project/artisan schedule:run >> /dev/null 2>&1
+
+    📚:
+        Laravel Scheduler
+
+    🔹 9. File Uploads and Permissions
+        Public disk management
+        chown -R www-data:www-data /var/www/html
+        Set correct storage and bootstrap/cache permissions
+
+    🔹 10. Laravel Env Caching
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+
+🔴 Phase 4: Expert Level Tools
+    🔹 11. Git + Deployment Automation
+        Pull from Git: git clone, git pull origin main
+        Use GitHub Actions or GitLab CI/CD for auto deployment
+
+    📚:
+        Deploy Laravel via GitHub Actions
+
+    🔹 12. Laravel Forge / Ploi / RunCloud (Optional SaaS Tools)
+        These make deployment faster but you should first master manual deployment
+
+    🔹 13. Load Balancer, Firewall, UFW
+        sudo ufw allow ssh
+        sudo ufw allow 'Apache Full'
+        Configure firewall rules
+
+    📚:
+        UFW Firewall Basics
 
 
 
