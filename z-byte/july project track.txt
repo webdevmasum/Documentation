@@ -143,7 +143,7 @@ onolyriks	        Masum		        11-07-2025      done        deliverd
 gianmarcosalett     Masum		        11-07-2025      ----        deliverd    Client server need
 malikdoc	        Masum		        11-07-2025      ----        deliverd
 mariamshah	        Masum + Tanvier	    11-07-2025      ----        deliverd    Client server need
-sogeoo              Masum		        11-07-2025      need        15-07-2025
+sogeoo              Masum		        11-07-2025      done        15-07-2025
 browgod	            Masum       		11-07-2025      done        07-08-2025
 happiitude	        Masum		        11-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		11-07-2025	    ----        29-06-2025  Client server need
@@ -158,5 +158,30 @@ hatemverymuch  	    Rahin       		11-07-2025      need        24-07-2025
 norbertellmt  	    Rahin       		11-07-2025      need        24-07-2025
 troyob  	        -----       		11-07-2025      ----        24-07-2025
 mick15  	        -----       		11-07-2025      ----        24-07-2025
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+hirecardrive	    Masum       	    12-07-2025      need        deliverd
+colinhartlieb	    Masum		        12-07-2025      need        deliverd
+onolyriks	        Masum		        12-07-2025      need        deliverd
+gianmarcosalett     Masum		        12-07-2025      ----        deliverd    Client server need
+malikdoc	        Masum		        12-07-2025      check       deliverd
+mariamshah	        Masum + Tanvier	    12-07-2025      need        deliverd    Client server need
+sogeoo              Masum		        12-07-2025      need        15-07-2025
+browgod	            Masum       		12-07-2025      ----        07-08-2025
+happiitude	        Masum		        12-07-2025      ----        23-07-2025  <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		12-07-2025	    need        29-06-2025  Client server need
+afreed17 	        Tanvir		        12-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        12-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		12-07-2025      ----        16-07-2025
+ciyeone	            Tanvir       		12-07-2025      need        16-07-2025
+lex     	        Nasrat		        12-07-2025      need        deliverd
+saeed327356	        Rahin		        12-07-2025      ----        deliverd    Client server need
+lalanikhurram	    Rahin       		12-07-2025      need        deliverd
+hatemverymuch  	    Rahin       		12-07-2025      need        24-07-2025
+norbertellmt  	    Rahin       		12-07-2025      need        24-07-2025
+troyob  	        -----       		12-07-2025      ----        24-07-2025
+mick15  	        -----       		12-07-2025      ----        24-07-2025
 
 
