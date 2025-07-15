@@ -2,6 +2,8 @@
 💎🚀✅ 💥 🔥 📌
 
 1. composer create-project Laravel/Laravel example-app
+*** composer create-project laravel/laravel:^11.0 practice_app
+
  ( than fixe your DB in env file and run migrate command )
 
 --> php artisan migrate

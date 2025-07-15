@@ -1,0 +1,18 @@
+***********
+Commands
+***********
+
+cmd+z               -> undo
+shift+cmd+z         -> redo
+cmd+shift+r         -> hard reload
+cmd+altr+arrow      -> milti line cursore
+altr+shift+arrow    -> same line copy
+Option + Delete     -> Backward word delete
+Fn+Option+Delete    -> Forward word delete
+Cmd + Delete        -> Delete to start of line
+cmd+,               -> settings
+cmd+k and cmd+s     -> key binding
+ctrl+space          -> class import
+Shift + Option + F	-> Auto format current file
+Option + Click	    -> Multi-line edit
+Cmd + P	            -> File name likhe open
