@@ -266,14 +266,14 @@ mick15  	        -----       		16-07-2025      ----        24-07-2025
 Project		        assigned	        update-date	    update      Delivery
 
 hirecardrive	    Masum       	    17-07-2025      need        deliverd
-colinhartlieb	    Masum		        17-07-2025      need        deliverd
+colinhartlieb	    Masum		        17-07-2025      done        deliverd
 onolyriks	        Masum		        17-07-2025      ----        deliverd
 gianmarcosalett     Masum		        17-07-2025      ----        deliverd    Client server need
 malikdoc	        Masum		        17-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    17-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        17-07-2025      need        15-07-2025
 browgod	            Masum       		17-07-2025      meeting     07-08-2025
-happiitude	        Masum		        17-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Masum		        17-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		17-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        17-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        17-07-2025      ----        29-06-2025
@@ -289,3 +289,31 @@ mikaelteo  	        Rahin       		17-07-2025      done        24-07-2025
 mick140178  	    -----       		17-07-2025      done        24-07-2025
 aviationinsider  	-----       		17-07-2025      need        24-07-2025
 
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+hirecardrive	    Masum       	    18-07-2025      need        deliverd
+colinhartlieb	    Masum		        18-07-2025      ----        deliverd
+onolyriks	        Masum		        18-07-2025      meeting     deliverd
+gianmarcosalett     Masum		        18-07-2025      ----        deliverd    Client server need
+malikdoc	        Masum		        18-07-2025      check       deliverd
+mariamshah	        Masum + Tanvier	    18-07-2025      done        deliverd    Client server need
+sogeoo              Masum		        18-07-2025      need        15-07-2025
+browgod	            Masum       		18-07-2025      meeting     07-08-2025
+happiitude	        Masum		        18-07-2025      ----        23-07-2025  <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		18-07-2025	    need**      29-06-2025  Client server accaseable
+afreed17 	        Tanvir		        18-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        18-07-2025      ----        29-06-2025
+bofranews	        Tanvir       		18-07-2025      D.pro        16-07-2025
+ciyeone	            Tanvir       		18-07-2025      done        16-07-2025
+lex     	        Nasrat		        18-07-2025      ----        deliverd
+saeed327356	        Rahin		        18-07-2025      ----        deliverd    Client server need
+lalanikhurram	    Rahin       		18-07-2025      need        deliverd
+hatemverymuch  	    Rahin       		18-07-2025      ----        24-07-2025
+norbertellmt  	    Rahin       		18-07-2025      ----        24-07-2025
+troyob  	        -----       		18-07-2025      ----        24-07-2025
+mikaelteo  	        Rahin       		18-07-2025      ----        24-07-2025
+mick140178  	    -----       		18-07-2025      ----        24-07-2025
+aviationinsider  	-----       		18-07-2025      done        24-07-2025
