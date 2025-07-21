@@ -344,3 +344,31 @@ troyob  	        -----       		18-07-2025      ----        24-07-2025
 mikaelteo  	        Rahin       		18-07-2025      ----        24-07-2025
 mick140178  	    -----       		18-07-2025      ----        24-07-2025
 aviationinsider  	-----       		18-07-2025      ----        24-07-2025
+
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+hirecardrive	    Masum       	    21-07-2025      need        deliverd
+colinhartlieb	    Masum		        21-07-2025      done        deliverd
+onolyriks	        Masum		        21-07-2025      ----        deliverd
+gianmarcosalett     Masum		        21-07-2025      meeting     deliverd    Client server need
+malikdoc	        Masum		        21-07-2025      check       deliverd
+mariamshah	        Masum + Tanvier	    21-07-2025      ----        deliverd    Client server need
+sogeoo              Masum		        21-07-2025      ----        15-07-2025
+browgod	            Masum       		21-07-2025      done     07-08-2025
+happiitude	        Masum		        21-07-2025      done        23-07-2025  <-> 27-07-2025
+dukeautorepair      Masum + Tanvir		21-07-2025	    wait        29-06-2025  Client server accaseable (domain ache hosting nai)
+afreed17 	        Tanvir		        21-07-2025      ----        deliverd
+meister_eckart	    Tanvir		        21-07-2025      need        29-06-2025
+bofranews	        Tanvir       		21-07-2025      ----     16-07-2025
+ciyeone	            Tanvir       		21-07-2025      ----        16-07-2025
+lex     	        Nasrat		        21-07-2025      discuss     deliverd
+saeed327356	        Rahin		        21-07-2025      ----        deliverd    Client server need
+lalanikhurram	    Rahin       		21-07-2025      need        deliverd
+hatemverymuch  	    Rahin       		21-07-2025      ----        24-07-2025
+norbertellmt  	    Rahin       		21-07-2025      need        24-07-2025
+troyob  	        -----       		21-07-2025      ----        24-07-2025
+mikaelteo  	        Rahin       		21-07-2025      ----        24-07-2025
+mick140178  	    -----       		21-07-2025      ----        24-07-2025
+aviationinsider  	-----       		21-07-2025      ----        24-07-2025
