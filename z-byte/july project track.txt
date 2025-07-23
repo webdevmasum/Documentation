@@ -12,7 +12,7 @@ malikdoc	        Masum		        06-07-2025      done        deliverd
 mariamshah	        Masum + Tanvier	    06-07-2025      ----        deliverd
 sogeoo              Masum		        06-07-2025      ----        15-07-2025
 browgod	            Masum       		06-07-2025      ----        07-08-2025
-happiitude	        Masum		        06-07-2025      done        23-07-2025 <-> 27-07-2025
+happiitude	        Sazzad		        06-07-2025      done        23-07-2025 <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		06-07-2025	    ----        29-06-2025
 checkwaly   	    Tanvir		        06-07-2025      ----        stack
 afreed17 	        Tanvir		        06-07-2025      ----        deliverd
@@ -39,7 +39,7 @@ malikdoc	        Masum		        07-07-2025      ----        deliverd
 mariamshah	        Masum + Tanvier	    07-07-2025      ----        deliverd    Client server need
 sogeoo              Masum		        07-07-2025      ----        15-07-2025
 browgod	            Masum       		07-07-2025      need        07-08-2025
-happiitude	        Masum		        07-07-2025      ----        23-07-2025 <-> 27-07-2025
+happiitude	        Sazzad		        07-07-2025      ----        23-07-2025 <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		07-07-2025	    ----        29-06-2025 Client server need
 afreed17 	        Tanvir		        07-07-2025      need        deliverd
 meister_eckart	    Tanvir		        07-07-2025      need        29-06-2025
@@ -65,7 +65,7 @@ malikdoc	        Masum		        07-07-2025      ----        deliverd
 mariamshah	        Masum + Tanvier	    07-07-2025      ----        deliverd    Client server need
 sogeoo              Masum		        07-07-2025      ----        15-07-2025
 browgod	            Masum       		07-07-2025      need        07-08-2025
-happiitude	        Masum		        07-07-2025      done        23-07-2025 <-> 27-07-2025
+happiitude	        Sazzad		        07-07-2025      done        23-07-2025 <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		07-07-2025	    ----        29-06-2025 Client server need
 afreed17 	        Tanvir		        07-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        07-07-2025      need        29-06-2025
@@ -93,7 +93,7 @@ malikdoc	        Masum		        07-07-2025      ----        deliverd
 mariamshah	        Masum + Tanvier	    07-07-2025      done        deliverd    Client server need
 sogeoo              Masum		        07-07-2025      need        15-07-2025
 browgod	            Masum       		07-07-2025      ----        07-08-2025
-happiitude	        Masum		        07-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        07-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		07-07-2025	    ----        29-06-2025  Client server need
 afreed17 	        Tanvir		        07-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        07-07-2025      need        29-06-2025
@@ -119,7 +119,7 @@ malikdoc	        Masum		        10-07-2025      done        deliverd
 mariamshah	        Masum + Tanvier	    10-07-2025      done        deliverd    Client server need
 sogeoo              Masum		        10-07-2025      need        15-07-2025
 browgod	            Masum       		10-07-2025      done        07-08-2025
-happiitude	        Masum		        10-07-2025      done        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        10-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		10-07-2025	    done        29-06-2025  Client server need
 afreed17 	        Tanvir		        10-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        10-07-2025      done        29-06-2025
@@ -145,7 +145,7 @@ malikdoc	        Masum		        11-07-2025      ----        deliverd
 mariamshah	        Masum + Tanvier	    11-07-2025      ----        deliverd    Client server need
 sogeoo              Masum		        11-07-2025      done        15-07-2025
 browgod	            Masum       		11-07-2025      done        07-08-2025
-happiitude	        Masum		        11-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        11-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		11-07-2025	    ----        29-06-2025  Client server need
 afreed17 	        Tanvir		        11-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        11-07-2025      ----        29-06-2025
@@ -170,7 +170,7 @@ malikdoc	        Masum		        12-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    12-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        12-07-2025      need        15-07-2025
 browgod	            Masum       		12-07-2025      ----        07-08-2025
-happiitude	        Masum		        12-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        12-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		12-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        12-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        12-07-2025      ----        29-06-2025
@@ -195,7 +195,7 @@ malikdoc	        Masum		        13-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    13-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        13-07-2025      need        15-07-2025
 browgod	            Masum       		13-07-2025      ----        07-08-2025
-happiitude	        Masum		        13-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        13-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		13-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        13-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        13-07-2025      ----        29-06-2025
@@ -221,7 +221,7 @@ malikdoc	        Masum		        15-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    15-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        15-07-2025      need        15-07-2025
 browgod	            Masum       		15-07-2025      need        07-08-2025
-happiitude	        Masum		        15-07-2025      need        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        15-07-2025      need        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		15-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        15-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        15-07-2025      need        29-06-2025
@@ -247,7 +247,7 @@ malikdoc	        Masum		        16-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    16-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        16-07-2025      need        15-07-2025
 browgod	            Masum       		16-07-2025      done        07-08-2025
-happiitude	        Masum		        16-07-2025      done        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        16-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		16-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        16-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        16-07-2025      done        29-06-2025
@@ -273,7 +273,7 @@ malikdoc	        Masum		        17-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    17-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        17-07-2025      need        15-07-2025
 browgod	            Masum       		17-07-2025      meeting     07-08-2025
-happiitude	        Masum		        17-07-2025      done        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        17-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		17-07-2025	    need        29-06-2025  Client server need
 afreed17 	        Tanvir		        17-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        17-07-2025      ----        29-06-2025
@@ -302,7 +302,7 @@ malikdoc	        Masum		        18-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    18-07-2025      done        deliverd    Client server need
 sogeoo              Masum		        18-07-2025      need        15-07-2025
 browgod	            Masum       		18-07-2025      meeting     07-08-2025
-happiitude	        Masum		        18-07-2025      done        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        18-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		18-07-2025	    need**      29-06-2025  Client server accaseable
 afreed17 	        Tanvir		        18-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        18-07-2025      ----        29-06-2025
@@ -329,7 +329,7 @@ malikdoc	        Masum		        18-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    18-07-2025      done        deliverd    Client server need
 sogeoo              Masum		        18-07-2025      need        15-07-2025
 browgod	            Masum       		18-07-2025      meeting     07-08-2025
-happiitude	        Masum		        18-07-2025      ----        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        18-07-2025      ----        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		18-07-2025	    wait        29-06-2025  Client server accaseable (domain ache hosting nai)
 afreed17 	        Tanvir		        18-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        18-07-2025      ----        29-06-2025
@@ -357,7 +357,7 @@ malikdoc	        Masum		        21-07-2025      check       deliverd
 mariamshah	        Masum + Tanvier	    21-07-2025      ----        deliverd    Client server need
 sogeoo              Masum		        21-07-2025      ----        15-07-2025
 browgod	            Masum       		21-07-2025      done     07-08-2025
-happiitude	        Masum		        21-07-2025      done        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        21-07-2025      done        23-07-2025  <-> 27-07-2025
 dukeautorepair      Masum + Tanvir		21-07-2025	    wait        29-06-2025  Client server accaseable (domain ache hosting nai)
 afreed17 	        Tanvir		        21-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        21-07-2025      need        29-06-2025
@@ -386,18 +386,18 @@ malikdoc	        Masum		        23-07-2025      need        deliverd
 mariamshah	        Masum + Tanvier	    23-07-2025      need        deliverd    Client server need
 sogeoo              Masum		        23-07-2025      need        15-07-2025
 browgod	            Masum       		23-07-2025      ----        07-08-2025
-happiitude	        Masum		        23-07-2025      need        23-07-2025  <-> 27-07-2025
+happiitude	        Sazzad		        23-07-2025      need        23-07-2025  <-> 27-07-2025 extention
 dukeautorepair      Masum + Tanvir		23-07-2025	    check       29-06-2025  Client server accaseable (domain ache hosting nai)
 afreed17 	        Tanvir		        23-07-2025      ----        deliverd
 meister_eckart	    Tanvir		        23-07-2025      need        29-06-2025
-bofranews	        Tanvir       		23-07-2025      ----        16-07-2025
+bofranews	        Tanvir       		23-07-2025      ----        16-07-2025  meeting server cre...
 ciyeone	            Tanvir       		23-07-2025      ----        16-07-2025
+aviationinsider  	Tanvir       		23-07-2025      ----        24-07-2025
 lex     	        Nasrat		        23-07-2025      discuss     deliverd
 saeed327356	        Rahin		        23-07-2025      ----        deliverd    Client server need
 lalanikhurram	    Rahin       		23-07-2025      ----        deliverd
-hatemverymuch  	    Rahin       		23-07-2025      meeting     24-07-2025
-norbertellmt  	    Rahin       		23-07-2025      need        24-07-2025
+hatemverymuch  	    -----       		23-07-2025      meeting     24-07-2025
+norbertellmt  	    Rahin       		23-07-2025      need        24-07-2025  extention
 troyob  	        -----       		23-07-2025      ----        24-07-2025
-mikaelteo  	        Rahin       		23-07-2025      need        24-07-2025
+mikaelteo  	        R----       		23-07-2025      need        24-07-2025
 mick140178  	    -----       		23-07-2025      need        24-07-2025
-aviationinsider  	Tanvir       		23-07-2025      ----        24-07-2025
