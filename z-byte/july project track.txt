@@ -574,3 +574,30 @@ norbertellmt  	    Rahin       		29-07-2025      done        24-07-2025  extenti
 troyob  	        -----       		29-07-2025      ----        24-07-2025
 mikaelteo  	        Rahin       		29-07-2025      ----        24-07-2025
 mick140178  	    -----       		29-07-2025      done        24-07-2025
+
+
+
+march
+FO83454A59308   420
+FO519EB19E383   400
+FO113A0A89DC5   800
+FO1137DCB52C5   40      total 1660
+
+april
+FO320AB266087   700
+FO1D0E41B143    200
+FO72DDE0F6B47   640     total 1540
+
+may
+FO519EB19E383   200
+FO620FF83C004   600
+FO2D28CCEA42    500     total 1300
+
+
+June
+FO11A773C8F87   400
+FO3D48B18A41    8
+FO527C447F0C7   1200
+FO72E4A887947   600     total 2208
+
+july
