@@ -2,25 +2,51 @@
 
 Project		        assigned	        update-date	    update      Delivery
 
-hirecardrive	    Masum       	    04-08-2025      meet        deliverd
+hirecardrive	    Masum       	    04-08-2025      done        deliverd
 colinhartlieb	    Masum		        04-08-2025      meet        deliverd
 onolyriks	        Masum		        04-08-2025      done        deliverd
 gianmarcosalett     Masum		        04-08-2025      server      deliverd    Client server need
 malikdoc	        Masum		        04-08-2025      need        deliverd
 mariamshah	        Masum + Tanvier	    04-08-2025      need        deliverd    Client server need
 sogeoo              Masum		        04-08-2025      ----        deloverd
-browgod	            Masum       		04-08-2025      need        deliverd
+browgod	            Masum       		04-08-2025      done        deliverd
 mick140178  	    Masum       		04-08-2025      done        24-07-2025
 happiitude	        Sazzad		        04-08-2025      ----        23-07-2025  <-> 27-07-2025 extention
 dukeautorepair      Masum + Tanvir		04-08-2025	    F-up        29-06-2025  Client server accaseable (domain ache hosting nai)
-afreed17 	        Tanvir		        04-08-2025      ----        deliverd
+afreed17 	        Tanvir		        04-08-2025      doen        deliverd
 meister_eckart	    Tanvir		        04-08-2025      ----        29-06-2025
-bofranews	        Tanvir       		04-08-2025      need        16-07-2025  
+bofranews	        Tanvir       		04-08-2025      done        16-07-2025  
 ciyeone	            Tanvir       		04-08-2025      ----        16-07-2025
 aviationinsider  	Tanvir       		04-08-2025      need        24-07-2025
-lex     	        Nasrat		        04-08-2025      need        deliverd
+lex     	        Nasrat		        04-08-2025      done        deliverd
 saeed327356	        Rahin		        04-08-2025      ----        deliverd    Client server need
-lalanikhurram	    Rahin       		04-08-2025      need        deliverd
+lalanikhurram	    Rahin       		04-08-2025      done        deliverd
 hatemverymuch  	    -----       		04-08-2025      need        24-07-2025
-norbertellmt  	    Rahin       		04-08-2025      ----        24-07-2025  extention
-mikaelteo  	        Rahin       		04-08-2025      ----        24-07-2025
+norbertellmt  	    Rahin       		04-08-2025      done        24-07-2025  extention
+mikaelteo  	        Rahin       		04-08-2025      done        24-07-2025
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+hirecardrive	    Masum       	    05-08-2025      ----        deliverd
+colinhartlieb	    Masum		        05-08-2025      F-up        deliverd
+onolyriks	        Masum		        05-08-2025      ----        deliverd
+gianmarcosalett     Masum		        05-08-2025      server      deliverd    Client server need
+malikdoc	        Masum		        05-08-2025      need        deliverd
+mariamshah	        Masum + Tanvier	    05-08-2025      need        deliverd    Client server need
+sogeoo              Masum		        05-08-2025      ----        deloverd
+browgod	            Masum       		05-08-2025      ----        27-08-2025
+mick140178  	    Masum       		05-08-2025      ----        deliverd
+happiitude	        Sazzad		        05-08-2025      ----        23-07-2025  <-> 27-07-2025 extention
+dukeautorepair      Masum + Tanvir		05-08-2025	    F-up        29-06-2025  Client server accaseable (domain ache hosting nai)
+afreed17 	        Tanvir		        05-08-2025      ----        deliverd
+meister_eckart	    Tanvir		        05-08-2025      ----        29-06-2025
+bofranews	        Tanvir       		05-08-2025      ----        16-07-2025  
+ciyeone	            Tanvir       		05-08-2025      ----        16-07-2025
+aviationinsider  	Tanvir       		05-08-2025      need        24-07-2025
+lex     	        Nasrat		        05-08-2025      ----        deliverd
+saeed327356	        Rahin		        05-08-2025      ----        deliverd    Client server need
+lalanikhurram	    Rahin       		05-08-2025      ----        deliverd
+hatemverymuch  	    -----       		05-08-2025      need        24-07-2025
+norbertellmt  	    Rahin       		05-08-2025      ----        24-07-2025  extention
+mikaelteo  	        Rahin       		05-08-2025      ----        24-07-2025
