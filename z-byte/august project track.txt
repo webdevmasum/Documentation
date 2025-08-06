@@ -64,10 +64,12 @@ mariamshah	        Masum + Tanvier	    06-08-2025      need        deliverd    C
 sogeoo              Masum		        06-08-2025      ----        deloverd
 browgod	            Masum       		06-08-2025      ----        27-08-2025
 mick140178  	    Masum       		06-08-2025      ----        deliverd
+Adel_nazih  	    Masum           	06-08-2025      ----        ----------
 dukeautorepair      Masum + Tanvir		06-08-2025	    F-up        29-06-2025  Client server accaseable (domain ache hosting nai)
-hatemverymuch  	    Masum + Sazzad      06-08-2025      need        24-07-2025
+hatemverymuch  	    Masum + Sazzad      06-08-2025      done        24-07-2025
 happiitude	        Sazzad		        06-08-2025      ----        23-07-2025  <-> 27-07-2025 extention
 Enzolacoasa         Sazzad           	06-08-2025      ----        24-07-2025
+lex     	        Sazzad		        06-08-2025      need        ----------
 afreed17 	        Tanvir		        06-08-2025      ----        deliverd
 meister_eckart	    Tanvir		        06-08-2025      ----        29-06-2025
 bofranews	        Tanvir       		06-08-2025      ----        16-07-2025  
@@ -77,8 +79,6 @@ saeed327356	        Rahin		        06-08-2025      ----        deliverd    Clien
 lalanikhurram	    Rahin       		06-08-2025      ----        deliverd
 norbertellmt  	    Rahin       		06-08-2025      ----        24-07-2025  extention
 mikaelteo  	        Rahin       		06-08-2025      ----        24-07-2025
-lex     	        -----		        06-08-2025      need        deliverd
-Adel_nazih  	    -----           	06-08-2025      ----        24-07-2025
+Roneysafiani  	    Rahin           	06-08-2025      ----        12-08-2025
 Zbibi         	    -----           	06-08-2025      ----        24-07-2025
 Aviation 3K    	    -----           	06-08-2025      ----        24-07-2025
-Roneysafiani  	    -----           	06-08-2025      ----        24-07-2025
