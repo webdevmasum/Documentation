@@ -74,9 +74,318 @@ Web Model--->>>
 ******************
 Web Route--->>>
 ******************
+
+    Route::get('/photoshot', [PhotoshotController::class, 'index'])->name('photoshot.index');
+    Route::get('/photoshot/create', [PhotoshotController::class, 'create'])->name('photoshot.create');
+    Route::post('/photoshot/store', [PhotoshotController::class, 'store'])->name('photoshot.store');
+    Route::get('/photoshot/show/{id}', [PhotoshotController::class, 'show'])->name('photoshot.show');
+    Route::get('/photoshot/edit/{id}', [PhotoshotController::class, 'edit'])->name('photoshot.edit');
+    Route::put('/photoshot/update/{id}', [PhotoshotController::class, 'update'])->name('photoshot.update');
+    Route::get('/photoshot/status/{id}', [PhotoshotController::class, 'status'])->name('photoshot.status');
+    Route::delete('/photoshot/destroy/{id}', [PhotoshotController::class, 'destroy'])->name('photoshot.destroy');
+
+    // Route::delete('/photoshot/image/{id}', [PhotoshotController::class, 'deleteImage'])->name('photoshot.image.delete');
+    Route::delete('photoshot/image/delete/{id}', [PhotoshotController::class, 'deleteImage'])->name('photoshot.image.delete');
+
+
+
 ******************
 Web Controller--->>>
 ******************
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Photoshot;
+
+use App\Http\Controllers\Controller;
+use App\Models\Photoshot;
+use App\Models\PhotoshotImage;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Yajra\DataTables\DataTables;
+
+class PhotoshotController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
+    {
+        // $data = photoshot::latest();
+        $data = Photoshot::with('images')->latest();
+
+        if ($request->ajax()) {
+            return DataTables::of($data)
+                ->addIndexColumn()
+
+                // photoshot Image Column
+                ->addColumn('image', function ($data) {
+                    $imgPath = $data->latestImage ? asset($data->latestImage->image) : asset('default.png');
+                    return '<img src="' . $imgPath . '" alt="Photoshot Image" height="50">';
+                })
+
+                ->addColumn('status', function ($data) {
+                    $status = '';
+                    $status .= '<div class="switch-sm icon-state">';
+                    $status .= '<label class="switch">';
+                    $status .= '<input onclick="showStatusChangeAlert(' . $data->id . ')" type="checkbox" class="form-check-input" id="customSwitch' . $data->id . '" getAreaid="' . $data->id . '" name="status"';
+
+                    // Check if the status is active
+                    if ($data->status == "active") {
+                        $status .= ' checked';
+                    }
+
+                    $status .= '>';
+                    $status .= '<span class="switch-state"></span>';
+                    $status .= '</label>';
+                    $status .= '</div>';
+                    $status .= '</div>';
+
+                    return $status;
+                })
+                ->addColumn('action', function ($data) {
+
+                    return '<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                                  <a href="' . route('photoshot.edit',  $data->id) . '" type="button" class="action edit text-success" title="Edit">
+                                  <i class="icon-pencil-alt"></i>
+                                  </a>&nbsp;
+                                  <a href="#" onclick="showDeleteConfirm(' . $data->id . ')" type="button" class="action delete text-danger" title="Delete">
+                                  <i class="icon-trash"></i>
+                                </a>
+                                </div>';
+                })
+                ->rawColumns(['status', 'action', 'image'])
+                ->make(true);
+        }
+
+        return view('backend.layouts.photoshot.index');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('backend.layouts.photoshot.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+
+        $validated = $request->validate([
+            'title'         => 'required|string|max:255',
+            'sub_title'     => 'nullable|string|max:255',
+            'description'   => 'nullable|string',
+            'images.*'      => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        // dd($validated);
+        try {
+            DB::beginTransaction();
+
+            $photoshot = Photoshot::create([
+                'title'           => $validated['title'],
+                'sub_title'       => $validated['sub_title'],
+                'description'     => $validated['description'],
+
+            ]);
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('uploads/photoshots'), $imageName);
+
+                    $photoshot->images()->create([
+                        'image' => 'uploads/photoshots/' . $imageName,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('photoshot.index')->with('notify-success', 'Photoshot created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('photoshot Store Error: ' . $e->getMessage());
+
+            return back()->withInput()->with('notify-error', 'Something went wrong. Please try again.');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id)
+    {
+        $photoshot = Photoshot::with(['images'])->findOrFail($id);
+
+        return view('backend.layouts.photoshot.edit', compact('photoshot'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+
+            'title'            => 'required|string|max:255',
+            'sub_title'        => 'nullable|string|max:255',
+            'description'      => 'nullable|string',
+            'images.*'         => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $photoshot = Photoshot::findOrFail($id);
+
+            // Update main photoshot info
+            $photoshot->update([
+                'title'           => $validated['title'],
+                'sub_title'       => $validated['sub_title'],
+                'description'     => $validated['description'],
+            ]);
+
+            // Upload new images if available (same as store)
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('uploads/photoshots'), $imageName);
+
+                    $imagePath = 'uploads/photoshots/' . $imageName; // Save relative path
+
+                    $photoshot->images()->create([
+                        'image' => $imagePath,
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('photoshot.index')->with('notify-success', 'photoshot updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('photoshot Update Error: ' . $e->getMessage());
+
+            return back()->withInput()->with('notify-error', 'Something went wrong. Please try again.');
+        }
+    }
+
+
+    public function deleteImage($id)
+    {
+        try {
+            $image = PhotoshotImage::findOrFail($id);
+
+            // Check actual image path
+            Log::info('Image path from DB: ' . $image->image);
+
+            $filePath = public_path($image->image); // don't use ltrim here
+
+            Log::info('Full file path: ' . $filePath);
+
+            if (file_exists($filePath)) {
+                unlink($filePath); // Attempt to delete
+                Log::info('File deleted successfully.');
+            } else {
+                Log::warning('File does NOT exist at: ' . $filePath);
+            }
+
+            $image->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Image deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Failed to delete image: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete image.'
+            ], 500);
+        }
+    }
+
+
+
+    /**
+     * Delete the specified dynamic page from the photoshot database.
+     *
+     * @param int $id
+     */
+    public function destroy($id)
+    {
+        $photoshot = Photoshot::findOrFail($id);
+
+        // Check if photoshot has images
+        if ($photoshot->images()->exists()) {
+            foreach ($photoshot->images as $image) {
+                // Delete image file from folder
+                if (file_exists(public_path($image->image))) {
+                    unlink(public_path($image->image));
+                }
+
+                // Delete image record from database
+                $image->delete();
+            }
+        }
+
+        // Delete the photoshot itself
+        $photoshot->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Photoshot and all its images deleted successfully.',
+        ]);
+    }
+
+
+    /**
+     * Update the status of a dynamic page.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status($id)
+    {
+        try {
+            $data = Photoshot::findOrFail($id);
+            $data->status = $data->status === 'active' ? 'inactive' : 'active';
+            $data->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => $data->status === 'active' ? 'Published Successfully.' : 'Unpublished Successfully.',
+                'data' => $data,
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('photoshot Model Status Toggle Error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+    }
+}
+
+
+
+
 ******************
 Web Create Blade--->>>
 ******************
