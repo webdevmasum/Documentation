@@ -389,6 +389,116 @@ class PhotoshotController extends Controller
 ******************
 Web Create Blade--->>>
 ******************
+
+
+@extends('backend.app')
+
+@section('title', 'Photoshot Create')
+
+@push('styles')
+    <style>
+        .ck-editor__editable[role="textbox"] {
+            min-height: 150px;
+        }
+    </style>
+@endpush
+
+@section('content')
+    <div class="container-fluid">
+        <div class="page-title">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h3>Create New Photoshot</h3>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('photoshot.index') }}"><i data-feather="arrow-left"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active">Photoshot Create</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-profile">
+            <div class="row">
+                <div class="col-xl-12">
+                    <form class="card" method="POST" action="{{ route('photoshot.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <div class="card-header pb-0">
+                            <h4 class="card-title mb-0">Photoshot Create Form</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <!-- Title -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Title</label>
+                                    <input type="text" name="title"
+                                        class="form-control @error('title') is-invalid @enderror"
+                                        value="{{ old('title') }}" placeholder="Enter Title">
+                                    @error('title')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Sub Title -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Sub Title</label>
+                                    <input type="text" name="sub_title" placeholder="Enter sub title"
+                                        class="form-control @error('sub_title') is-invalid @enderror"
+                                        value="{{ old('sub_title') }}">
+                                    @error('sub_title')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea name="description" id="description" rows="4" placeholder="Description write here..."
+                                        class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
+                                    @error('description')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Image Upload -->
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Photoshot Images (Multiple Images Allowed)</label>
+                                    <input type="file" class="form-control dropify" name="images[]" multiple>
+                                    @error('images')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary" type="submit">Create</button>
+                            <a href="{{ route('photoshot.index') }}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@push('scripts')
+
+    <script>
+        ClassicEditor.create(document.querySelector('#description')).catch(error => console.error(error));
+        ClassicEditor.create(document.querySelector('#information')).catch(error => console.error(error));
+        $('.dropify').dropify();
+
+    </script>
+@endpush
+
+
+
+
 ******************
 Web Create Blade--->>>
 ******************
