@@ -1,0 +1,85 @@
+******************
+Web database--->>>
+******************
+
+public function up(): void
+    {
+        Schema::create('photoshots', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->string('sub_title')->nullable();
+            $table->text('description')->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    public function up(): void
+    {
+        Schema::create('photoshot_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('photoshot_id')->constrained('photoshots')->onDelete('cascade');
+            $table->string('image');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+
+******************
+Web Model--->>>
+******************
+
+    class Photoshot extends Model
+    {
+        use SoftDeletes;
+
+        protected $guarded = [];
+
+        /**
+        * Get all images for the photoshot
+        */
+        public function images()
+        {
+            return $this->hasMany(PhotoshotImage::class, 'photoshot_id', 'id');
+        }
+
+        // Latest image relationship
+        public function latestImage()
+        {
+            return $this->hasOne(PhotoshotImage::class, 'photoshot_id', 'id')->latestOfMany();
+        }
+    }
+
+
+    class PhotoshotImage extends Model
+    {
+        use SoftDeletes;
+
+        protected $guarded = [];
+
+        /**
+        * Get the photoshot this image belongs to
+        */
+        public function photoshot()
+        {
+            return $this->belongsTo(Photoshot::class, 'photoshot_id', 'id');
+        }
+    }
+
+
+
+
+******************
+Web Route--->>>
+******************
+******************
+Web Controller--->>>
+******************
+******************
+Web Create Blade--->>>
+******************
+******************
+Web Create Blade--->>>
+******************
