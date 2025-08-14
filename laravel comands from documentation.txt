@@ -58,6 +58,12 @@ php artisan migrate:fresh --seed
 php artisan storage:link 		{ To create image path }
 
 
+New cPanel credentials
+Domain: https://softvencefsd.xyz:2083/
+User: softvence
+Password: z}Rk#^R8]R=$([}a
+
+
 git project run system..
 	1. npm i
 	2. 
