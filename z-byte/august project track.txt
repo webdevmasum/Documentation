@@ -212,3 +212,36 @@ Roneysafiani  	    Rahin           	13-08-2025      ----        11-08-2025
 Zbibi         	    -----           	13-08-2025      ----        ----------
 Aviation 3K    	    -----           	13-08-2025      ----        24-07-2025
 
+
+
+Project		        assigned	        update-date	    update      Delivery
+
+hirecardrive	    Masum       	    14-08-2025      done        deliverd**
+colinhartlieb	    Masum		        14-08-2025      ----        deliverd**
+onolyriks	        Masum		        14-08-2025      ----        deliverd
+gianmarcosalett     Masum		        14-08-2025      done        deliverd    Client server need
+malikdoc	        Masum		        14-08-2025      ----        deliverd
+mariamshah	        Masum + Tanvier	    14-08-2025      need        deliverd**  Client server need
+sogeoo              Masum		        14-08-2025      ----        deloverd    Client server need
+browgod	            Masum       		14-08-2025      need        27-08-2025
+mick140178  	    Masum       		14-08-2025      ----        03-09-2025
+Adel_nazih  	    Masum           	14-08-2025      ----        16-09-2025
+dukeautorepair      Masum + Tanvir		14-08-2025	    ----        deliverd    Client server accaseable (domain ache hosting nai)
+hatemverymuch  	    Masum + Sazzad      14-08-2025      need        24-08-2025
+happiitude	        Sazzad		        14-08-2025      meet        deliverd      
+Enzolacoasa         Sazzad           	14-08-2025      ----        ----------
+lex     	        Sazzad		        14-08-2025      need        25-08-2025
+afreed17 	        Tanvir		        14-08-2025      ----        deliverd
+meister_eckart	    Tanvir		        14-08-2025      ----        29-06-2025
+bofranews	        Tanvir       		14-08-2025      need       deliverd  
+ciyeone	            Tanvir       		14-08-2025      need        25-08-2025
+aviationinsider  	Tanvir       		14-08-2025      need        07-09-2025
+daviga            	Tanvir       		14-08-2025      ----        deliverd
+saeed327356	        Rahin		        14-08-2025      ----        deliverd    Client server need
+lalanikhurram	    Rahin       		14-08-2025      done        deliverd
+norbertellmt  	    Rahin       		14-08-2025      f-up        deliverd    revision
+mikaelteo  	        Rahin       		14-08-2025      need        14-08-2025  extention
+Roneysafiani  	    Rahin           	14-08-2025      ----        deliverd
+Zbibi         	    -----           	14-08-2025      ----        ----------
+Aviation 3K    	    -----           	14-08-2025      ----        24-07-2025
+
