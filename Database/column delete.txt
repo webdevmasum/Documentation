@@ -1,0 +1,4 @@
+
+table e data thakay delete na hole, SQL e ei command run than delete easily.
+
+ALTER TABLE cars DROP FOREIGN KEY u798316814_tx5zp/cars_car_model_id_foreign;

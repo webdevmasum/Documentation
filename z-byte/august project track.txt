@@ -203,6 +203,7 @@ meister_eckart	    Tanvir		        13-08-2025      ----        29-06-2025
 bofranews	        Tanvir       		13-08-2025      need       deliverd  
 ciyeone	            Tanvir       		13-08-2025      need        25-08-2025
 aviationinsider  	Tanvir       		13-08-2025      need        07-09-2025
+daviga            	Tanvir       		13-08-2025      ----        deliverd
 saeed327356	        Rahin		        13-08-2025      ----        deliverd    Client server need
 lalanikhurram	    Rahin       		13-08-2025      done        deliverd
 norbertellmt  	    Rahin       		13-08-2025      ----        deliverd    revision
