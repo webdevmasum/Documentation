@@ -1,0 +1,110 @@
+backend/app.blade.php
+******************************
+
+
+@include('backend.partials.styles')
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
+
+
+api/chatingcontroller.php
+********************************
+
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Events\SendMessage;
+use App\Http\Controllers\Controller;
+use App\Models\Chating;
+use App\Models\User;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+class ChatingController extends Controller
+{
+    use ApiResponse;
+
+
+    /**
+     * send message
+     */
+    public function send(Request $request, $receiver_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'text' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 400);
+        }
+
+        $receiver = User::find($receiver_id);
+        if (!$receiver) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $validateData = $validator->validated();
+
+        try {
+            $message = Chating::create([
+                'sender_id'   => auth()->user()->id,
+                'receiver_id' => $receiver_id,
+                'message'     => $validateData['text'],
+            ]);
+            // Broadcast event
+            broadcast(new SendMessage($message))->toOthers();
+
+            $message->load(['sender:id,name,avatar', 'receiver:id,name,avatar']);
+
+            return response()->json(['message' => 'Message sent successfully'], 200);
+        } catch (\Exception $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
+}
+
+
+
+*************************
+channels.php
+
+
+
+
+//chatting
+Broadcast::channel('chating.{reciver_id}', function ($user, $reciver_id) {
+    // return (int) $user->id === (int) $reciver_id;
+    return true;
+});
+
+
+**************************
+resources/js/cho.js
+
+
+
+
+import Echo from 'laravel-echo';
+
+import Pusher from 'pusher-js';
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'reverb',
+    key: import.meta.env.VITE_REVERB_APP_KEY,
+    wsHost: import.meta.env.VITE_REVERB_HOST,
+    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
+    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    enabledTransports: ['ws', 'wss'],
+});
+
+
+console.log('Echo initialized with Reverb');
+
+window.Echo.private('chating.' + 1)
+    .listen('.message.sent', (e) => {
+        console.log('New message:', e.message);
+    });
