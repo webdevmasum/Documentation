@@ -280,9 +280,35 @@ trait ApiResponse
 Channel:
 **************************
 
+    // chatting
+    Broadcast::channel('chatting.{reciever_id}', function ($user, $reciever_id) {
+        return (int) $user->id === (int) $reciever_id;
+    });
+
+
 **************************
 .env
 **************************
+
+// softvencefsd:
+
+REVERB_APP_ID=250884
+REVERB_APP_KEY=qaj0frsxyhdqsehyegyy
+REVERB_APP_SECRET=vyuyult4tqr7jzhsrgqm
+REVERB_HOST="reverb.softvencefsd.xyz"
+REVERB_PORT=443
+REVERB_SERVER_PORT=8082
+REVERB_SCHEME=https
+
+
+// local:
+
+# REVERB_APP_ID=393873
+# REVERB_APP_KEY=ksbvrx8xzeffoo7slcwl
+# REVERB_APP_SECRET=4qzsnwr4cfbmjzvibzw5
+# REVERB_HOST="localhost"
+# REVERB_PORT=8080
+# REVERB_SCHEME=http
 
 **************************
 Event
