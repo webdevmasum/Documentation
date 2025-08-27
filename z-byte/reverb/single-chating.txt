@@ -397,6 +397,125 @@ window.Echo.private('chatting.' + recieverId)
 
 
 **************************
+Vite Install: command
+**************************
+// use for admin dashboard checking
+
+* npm run build
+* npm run dev
+* console
+* web socket
+* all->auth-> request url
+
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>@yield('title')</title>
+
+    {!! ToastMagic::styles() !!}
+
+    @include('backend.partials.styles')
+    //vite
+    @vite(['resources/css/app.css', 'resources/js/app.js']) 
+
+</head>
+
+**************************
+bootstrap/app.php
+**************************
+
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Support\Facades\Route;
+use App\Helpers\Helper;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
+        channels: __DIR__ . '/../routes/channels.php',
+        health: '/up',
+        then: function () {
+            Route::middleware(['web', 'admin'])
+                ->group(base_path('routes/backend.php'));
+            Route::middleware(['web'])
+                ->group(base_path('routes/backend_cms.php'));
+            Route::middleware(['api'])
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+        }
+    )
+    ->withBroadcasting(
+        __DIR__ . '/../routes/channels.php',
+        ['prefix' => 'api', 'middleware' => ['auth:api']],
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (Throwable $e, Request $request) {
+            if ($request->is('api/*')) {
+                if ($e instanceof ValidationException) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                        'errors'  => $e->errors(),
+                    ], 422);
+                }
+
+                if ($e instanceof ModelNotFoundException) {
+                    return response()->json([
+                        'message' => 'Resource not found',
+                    ], 404);
+                }
+
+                if ($e instanceof AuthenticationException) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                    ], 401);
+                }
+                if ($e instanceof AuthorizationException) {
+                    return response()->json([
+                        'message' => $e->getMessage(),
+                    ], 403);
+                }
+               // Dynamically determine the status code if available
+                $statusCode = method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500;
+
+                return response()->json([
+                    'message' => $e->getMessage(),
+                ], $statusCode);
+            } else {
+                return null;
+            }
+        });
+    })->create();
+
+
+
+
+**************************
+Flutter credentials
+**************************
+
+***->   https://browgod.softvencefsd.xyz/api/broadcasting/auth
+***->   env.
+***->   event
+***->   
+***->
+
+**************************
 Flutter credentials
 **************************
 
