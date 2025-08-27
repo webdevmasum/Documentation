@@ -108,3 +108,10 @@ window.Echo.private('chating.' + 1)
     .listen('.message.sent', (e) => {
         console.log('New message:', e.message);
     });
+
+
+
+**->
+all-> auth-> Request URL: https://browgod.softvencefsd.xyz/broadcasting/auth
+
+**-> console e vite run thakle message asbe.
