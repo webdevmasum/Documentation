@@ -50,12 +50,157 @@ Model:
 
     }
 
+
+
 **************************
 Route:
 **************************
 
+    Route::prefix('chatting')->controller(ChattingController::class)->group(function () {
+        Route::get('/',  'index');
+        Route::post('/send', 'send');
+        Route::get('/conversation/{receiver_id}', 'conversation');
+    });
+
 **************************
 Controller:
+**************************
+
+namespace App\Http\Controllers\API\Chatting;
+
+use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\API\Chatting\SendResource;
+use App\Models\Chatting;
+use App\Models\User;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+
+class ChattingController extends Controller
+{
+
+    use ApiResponse;
+
+
+    public function index()
+    {
+        try {
+            $auth = auth('api')->user();
+
+            if (!$auth) {
+                return $this->errorResponse("Authentication failed.", 401);
+            }
+
+            // Fetch unique sender and receiver IDs (excluding the authenticated user)
+            $uniqueUserIds = Chatting::where('sender_id', $auth->id)
+                ->orWhere('receiver_id', $auth->id)
+                ->select('sender_id', 'receiver_id')
+                ->get()
+                ->flatMap(function ($chat) use ($auth) {
+                    return array_filter([$chat->sender_id, $chat->receiver_id], function ($id) use ($auth) {
+                        return $id != $auth->id;
+                    });
+                })->unique()->values();
+
+            if ($uniqueUserIds->isEmpty()) {
+                return $this->successResponse([], "No messages found", 200);
+            }
+
+            // Fetch user details with the latest message
+            $users = User::whereIn('id', $uniqueUserIds)
+                ->select('id', 'name', 'avatar')
+                ->get()
+                ->map(function ($user) use ($auth) {
+                    $latestMessage = Chatting::where(function ($query) use ($auth, $user) {
+                        $query->where('sender_id', $auth->id)->where('receiver_id', $user->id)
+                            ->orWhere('sender_id', $user->id)->where('receiver_id', $auth->id);
+                    })
+                        ->orderBy('created_at', 'desc')
+                        ->first();
+
+                    return [
+                        'id'             => $user->id,
+                        'name'           => $user->name,
+                        'avatar'         => $user->avatar,
+                        'latest_message' => $latestMessage ? $latestMessage->message : null,
+                        'created_at'     => $latestMessage ? $latestMessage->created_at->format('Y-m-d H:i:s') : null,
+                    ];
+                });
+
+            return $this->successResponse($users, "Chating history retrieved successfully.", 200);
+        } catch (\Exception $exception) {
+            Log::error('Error retrieving unique users: ' . $exception->getMessage());
+            return $this->errorResponse("Failed to retrieve chating history: " . $exception->getMessage(), 500);
+        }
+    }
+
+    public function conversation($reciver_id)
+    {
+        $auth = auth('api')->user();
+
+        try {
+            $data = Chatting::where(function ($query) use ($auth, $reciver_id) {
+                $query->where('sender_id', $auth->id)->where('receiver_id', $reciver_id)
+                    ->orWhere('sender_id', $reciver_id)->where('receiver_id', $auth->id);
+            })
+                ->with(['sender:id,name,avatar', 'receiver:id,name,avatar'])
+                ->orderBy('created_at', 'asc')
+                ->get();
+
+            if ($data->isEmpty()) {
+                return $this->successResponse([], "No conversation found.", 200);
+            }
+
+            return $this->successResponse($data, "Conversation retrieved successfully.", 200);
+        } catch (\Exception $exception) {
+            Log::error('Error retrieving conversation: ' . $exception->getMessage());
+            return $this->errorResponse("Failed to retrieve conversation: " . $exception->getMessage(), 500);
+        }
+    }
+
+
+        public function send(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'receiver_id' => 'required|exists:users,id',
+            'message'     => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors()->first(), 422);
+        }
+
+        $validateData = $validator->validated();
+
+        try {
+            // get current auth
+            $auth = auth('api')->user();
+
+            $message = Chatting::create([
+                'sender_id'   => $auth->id,
+                'receiver_id' => $validateData['receiver_id'],
+                'message'     => $validateData['message'],
+            ]);
+
+            // Broadcast event
+            broadcast(new MessageSent($message))->toOthers();
+
+            // eager load relations
+            $message->load(['sender:id,name,avatar', 'receiver:id,name,avatar']);
+
+            return $this->successResponse(new SendResource($message), "Message sent successfully", 200);
+        } catch (\Exception $exception) {
+            Log::error('Error sending message: ' . $exception->getMessage());
+            return $this->errorResponse("Failed to send message: " . $exception->getMessage(), 500);
+        }
+    }
+}
+
+
+**************************
+Trait:
 **************************
 
 **************************
