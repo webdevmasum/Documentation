@@ -1,0 +1,98 @@
+
+**************************
+database:
+**************************
+
+    Schema::create('chattings', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('sender_id');
+        $table->unsignedBigInteger('receiver_id');
+        $table->text('message');
+        $table->timestamps();
+        $table->foreign('sender_id')->references('id')->on('users')->onDelete('cascade');
+        $table->foreign('receiver_id')->references('id')->on('users')->onDelete('cascade');
+    });
+
+
+**************************
+Model:
+**************************
+
+    class Chatting extends Model
+    {
+
+    protected $fillable = [
+            'ride_id',
+            'sender_id',
+            'receiver_id',
+            'message',
+            'is_read',
+        ];
+
+
+        protected $casts = [
+            'ride_id'     => 'integer',
+            'sender_id'   => 'integer',
+            'receiver_id' => 'integer',
+            'message'     => 'string',
+        ];
+
+
+        public function sender(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+        {
+            return $this->belongsTo(User::class, 'sender_id');
+        }
+
+        public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+        {
+            return $this->belongsTo(User::class, 'receiver_id');
+        }
+
+    }
+
+**************************
+Route:
+**************************
+
+**************************
+Controller:
+**************************
+
+**************************
+Channel:
+**************************
+
+**************************
+.env
+**************************
+
+**************************
+Event
+**************************
+
+**************************
+Flutter credentials
+**************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
