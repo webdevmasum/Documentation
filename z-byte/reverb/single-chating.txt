@@ -311,7 +311,57 @@ REVERB_SCHEME=https
 # REVERB_SCHEME=http
 
 **************************
-Event
+Event: App/Events/messageSent:
+**************************
+
+<?php
+
+namespace App\Events;
+
+use App\Models\Chatting;
+use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Queue\SerializesModels;
+
+class MessageSent implements ShouldBroadcast
+{
+    use Dispatchable, InteractsWithSockets, SerializesModels;
+
+
+    public $message;
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(Chatting $message)
+    {
+        $this->message = $message->load(['sender', 'receiver']);
+    }
+
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return PrivateChannel
+     */
+    public function broadcastOn(): PrivateChannel
+    {
+        return new PrivateChannel('chatting.' . $this->message->receiver_id);
+    }
+
+
+    public function broadcastAs(): string
+    {
+        return 'message.sent';
+    }
+
+}
+
+
+**************************
+js/echo
 **************************
 
 **************************
