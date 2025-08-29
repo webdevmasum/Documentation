@@ -14,7 +14,7 @@
 --> php artisan serve
 php artisan serve --port=8080
 
-course category
+** php artisan make:notification InvoicePaid
 
 php artisan reverb:start --debug  **[chat in local must run reverb]**
 
@@ -22,7 +22,12 @@ php artisan reverb:start --debug  **[chat in local must run reverb]**
 4. php artisan make:controller App/Http/Controllers/Web/Backend/Blog/BlogController -r
 
 *!* php artisan make:controller App/Http/Controllers/Api/OrderController
-*!* php artisan make:controller App/Http/Controllers/API/Cms/AboutPageController
+*!* php artisan make:controller App/Http/Controllers/API/Cms/ApiAboutPageController
+
+*!* php artisan make:mail ResponseOtpCancelMail
+
+php artisan make:trait ApiResponse
+
 
 5. php artisan make:model Blog -m
 
@@ -35,6 +40,12 @@ php artisan optimize:clear
 composer update
 composer dump-autoload
 
+
+"
+themariiedhome
+Pass: "sD+,;S7GKgoc"
+
+"
 
 php artisan about 			( show environment, cache, driver )
 php artisan queue:work 			( for mail sending )
