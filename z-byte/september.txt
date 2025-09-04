@@ -77,7 +77,7 @@ colinhartlieb	    Masum		        03-09-2025      done        deliverd**
 onolyriks	        Masum		        03-09-2025      ----        deliverd
 gianmarcosalett     Masum		        03-09-2025      need        deliverd        Client server need
 malikdoc	        Masum		        03-09-2025      ----        deliverd        Client server need
-mariamshah	        Masum + Tanvir	    03-09-2025      f-upd       deliverd**      Client server need
+mariamshah	        Masum + Tanvir	    03-09-2025      done       deliverd**      Client server need
 sogeoo              Masum		        03-09-2025      ----        deloverd        Client server need
 browgod	            Masum       		03-09-2025      done        deliverd
 mick140178  	    Masum       		03-09-2025      done        03-09-2025      [1+3 extend need google and apple login]
@@ -102,3 +102,38 @@ Roneysafiani  	    Rahin           	03-09-2025      ----        deliverd
 gabipoli    	    Rahin           	03-09-2025      ----        09-09-2025
 Zbibi         	    -----           	03-09-2025      ----        ----------
 Aviation 3K    	    -----           	03-09-2025      ----        24-07-2025
+
+
+Project		        assigned	        update-date	    update      Delivery        Note
+
+hirecardrive	    Masum       	    04-09-2025      need        deliverd**
+colinhartlieb	    Masum		        04-09-2025      done        deliverd**
+onolyriks	        Masum		        04-09-2025      ----        deliverd
+gianmarcosalett     Masum		        04-09-2025      need        deliverd        Client server need
+malikdoc	        Masum		        04-09-2025      ----        deliverd        Client server need
+mariamshah	        Masum + Tanvir	    04-09-2025      done       deliverd**      Client server need
+sogeoo              Masum		        04-09-2025      ----        deloverd        Client server need
+browgod	            Masum       		04-09-2025      done        deliverd
+mick140178  	    Masum + Ridwan 		04-09-2025      ----        03-09-2025      [1+3 extend need google and apple login]
+Adel_nazih  	    Masum + Tanvir     	04-09-2025      ----        16-09-2025
+dukeautorepair      Masum + Tanvir		04-09-2025	    f-upd        deliverd       Client server accaseable (domain ache hosting nai)
+hatemverymuch  	    Masum + Sazzad      04-09-2025      need        24-08-2025
+happiitude	        Sazzad		        04-09-2025      done        deliverd        [extention not allow]      
+Enzolacoasa         Sazzad           	04-09-2025      ----        ----------
+lex     	        Sazzad		        04-09-2025      ----        25-08-2025
+pacificfirepro    	Sazzad           	04-09-2025      done        20-08-2025      [date untrack]
+afreed17 	        Tanvir		        04-09-2025      ----        deliverd
+meister_eckart	    Tanvir		        04-09-2025      ----        02-09-2025      [need to end]
+bofranews	        Tanvir       		04-09-2025      ----        deliverd  
+ciyeone	            Tanvir       		04-09-2025      ----        deliverd        [need to deliver]
+aviationinsider  	Tanvir       		04-09-2025      done        07-09-2025
+daviga            	Tanvir       		04-09-2025      ----        deliverd
+saeed327356	        Rahin		        04-09-2025      ----        deliverd        Client server need
+lalanikhurram	    Rahin       		04-09-2025      ----        deliverd
+norbertellmt  	    Rahin       		04-09-2025      ----        deliverd        revision
+mikaelteo  	        Rahin       		04-09-2025      ----        14-08-2025      extention
+Roneysafiani  	    Rahin           	04-09-2025      ----        deliverd
+gabipoli    	    Rahin           	04-09-2025      ----        09-09-2025
+Zbibi         	    -----           	04-09-2025      ----        ----------
+Aviation 3K    	    -----           	04-09-2025      ----        24-07-2025
+peteim3     	    Ridwan           	04-09-2025      ----        08-09-2025
