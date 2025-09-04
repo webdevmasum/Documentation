@@ -807,13 +807,42 @@ View: edit
 Sidebar:
 **************************
 
+    <li>
+        <a href="{{ route('settings.dynamic-page.index') }}"
+            class="tp-link {{ Request::routeIs('settings.dynamic-page.index') ? 'active' : ' ' }}">Privacy Policy</a>
+    </li>
+
 **************************
 Api Route:
 **************************
 
+    // routes/api.php
+    Route::get('dynamic-page/{slug}', [ApiDynamicPageController::class, 'show'])->name('api.dynamic-page');
+
+
 **************************
 Api Controller:
 **************************
+
+
+class ApiDynamicPageController extends Controller
+{
+
+    public function show($slug)
+    {
+        $page = DynamicPage::where('page_slug', $slug)
+            ->where('status', 'active')
+            ->first();
+
+        if (!$page) {
+            return response()->view('frontend.pages.dynamic', [], 404);
+        }
+
+        return view('frontend.pages.dynamic', compact('page'));
+    }
+
+}
+
 
 **************************
 View:
