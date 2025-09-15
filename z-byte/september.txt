@@ -228,12 +228,12 @@ mariamshah	        Masum + Tanvir	    14-09-2025      ----        deliverd**    
 sogeoo              Masum		        14-09-2025      done        deloverd        Client server need
 browgod	            Masum       		14-09-2025      ----        deliverd
 peteim3     	    Masum              	14-09-2025      done        27-09-2025      
-kalkal12345    	    Masum           	14-09-2025      ----        30-09-2025
+kalkal12345    	    Masum           	14-09-2025      done        30-09-2025
 mick140178  	    Masum + Ridwan 		14-09-2025      ----        03-09-2025      [1+3 extend need google and apple login]
 dukeautorepair      Masum + Tanvir		14-09-2025	    done        deliverd        Client server accaseable (domain ache hosting nai)
 hatemverymuch  	    Masum + Sazzad      14-09-2025      ----        24-08-2025
-happiitude	        Sazzad		        14-09-2025      ----        deliverd        [extention not allow]      
-Adel_nazih  	    Sazzad           	14-09-2025      ----        16-09-2025
+happiitude	        Sazzad		        14-09-2025      done        deliverd        [extention not allow]      
+Adel_nazih  	    Sazzad           	14-09-2025      done        16-09-2025
 Enzolacoasa         Sazzad           	14-09-2025      ----        ----------
 lex     	        Sazzad		        14-09-2025      ----        deliverd
 pacificfirepro    	Sazzad           	14-09-2025      ----        20-08-2025      [date untrack]
@@ -243,7 +243,7 @@ meister_eckart	    Tanvir		        14-09-2025      ----        25-09-2025      [
 bofranews	        Tanvir       		14-09-2025      ----        deliverd  
 ciyeone	            Tanvir       		14-09-2025      ----        deliverd        [need to deliver]
 aviationinsider  	Tanvir       		14-09-2025      done        07-09-2025
-daviga            	Tanvir       		14-09-2025      ----        deliverd
+daviga            	Tanvir       		14-09-2025      done        deliverd
 saeed327356	        Rahin		        14-09-2025      ----        deliverd        Client server need
 lalanikhurram	    Rahin       		14-09-2025      ----        deliverd
 norbertellmt  	    Rahin       		14-09-2025      ----        deliverd        revision
