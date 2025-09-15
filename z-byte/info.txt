@@ -1,0 +1,7 @@
+
+
+important
+
+#1828 - Cannot drop column 'car_model_id': needed in a foreign key constraint 'u798316814_tx5zp/cars_car_model_id_foreign'
+
+ALTER TABLE cars DROP FOREIGN KEY u798316814_tx5zp/cars_car_model_id_foreign;
