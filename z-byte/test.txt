@@ -1,0 +1,78 @@
+Client name : mick140178
+Order ID: FO16A1D85281 
+Profile : Swiftech
+Work progress: ≈ 60% (backend)
+Current issue (Minimum 3 lines): Google Login, AI integration
+Last issue date: 
+Last message Date: 19 Sep (from Flutter)
+Assigned Person: Masum Mia
+Project led by: Ridoan
+Project Deadline: 30-Sep
+---------------------------------------------------
+Client name : Saifalqubaisi2
+Order ID: FO61AD2057582
+Profile : webgenius0
+Work progress: ≈ 20% (backend)
+Current issue (Minimum 3 lines): N/A
+Last issue date: N/A
+Last message Date: 17-Sep (20-Sep)
+Assigned Person: Masum Mia
+Project led by: Ridoan
+Project Deadline: 9-Oct
+---------------------------------------------------
+Client name : Meister Eckart
+Order ID: FO71A6E130181
+Profile : wp_monkey
+Work progress: ≈ 50% (from my calculation part)
+Current issue (Minimum 3 lines): Calculators, client instruction about calculations are not clear
+Last issue date:
+Last message Date: 19-Sep
+Assigned Person: Tanvir
+Project led by: Araful, Ridoan
+Project Deadline: 27-Sep
+---------------------------------------------------
+Client name : Jencjen
+Order ID: FO31AD7007985
+Profile : wix_buddy
+Work progress: ≈ 20%
+Current issue (Minimum 3 lines):
+Last issue date:
+Last message Date: 18-Sep
+Assigned Person: Masum Mia
+Project led by: Ridoan
+Project Deadline: 9-Oct
+---------------------------------------------------
+Client name : enzolacausa 
+Order ID: FO62126B5AD04
+Profile : wix_buddy
+Work progress: ≈ 0% (from my end)
+Current issue (Minimum 3 lines): 
+Last issue date:
+Last message Date: N/A
+Assigned Person: Masum Mia
+Project led by: Saiful, Tanvir, Ridoan
+Project Deadline: Extension was requested to the client
+
+
+
+
+Hello Mick,
+
+I hope you and your family are safe and sound.
+
+As per your Project requirement, I have fixed the following tasks:
+  
+- I've developed Go-og-le login.
+- I'm working on Apple login.
+
+Note: Your app needs some cr-ede-nti-als for Apple login. If you provide those cr-ede-nti-als to me, I can complete the Apple login.
+
+The required cr-ede-nti-als are: https://docs.google.com/document/d/1Ckb3dMKwnvb4zL-ovp-ZblWdsc4b45nDEMCqiNjOhRE/edit?usp=sharing
+
+Note: For AI integration, please p-u-rc-ha-se the AI API key, which can be obtained from the OpenAI dashboard.
+ 
+For some reason, if you have any questions, modifications, or concerns, please let me know. I'll get back to you as soon as possible.
+
+Best wishes.
+
+Client Name: mick140178 | Profile: Swiftech   | Update Massage
