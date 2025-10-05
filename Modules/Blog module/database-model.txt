@@ -1,0 +1,90 @@
+
+
+*******************************
+tag
+*******************************
+
+Schema::create('tags', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->enum('status', ['active', 'inactive'])->default('active');
+        $table->timestamps();
+        $table->softDeletes();
+    });
+
+
+*******************************
+Blog category
+*******************************
+
+Schema::create('blog_categories', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->enum('status', ['active', 'inactive'])->default('active');
+        $table->timestamps();
+        $table->softDeletes();
+    });
+
+
+
+*******************************
+blog
+*******************************
+
+Schema::create('blogs', function (Blueprint $table) {
+        $table->id();
+        $table->unsignedBigInteger('blog_category_id')->nullable();
+        $table->string('title');
+        $table->text('description')->nullable();
+        $table->string('image')->nullable();
+        $table->enum('status', ['active', 'inactive'])->default('active');
+        $table->timestamps();
+        $table->softDeletes();
+    });
+
+
+*******************************
+blog-tag
+*******************************
+
+Schema::create('blog_tags', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('blog_id')->constrained('blogs')->onDelete('cascade');
+        $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
+        $table->timestamps();
+    });
+
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+
+**********************
+BlogCategory
+**********************
+
+class BlogCategory extends Model
+{
+    use SoftDeletes;
+
+    protected $guarded =[];
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'blog_category_id');
+    }
+}
+
+
+
+**********************
+**********************
+
+**********************
+**********************
+
+**********************
+**********************
+
+**********************
+**********************

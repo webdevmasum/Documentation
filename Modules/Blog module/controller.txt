@@ -1,0 +1,254 @@
+
+
+
+
+<?php
+
+namespace App\Http\Controllers\Web\Backend\Blog;
+
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Models\Blog;
+use App\Models\BlogCategory;
+use App\Models\Tag;
+use App\Traits\ApiResponse;
+use Devrabiul\ToastMagic\Facades\ToastMagic;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\DataTables;
+
+class BlogController extends Controller
+{
+    use ApiResponse;
+
+    /**
+     * Displays the list of blog.
+     *
+     * This method handles AJAX requests to fetch and return product data
+     * in a format suitable for DataTables, including columns for publish
+     * products. If not an AJAX request, it returns the main view for products.
+     *
+     * @param Request $request The incoming HTTP request.
+     */
+
+    public function index(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = Blog::with('category')->orderBy('id', 'desc');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('image', function ($row) {
+                    $url = $row->image ? asset($row->image) : asset('backend/images/no-image.png');
+                    return '<div class="text-center">
+                        <img src="' . $url . '" class="img-thumbnail preview-image" width="40" data-src="' . $url . '">
+                    </div>';
+                })
+
+                ->addColumn('category', function ($row) {
+                    return $row->category ? $row->category->name : '-';
+                })
+                ->addColumn('status', function ($row) {
+                    $checked = $row->status == 'active' ? 'checked' : '';
+                    return '<div class="form-check form-switch " style="display: flex; justify-content: center; align-items: center;">
+                        <input type="checkbox" class="form-check-input status-toggle" data-id="' . $row->id . '" ' . $checked . '>
+                    </div>';
+                })
+                ->addColumn('action', function ($row) {
+                    return '<a href="' . route('blog.edit', $row->id) . '" class="action-btn edit" title="Edit">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <button onclick="deleteBlog(' . $row->id . ')" class="action-btn delete" title="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>';
+                })
+                ->rawColumns(['image', 'status', 'action'])
+                ->make(true);
+        }
+
+        return view('backend.layouts.blog.index');
+    }
+
+
+
+    /**
+     * Show the form for creating a new blog dynamic page.
+     */
+
+    public function create()
+    {
+        $categories = BlogCategory::pluck('name', 'id');
+        $tags = Tag::pluck('name', 'id');
+        return view('backend.layouts.blog.create', compact('categories', 'tags'));
+    }
+
+    /**
+     * Store a newly created dynamic page in the database.
+     *
+     * @param Request $request
+     */
+
+    public function store(Request $request)
+    {
+        // Validate Request
+        $request->validate([
+            'title'             => 'required|string|max:255',
+            'description'       => 'nullable',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4000',
+            'category'          => 'required|string|max:255',
+            'new_category'      => 'nullable|string|max:255',
+            'tags'              => 'nullable|array',
+            'tags.*'            => 'nullable|string|max:255', // each tag can be string (new) or numeric (existing)
+        ]);
+
+        try {
+
+            // Handle Category
+            if (is_numeric($request->category)) {
+                // existing category
+                $categoryId = $request->category;
+            } else {
+                // new category
+                $category = BlogCategory::firstOrCreate(
+                    ['name' => $request->category],
+                    ['status' => 'active']
+                );
+                $categoryId = $category->id;
+            }
+
+            // Create Blog
+            $blog = new Blog();
+            $blog->title            = $request->title;
+            $blog->description      = $request->description;
+            $blog->blog_category_id = $categoryId;
+
+            // Handle Image Upload
+            if ($request->hasFile('image')) {
+                $blogImage       = Helper::fileUpload($request->file('image'), 'blog-image', $request->image);
+                $blog->image     = $blogImage;
+            }
+
+            $blog->save();
+
+            // Handle Tags (existing + new)
+            if ($request->filled('tags')) {
+                $tagsToAttach = [];
+
+                foreach ($request->tags as $tagInput) {
+                    if (is_numeric($tagInput)) {
+                        // Existing tag
+                        $tagsToAttach[] = $tagInput;
+                    } else {
+                        // New tag creation
+                        $newTag = Tag::firstOrCreate(
+                            ['name'   => $tagInput], // avoid duplicates
+                            ['status' => 'active']
+                        );
+                        $tagsToAttach[] = $newTag->id;
+                    }
+                }
+
+                $blog->tags()->attach($tagsToAttach);
+            }
+
+            // Success Notification
+            ToastMagic::success('Blog Created Successfully');
+            return redirect()->route('blog.index');
+        } catch (\Exception $e) {
+            // Error Handling
+            ToastMagic::error('Something went wrong: ' . $e->getMessage());
+            return back()->withInput();
+        }
+    }
+
+
+    /**
+     * Display the specified blog to edit and update.
+     *
+     * @param  string  $id
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+
+    public function edit($id)
+    {
+        $data = Blog::find($id);
+        return view('backend.layouts.blog.edit', compact('data'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4000',
+            'published_at' => 'nullable|date',
+        ]);
+
+        $data = Blog::find($id);
+        $data->title = $request->title;
+        $data->description = $request->description;
+        $data->published_at = $request->published_at;
+
+        if ($request->hasFile('image')) {
+            // Remove old image if a new image is uploaded
+            if ($data->image && File::exists($data->image)) {
+                File::delete($data->image);
+            }
+            // Store the new image
+            $data->image = Helper::fileUpload($request->file('image'), 'blog-image', $request->image);
+        }
+
+        $data->save();
+
+
+        ToastMagic::success('Blog Updated Successfully');
+
+        return redirect()->route('blog.index');
+    }
+
+    /**
+     * Delete the specified dynamic page from the blog database.
+     *
+     * @param int $id
+     */
+    public function destroy($id)
+    {
+        $data = Blog::findOrFail($id);
+
+        $data->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Deleted successfully.',
+        ]);
+    }
+
+
+    /**
+     * Update the status of a blog.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function status($id)
+    {
+        $data = Blog::findOrFail($id);
+
+        if ($data->status == 'active') {
+            $data->status = 'inactive';
+            $data->save();
+            return response()->json([
+                'success' => false,
+                'message' => 'Unpublished Successfully.',
+                'data'    => $data,
+            ]);
+        } else {
+            $data->status = 'active';
+            $data->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'Published Successfully.',
+                'data'    => $data,
+            ]);
+        }
+    }
+}
