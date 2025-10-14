@@ -1,0 +1,58 @@
+
+ProjectProject		    Target             assigned	
+
+onolyriks	                                Masum		        
+-sogeoo                                     Masum		                
+happiitude	                                Sazzad		          
+lex     	                                Sazzad		        
+bofranews	                                Tanvir   
+saeed327356	                                Rahin		              
+Roneysafiani  	                            Rahin           	
+
+@ browgod               -> Server	        Masum  
+@ peteim3               -> Server     	    Masum   	
+- malikdoc              -> Server	        Masum
+- ciyeone               -> Server	        Tanvir   
+- gabipoli              -> Server    	    Rahin  	
+- Zbibi                 -> Server         	Rahin 
+
+@ hirecardrive          -> Issue	        Masum       	 
+@ colinhartlieb         -> Issue	        Masum
+@ gianmarcosalett       -> Issue            Masum		         
+@ dukeautorepair        -> Issue            Masum + Tanvir		        
+@ mariamshah            -> Issue	        Masum + Tanvir	    
+@@meister_eckart**      -> Issue	        Tanvir		        
+@ aviationinsider       -> Issue  	        Tanvir       		
+@ afreed17              -> Issue 	        Tanvir		        
+- daviga                -> Issue           	Tanvir       		
+@ norbertellmt          -> Issue  	        Rahin       		
+          	
+
+## kalkal12345 **       -> Close  	        Masum           	
+## saifalqubaisi**      -> Close  	        Masum           	
+## mick140178**         -> Close 	        Masum + Ridwan 		
+## sirreel1****         -> Close     	    Masum + ------               
+## hatemverymuch        -> Close   	        Masum + Sazzad      
+## lalanikhurram**      -> Close 	        Sazzad       		
+## pacificfirepro       -> Close     	    Sazzad           	
+## Adel_nazih           -> Close  	        Sazzad           	
+## jorgefranco95**      -> Close  	        Tanvir           	
+## mikaelteo**          -> Close   	        Rahin       		
+## mufasaanon****       -> Close     	    Rahin               
+## jencjen**            -> Close            Ridoan     	     
+## moises510****        -> Close            Ridoan              
+
+## mirko86z                                 Masum
+## Aviation 3K    	                        Sazzad + Masum      
+## solertia33    	                        Tanvir            
+## mikesworks93         -> Close     	    Rahin               
+## enzolacausa                              Rahin + Tanvir     	
+## rutland_padel    	                    Ridoan                          
+## felicerosee     	                        Ridoan + Tanvir             
+
+
+
+
+
+
+
