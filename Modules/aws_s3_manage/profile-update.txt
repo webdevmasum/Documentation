@@ -14,6 +14,131 @@ Controller
 ************************
 
 
+
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\ApiResponse;
+use App\Helpers\StoreImage;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\UserSettingResource;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
+class ApiUserSettingController extends Controller
+{
+    use ApiResponse;
+
+    /**
+     * Display user general settings.
+     */
+    public function show()
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return $this->errorResponse('User not found', 404);
+        }
+
+        return $this->successResponse(new UserSettingResource($user), 'User settings fetched successfully');
+    }
+
+    /**
+     * Update user general settings.
+     */
+
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return $this->errorResponse('User not authenticated', 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name'                     => 'nullable|string|max:255',
+            'lastname'                 => 'nullable|string|max:255',
+            'username'                 => 'nullable|string|max:255|unique:users,username,' . $user->id,
+            'bio'                      => 'nullable|string|max:500',
+            'location'                 => 'nullable|string|max:255',
+            'weblink'                  => 'nullable|string|max:255',
+            'commission'               => 'nullable|boolean',
+            'followermanage'           => 'nullable|boolean',
+            'email_notification'       => 'nullable|boolean',
+            'subscriber_notification'  => 'nullable|boolean',
+            'tip_notification'         => 'nullable|boolean',
+
+            'profile_pic'              => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'banner_pic'               => 'nullable|image|mimes:jpeg,png,jpg,webp|max:8192',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->errorResponse($validator->errors()->first(), 422);
+        }
+
+        $data = $validator->validated();
+
+        try {
+            $disk = media_disk();
+
+            // ✅ Profile pic upload & old delete
+            if ($request->hasFile('profile_pic')) {
+                // delete old image if exists
+                if ($user->profile_pic && Storage::disk($disk)->exists($user->profile_pic)) {
+                    Storage::disk($disk)->delete($user->profile_pic);
+                }
+
+                $data['profile_pic'] = StoreImage::storeFile(
+                    $request->file('profile_pic'),
+                    $user->username ?? 'profile',
+                    'user/profile'
+                );
+            }
+
+            // ✅ Banner pic upload & old delete
+            if ($request->hasFile('banner_pic')) {
+                if ($user->banner_pic && Storage::disk($disk)->exists($user->banner_pic)) {
+                    Storage::disk($disk)->delete($user->banner_pic);
+                }
+
+                $data['banner_pic'] = StoreImage::storeFile(
+                    $request->file('banner_pic'),
+                    $user->username ?? 'banner',
+                    'user/banner'
+                );
+            }
+
+            // ✅ Update user info
+            $user->update([
+                'name'                     => $data['name'] ?? $user->name,
+                'lastname'                 => $data['lastname'] ?? $user->lastname,
+                'username'                 => $data['username'] ?? $user->username,
+                'bio'                      => $data['bio'] ?? $user->bio,
+                'location'                 => $data['location'] ?? $user->location,
+                'weblink'                  => $data['weblink'] ?? $user->weblink,
+                'commission'               => $data['commission'] ?? $user->commission,
+                'followermanage'           => $data['followermanage'] ?? $user->followermanage,
+                'email_notification'       => $data['email_notification'] ?? $user->email_notification,
+                'subscriber_notification'  => $data['subscriber_notification'] ?? $user->subscriber_notification,
+                'tip_notification'         => $data['tip_notification'] ?? $user->tip_notification,
+                'profile_pic'              => $data['profile_pic'] ?? $user->profile_pic,
+                'banner_pic'               => $data['banner_pic'] ?? $user->banner_pic,
+            ]);
+
+            return $this->successResponse(
+                new UserSettingResource($user->fresh()),
+                'User settings updated successfully'
+            );
+        } catch (\Throwable $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+}
+
+
 ************************
 ************************
 ************************
