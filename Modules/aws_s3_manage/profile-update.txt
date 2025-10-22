@@ -140,7 +140,56 @@ class ApiUserSettingController extends Controller
 
 
 ************************
+Resources
 ************************
-************************
-************************
-************************
+
+
+
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
+
+class UserSettingResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id'                     => $this->id,
+            'name'                   => $this->name,
+            'lastname'               => $this->lastname,
+            'username'               => $this->username,
+            'email'                  => $this->email,
+            'bio'                    => $this->bio,
+            'location'               => $this->location,
+            'weblink'                => $this->weblink,
+
+            'profile_pic'            => $this->profile_pic && Storage::disk('public')->exists($this->profile_pic)
+                                        ? url('storage/' . $this->profile_pic)
+                                        : null,
+
+            'banner_pic'             => $this->banner_pic && Storage::disk('public')->exists($this->banner_pic)
+                                        ? url('storage/' . $this->banner_pic)
+                                        : null,
+
+            'commission'             => (bool) $this->commission,
+            'follower_manage'        => (bool) $this->followermanage,
+
+            // Notification Preferences
+            'email_notification'     => (bool) $this->email_notification,
+            'subscriber_notification' => (bool) $this->subscriber_notification,
+            'tip_notification'       => (bool) $this->tip_notification,
+            'created_at'             => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null,
+        ];
+    }
+}
+
+
