@@ -1,0 +1,21 @@
+************************
+Route
+************************
+
+Route::middleware(['auth:api', 'api'])->group(function () {
+
+    Route::get('/user/settings', [ApiUserSettingController::class, 'show']);
+    Route::post('/user/settings/update', [ApiUserSettingController::class, 'update']);
+});
+
+
+************************
+Controller
+************************
+
+
+************************
+************************
+************************
+************************
+************************
