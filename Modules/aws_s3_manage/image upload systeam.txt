@@ -1,0 +1,247 @@
+
+
+*************************************
+Helper
+*************************************
+
+<?php
+
+use Illuminate\Support\Facades\Storage;
+
+if (!function_exists('media_url')) {
+    function media_url($path)
+    {
+        if (!$path) return null;
+
+        return Storage::disk(media_disk())->url($path);
+    }
+}
+
+if (!function_exists('media_disk')) {
+    function media_disk()
+    {
+        // 🔁 Change this one line to switch between storages
+        // return 's3'; // when ready for AWS
+        return 'public'; // default local
+    }
+}
+
+
+
+*************************************
+StoreImage
+*************************************
+
+
+<?php
+
+namespace App\Helpers;
+
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+
+class StoreImage
+{
+    public static function storeFile($file, $title, $folder): string
+    {
+        $disk = media_disk(); // use helper for future flexibility
+
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $fileExtension = $file->getClientOriginalExtension();
+
+        $titlePart = $title ? substr(str_replace(' ', '', $title), 0, 9) : 'no_title';
+        $namePart  = substr($originalName, 0, 9);
+
+        $fileName = "{$namePart}.{$titlePart}." . uniqid() . ".{$fileExtension}";
+
+        $path = $file->storeAs($folder, $fileName, $disk);
+
+        return $path;
+    }
+}
+
+
+
+
+
+*************************************
+Create Content
+*************************************
+
+
+
+
+<?php
+
+namespace App\Http\Controllers\Api\Contents;
+
+use App\Http\Controllers\Controller;
+use App\Models\Report;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+use App\Models\Content;
+use App\Models\Tag;
+
+// helpers & custom classes
+use App\Helpers\StoreImage;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+// exceptions
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
+use Str;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
+
+
+public function createContent(Request $request)
+    {
+        try {
+            // ❌ Early exit if user unauthorized
+            if (Auth::user()->subscribe != 1) {
+                return response()->json([
+                    'status' => 405,
+                    'message' => 'User Unauthorized',
+                    'previous_url' => url()->previous(),
+                    'data' => $request->all(),
+                ]);
+            }
+
+            // ✅ Validation rules (no tags, no description, no schedule)
+            $validator = Validator::make($request->all(), [
+                'tier_id' => 'nullable|integer',
+                'title'   => 'nullable|string',
+                'file'    => 'required|file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,webm,3gp|max:102400',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'  => 422,
+                    'message' => 'Validation error',
+                    'errors'  => $validator->errors(),
+                ]);
+            }
+
+            $data = $validator->validated();
+
+            // ✅ Handle file upload using helper
+            if ($request->hasFile('file')) {
+                $data['file'] = StoreImage::storeFile(
+                    $request->file('file'),
+                    $data['title'] ?? 'content',
+                    'content-pics'
+                );
+            }
+
+            // ✅ Create content
+            $content = Content::create([
+                'creator' => Auth::id(),
+                'tier_id' => $data['tier_id'] ?? null,
+                'title'   => $data['title'] ?? null,
+                'file'    => $data['file'] ?? null,
+            ]);
+
+            return response()->json([
+                'status'  => 201,
+                'message' => 'Post created successfully',
+                'data'    => $content,
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Server Error',
+                'error'   => $e->getMessage(),
+            ]);
+        }
+    }
+
+
+*************************************
+Update Content
+*************************************
+
+
+
+public function updateContent(Request $request, $id)
+    {
+        try {
+            $content = Content::find($id);
+
+            if (!$content) {
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'Content not found',
+                ]);
+            }
+
+            if (strtolower(Auth::user()->role) !== 'fans' && $content->creator !== Auth::id()) {
+                return response()->json([
+                    'status' => 403,
+                    'message' => 'User Unauthorized!',
+                ]);
+            }
+
+            // ✅ Validate only the needed fields
+            $validator = Validator::make($request->all(), [
+                'tier_id' => 'nullable|integer',
+                'title'   => 'nullable|string',
+                'file'    => 'nullable|file|mimes:jpeg,png,jpg,gif,webp,mp4,mov,avi,webm,3gp|max:102400',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status'  => 422,
+                    'message' => 'Validation error',
+                    'errors'  => $validator->errors(),
+                ]);
+            }
+
+            $validated = $validator->validated();
+
+            // ✅ Handle file upload (local or S3)
+            if ($request->hasFile('file')) {
+                // delete old file if exists
+                if ($content->file && Storage::disk(media_disk())->exists($content->file)) {
+                    Storage::disk(media_disk())->delete($content->file);
+                }
+
+                $file = is_array($request->file('file'))
+                    ? end($request->file('file'))
+                    : $request->file('file');
+
+                $validated['file'] = \App\Helpers\StoreImage::storeFile(
+                    $file,
+                    $validated['title'] ?? $content->title,
+                    'content-pics',
+                    media_disk()
+                );
+            } else {
+                $validated['file'] = $content->file;
+            }
+
+            // ✅ Update record
+            $content->update([
+                'tier_id' => $validated['tier_id'] ?? $content->tier_id,
+                'title'   => $validated['title'] ?? $content->title,
+                'file'    => $validated['file'],
+            ]);
+
+            return response()->json([
+                'status'  => 200,
+                'message' => 'Content updated successfully',
+                'data'    => $content,
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status'  => 500,
+                'message' => 'Server error: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
