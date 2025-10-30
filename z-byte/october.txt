@@ -115,6 +115,7 @@ onolyriks	            Masum		        20-10-2025      ----        deliverd
 ## kalkal12345 **   	Masum           	20-10-2025      ----        30-09-2025
 ## saifalqubaisi** 	    Masum           	20-10-2025      done        19-09-2025      extention[16 sep]
 ##sirreel1****    	    Masum               20-10-2025       ----        ----------
+##wilderbruno****    	Masum               20-10-2025       ----        ----------
 ## mick140178** 	    Masum + Ridwan 		20-10-2025      done        03-09-2025      [1+3 extend need google and apple login]
 @ dukeautorepair        Masum + Tanvir		20-10-2025	    ----        deliverd        Client server accaseable (domain ache hosting nai)
 ## hatemverymuch @@ 	Masum + Sazzad      20-10-2025      need        24-08-2025
@@ -150,7 +151,7 @@ gtac            	    Ridoan + Tanvir     20-10-2025       ----        ----------
 
 
 
-Masum       Running 3     ShareRunning 3    bajuka/Server 9   
+Masum       Running 4     ShareRunning 3    bajuka/Server 9   
 Sazzad      Running 3     ShareRunning 2    bajuka/Server 2    
 Ridoan      Running 2     ShareRunning 2    bajuka/Server 1     
 Rahin       Running 4     ShareRunning 0    bajuka/Server 1      
