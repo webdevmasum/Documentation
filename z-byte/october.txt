@@ -147,14 +147,14 @@ felicerosee     	    Ridoan + Tanvir     20-10-2025       ----        ----------
 troyb            	    Ridoan + Tanvir     20-10-2025       ----        ----------
 ## moises510****       	Ridoan              20-10-2025      done        ----------
 ## rutland_padel    	Ridoan              20-10-2025      ----        ----------
-gtac            	    Ridoan + Tanvir     20-10-2025       ----        ----------
+
 
 
 
 Masum       Running 4     ShareRunning 3    bajuka/Server 9   
 Sazzad      Running 3     ShareRunning 2    bajuka/Server 2    
 Ridoan      Running 2     ShareRunning 2    bajuka/Server 1     
-Rahin       Running 4     ShareRunning 0    bajuka/Server 1      
+Rahin       Running 4     ShareRunning 0    bajuka/Server 1   
 Tanvier     Running 2     ShareRunning 3    bajuka/Server 5      
 
 
