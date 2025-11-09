@@ -94,13 +94,15 @@ troyb            	    Ridoan + Tanvir     20-10-2025                           -
 
 
 
-##Mirkoz****    	    Masum               
-##sirreel1****    	    Masum               
-##wilderbruno****    	Masum  
+##Mirkoz****    	    Masum 
+
+## saifalqubaisi** 	    Masum (incomplete)
+## sirreel1****    	    Masum               
+## wilderbruno****    	Masum  
              
-## hatemverymuch @@ 	Masum + Sazzad      
-## Aviation 3K @@   	Masum + Sazzad      
-##lalanikhurram**	    Sazzad
+## hatemverymuch @@ 	Sazzad + Masum      
+## Aviation 3K @@   	Sazzad + Masum      
+## lalanikhurram**	    Sazzad
 
 ## jorgefranco95** 	    Tanvir           	     
 ## solertia33    	    Tanvir 
@@ -113,8 +115,7 @@ troyb            	    Ridoan + Tanvir     20-10-2025                           -
 felicerosee     	    Ridoan + Tanvir     
 ## ddtdant          	Ridoan + Tanvir     
 ## cameron1         	Ridoan + Masum   
-
-## saifalqubaisi** 	    Masum           	
+          	
 ## pacificfirepro    	Sazzad           	
 ## Adel_nazih  	        Sazzad           	
 ## jencjen**            Ridoan           	   
