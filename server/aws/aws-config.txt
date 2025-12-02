@@ -1,0 +1,75 @@
+
+
+
+
+ EC2 Instance Create (AWS Console)
+
+*-> AWS Console e login -> EC2 -> Instances -> Launch instances.
+*-> Choose AMI: Ubuntu 22.04 LTS (or Debian/Amazon Linux) - ami latest LTS choose koro.
+*-> Instance type: t3.micro (free-tier) ba production e t3.small/t3.medium.
+*-> Key pair: new key pair create kore .pem download koro. (File ta safe rakhbe)
+*-> Network & Subnet: default thik ache.
+*-> ecurity group (Create new):
+*-> SSH (TCP 22) — Source: your IP (jodi possible) ba 0.0.0.0/0 (less secure).
+*-> HTTP (TCP 80) — Source: 0.0.0.0/0.
+*-> HTTPS (TCP 443) — Source: 0.0.0.0/0.
+*-> MySQL (TCP 3306) — Source: your IP (optional; avoid 0.0.0.0/0 production).
+*-> Storage: 20 GB SSD (gp3) min. Increase if media/storage large.
+*-> Review & Launch.
+
+
+CloudPanel | Documentation:::-----
+
+Documentation: https://www.cloudpanel.io/docs/v2/getting-started/other/#install-cloudpanel
+
+AWS->dashboard->Launch instance->name->ubuntu->select 24 or other->t3 small->key-pair ->select existing security group [check mark]->configure storage -> Launch instance.
+
+
+1. CloudPanel Installation:
+Installation->other->ubuntu 24.04 LTS -> MySQL 8.4 -> (copy the command and run the terminal)
+
+2. copy and run the terminal:
+a)-> apt update && apt -y upgrade && apt -y install curl wget sudo
+b)-> curl -sS https://installer.cloudpanel.io/ce/v2/install.sh -o install.sh; \
+echo "19cfa702e7936a79e47812ff57d9859175ea902c62a68b2c15ccd1ebaf36caeb install.sh" | \
+sha256sum -c && sudo DB_ENGINE=MYSQL_8.4 bash install.sh
+
+
+-> terminal will provide a link.
+
+-> go to aws and instance-> security -> security groups -> edit inbound rules -> 
+add rule-> custome TCP + port range(8443) + anywhere-IPv4 + 0.0.0.0/0 ->ave rule
+
+
+Admin User Creation: if forget user and pass follow:
+
+run this : sudo clpctl user:list
+set new one: sudo cloctl user:add --userName=whvtell --password=whvtell@2025 --email=whvtell338@gmail.com --firstName=whvtell --lastName=creative --role=admin
+
+*->  add site-> create static html site (select)-> d
+*-> add site-> create php site (select)-> application - laravel11 + sudomain name + php version + site use + site user pass -> create. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
