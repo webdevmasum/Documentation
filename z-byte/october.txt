@@ -243,3 +243,12 @@ troyb            	    Ridoan + Tanvir     20-10-2025                           -
 ## moises510****       	Ridoan              20-10-2025                          done        ----------
 ## rutland_padel    	Ridoan              20-10-2025                          ----        ----------
 
+mick140178 - functional modules
+meister - some modules
+moises510 - full
+jencjen - full
+felicerosee - running
+wilderbruno - running
+ddtdant999999 - running
+rutland_padel - cancel for ui confusions and client issue
+troyb15 - cancel for client payment issue
