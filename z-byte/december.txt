@@ -1,0 +1,134 @@
+Project		            assigned	        update-date	    update      Delivery        Note
+
+@ hirecardrive	        Masum       	    20-10-2025 / 28-10-2025             work        deliverd**
+@ colinhartlieb	        Masum		        14-10-2025                          work        deliverd**
+@ gianmarcosalett       Masum		        29-10-2025 / 30-10-2025             work        deliverd        Client server need
+-malikdoc	            Masum		        30-10-2025                          ----        deliverd        Client server need
+@ mariamshah	        Masum + Tanvir	    05-10-2025***                       work        deliverd**       Client server need
+-sogeoo                 Masum		        18-09-2025***                       server      deloverd        Client server need
+@ browgod	            Masum       		16-10-2025*                         server      deliverd
+@ peteim3     	        Masum              	09-10-2025                          server      27-09-2025
+## kalkal12345 **   	Masum           	30-10-2025                          server        30-09-2025
+## saifalqubaisi** 	    Masum           	30-10-2025=*                        Work        19-09-2025      extention[16 sep]
+##sirreel1****    	    Masum               27-10-2025==                        Work        ----------
+##wilderbruno****    	Masum               30-10-2025==                        Work        ----------
+## mick140178** 	    Masum + Ridwan 		27-10-2025==**                      Work        03-09-2025      [1+3 extend need google and apple login]
+@ dukeautorepair        Masum + Tanvir		20-10-2025**                        Work        deliverd        Client server accaseable (domain ache hosting nai)
+## hatemverymuch @@ 	Masum + Sazzad      30-10-2025==*                       work        24-08-2025
+## Aviation 3K @@   	Sazzad + Masum      30-10-2025==                        work        24-07-2025
+##lalanikhurram**	    Sazzad       		27-10-2025==                        work        deliverd
+## pacificfirepro    	Sazzad           	20-10-2025                          ----        20-08-2025      [date untrack]
+## Adel_nazih  	        Sazzad           	20-10-2025                          ----        16-09-2025
+happiitude	            Sazzad		        20-10-2025                          ----        deliverd        [extention not allow]      
+lex     	            Sazzad		        20-10-2025                          ----        deliverd
+## jorgefranco95** 	    Tanvir           	20-10-2025                          ----        25-07-2025      extention[23 sep]
+## solertia33    	    Tanvir              20-10-2025                          ----        24-07-2025
+@ aviationinsider  	    Tanvir       		20-10-2025                          ----        07-09-2025
+@ afreed17 	            Tanvir		        20-10-2025                          ----        deliverd
+@@meister_eckart**	    Tanvir		        20-10-2025                          ----        25-09-2025      [need to end]
+bofranews	            Tanvir       		20-10-2025                          ----        deliverd  
+-ciyeone	            Tanvir       		20-10-2025                          ----        deliverd        [need to deliver]
+-daviga            	    Tanvir       		20-10-2025                          ----        deliverd
+saeed327356	            Rahin		        20-10-2025                          ----        deliverd        Client server need
+Roneysafiani  	        Rahin           	20-10-2025                          ----        deliverd
+-gabipoli    	        Rahin           	20-10-2025                          ----        09-09-2025
+-Zbibi         	        Rahin           	20-10-2025                          ----        30-09-2025
+@ norbertellmt  	    Rahin       		20-10-2025                          ----        deliverd        revision
+## mikaelteo**  	    Rahin       		20-10-2025                          ----        09-10-2025      extention[done]
+## mufasaanon****    	Rahin               20-10-2025                          ----        24-07-2025
+## mikesworks93    	    Rahin               20-10-2025                          ----        ----------
+## enzolacausa          Rahin               20-10-2025                          need        ----------
+## jencjen**            Ridoan           	20-10-2025                          ----        30-09-2025      
+felicerosee     	    Ridoan + Tanvir     20-10-2025                           ----        ----------
+troyb            	    Ridoan + Tanvir     20-10-2025                           ----        ----------
+## moises510****       	Ridoan              20-10-2025                          done        ----------
+## rutland_padel    	Ridoan              20-10-2025                          ----        ----------
+
+mick140178 - functional modules
+meister - some modules
+moises510 - full
+jencjen - full
+felicerosee - running
+wilderbruno - running
+ddtdant999999 - running
+rutland_padel - cancel for ui confusions and client issue
+troyb15 - cancel for client payment issue
+
+
+
+
+Project		            assigned	        Assigned-date       update-date	    update      Delivery        Note
+
+@ hirecardrive	        Masum               20-10-2025           20-10-2025             work        deliverd**
+@ colinhartlieb	        Masum		        20-10-2025           14-10-2025             work        deliverd**
+@ gianmarcosalett       Masum		        20-10-2025           29-10-2025             work        deliverd        Client server need
+@ malikdoc	            Masum		        20-10-2025           30-10-2025             ----        deliverd        Client server need
+@ mariamshah	        Masum + Tanvir	    20-10-2025           05-10-2025***          work        deliverd**       Client server need
+@ sogeoo                Masum		        20-10-2025           18-09-2025***          server      deloverd        Client server need
+@ browgod	            Masum       	    20-10-2025           16-10-2025*            server      deliverd
+@ peteim3     	        Masum               20-10-2025           09-10-2025             server      27-09-2025
+@ kalkal12345   	    Masum           	20-10-2025           30-10-2025             server        30-09-2025
+#@# mick140178   	    Masum + Ridwan 		20-10-2025           27-10-2025==**         Work        03-09-2025      [1+3 extend need google and apple login]
+@ dukeautorepair        Masum + Tanvir		20-10-2025           20-10-2025**           Work        deliverd        Client server accaseable (domain ache hosting nai)
+D lalanikhurram 	    Sazzad       		20-10-2025           27-10-2025==           work        deliverd
+@ pacificfirepro    	Sazzad           	20-10-2025           20-10-2025             ----        20-08-2025      [date untrack]
+C Adel_nazih  	        Sazzad           	20-10-2025           20-10-2025             ----        16-09-2025
+D happiitude	        Sazzad		        20-10-2025           20-10-2025             ----        deliverd        [extention not allow]      
+D lex     	            Sazzad		        20-10-2025           20-10-2025             ----        deliverd
+@ aviationinsider  	    Tanvir       		20-10-2025           20-10-2025             ----        07-09-2025
+@ afreed17 	            Tanvir		        20-10-2025           20-10-2025             ----        deliverd
+@@ meister_eckart**	    Tanvir		        20-10-2025           20-10-2025             ----        25-09-2025      [need to end]
+D bofranews	            Tanvir       		20-10-2025           20-10-2025             ----        deliverd  
+@ ciyeone	            Tanvir       		20-10-2025           20-10-2025             ----        deliverd        [need to deliver]
+@ daviga            	Tanvir       		20-10-2025           20-10-2025             ----        deliverd
+D saeed327356	        Rahin		        20-10-2025           20-10-2025             ----        deliverd        Client server need
+D Roneysafiani  	    Rahin           	20-10-2025           20-10-2025             ----        deliverd
+D gabipoli    	        Rahin           	20-10-2025           20-10-2025             ----        09-09-2025
+@ Zbibi         	    Rahin           	20-10-2025           20-10-2025             ----        30-09-2025
+@ norbertellmt  	    Rahin       		20-10-2025           20-10-2025             ----        deliverd        revision
+@ mufasaanon****    	Rahin               20-10-2025           20-10-2025             ----        24-07-2025
+@ mikesworks93    	    Rahin               20-10-2025           20-10-2025             ----        ----------
+D jencjen**             Ridoan           	20-10-2025           20-10-2025             ----        30-09-2025      
+## wilderbruno*     	Ridoan               20-10-2025           30-10-2025==           Work        ----------
+C troyb            	    Ridoan + Tanvir     20-10-2025           20-10-2025              ----        ----------
+C rutland_padel    	    Ridoan              20-10-2025           20-10-2025             ----        ----------
+
+
+
+
+## saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
+## moises510**       	Ridoan              20-10-2025           20-10-2025             done        ----------
+## sirreel1 @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
+## Mirkoz @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
+## gsscbhh @@           Masum               30-11-2025           20-10-2025             work        ----------
+## hatemverymuch @@ 	Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
+## Aviation 3K @@   	Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
+## faheemakram @@       Sazzad              03-12-2025           ----------             work        ----------
+## akramfarmer @@       Sazzad              30-11-2025           20-10-2025             work        ----------
+## jorgefranco95 @@ 	Tanvir           	20-10-2025           20-10-2025             work        25-07-2025      extention[23 sep]
+## solertia33 @@    	Tanvir              20-10-2025           20-10-2025             work        24-07-2025
+## enzolacausa @@       Rahin               20-10-2025           20-10-2025             need        ---------- 
+## mikaelteo @@  	    Rahin       		20-10-2025           20-10-2025             work        09-10-2025      extention[done]
+## felicerosee @@    	Ridoan              20-10-2025           20-10-2025             work        ----------
+## ddtdant @@    	    Ridoan              20-10-2025           20-10-2025             work        ----------
+## camrone1 @@        	Ridoan              20-10-2025           20-10-2025             work        ----------
+## hightidenatalie @@   Ridoan              30-11-2025           02-12-2025             work        ----------
+## realfemi @@          Ridoan              30-11-2025           20-10-2025             work        ----------
+## adrian_wojto @@      Tanvier + Masum     03-12-2025(06/11/25) 20-10-2025             work        ----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
