@@ -98,16 +98,16 @@ C rutland_padel    	    Ridoan              20-10-2025           20-10-2025     
 
 ## saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
 ## moises510**       	Ridoan              20-10-2025           20-10-2025             done        ----------
-## sirreel1 @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
+##** sirreel1 @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
 ## Mirkoz @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
 ## gsscbhh @@           Masum               30-11-2025           20-10-2025             work        ----------
-## hatemverymuch @@ 	Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
-## Aviation 3K @@   	Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
+##** hatemverymuch @@ 	Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
+##** Aviation 3K @@   	Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
 ## faheemakram @@       Sazzad              03-12-2025           ----------             work        ----------
-## akramfarmer @@       Sazzad              30-11-2025           20-10-2025             work        ----------
+## akramfarmer @@       Sazzad + Masum              30-11-2025           20-10-2025             work        ----------
 ## jorgefranco95 @@ 	Tanvir           	20-10-2025           20-10-2025             work        25-07-2025      extention[23 sep]
 ## solertia33 @@    	Tanvir              20-10-2025           20-10-2025             work        24-07-2025
-## enzolacausa @@       Rahin               20-10-2025           20-10-2025             need        ---------- 
+##** enzolacausa @@       Rahin               20-10-2025           20-10-2025             need        ---------- 
 ## mikaelteo @@  	    Rahin       		20-10-2025           20-10-2025             work        09-10-2025      extention[done]
 ## felicerosee @@    	Ridoan              20-10-2025           20-10-2025             work        ----------
 ## ddtdant @@    	    Ridoan              20-10-2025           20-10-2025             work        ----------
@@ -115,6 +115,27 @@ C rutland_padel    	    Ridoan              20-10-2025           20-10-2025     
 ## hightidenatalie @@   Ridoan              30-11-2025           02-12-2025             work        ----------
 ## realfemi @@          Ridoan              30-11-2025           20-10-2025             work        ----------
 ## adrian_wojto @@      Tanvier + Masum     03-12-2025(06/11/25) 20-10-2025             work        ----------
+## iyad234  @@          Tanvier + Masum     03-12-2025(06/11/25) 20-10-2025             work        ----------
+
+
+
+## saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
+## sirreel1 @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
+## Mirkoz @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
+## gsscbhh @@           Masum               30-11-2025           20-10-2025             work        ----------
+## hatemverymuch @@ 	Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
+## Aviation 3K @@   	Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
+
+## jorgefranco95 @@ 	Tanvir           	20-10-2025           20-10-2025             work        25-07-2025      extention[23 sep]
+## solertia33 @@    	Tanvir              20-10-2025           20-10-2025             work        24-07-2025
+## enzolacausa @@       Rahin               20-10-2025           20-10-2025             need        ---------- 
+## mikaelteo @@  	    Rahin       		20-10-2025           20-10-2025             work        09-10-2025      extention[done]
+## felicerosee @@    	Ridoan              20-10-2025           20-10-2025             work        ----------
+## hightidenatalie @@   Ridoan              30-11-2025           02-12-2025             work        ----------
+
+## faheemakram @@       Sazzad              03-12-2025           ----------             work        ----------
+## akramfarmer @@       Sazzad              30-11-2025           20-10-2025             work        ----------
+
 
 
 
