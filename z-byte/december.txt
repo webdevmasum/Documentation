@@ -113,11 +113,14 @@ C rutland_padel    	    Ridoan              20-10-2025           20-10-2025     
 ## ddtdant @@    	    Ridoan              20-10-2025           20-10-2025             work        ----------
 ## camrone1 @@        	Ridoan              20-10-2025           20-10-2025             work        ----------
 ## hightidenatalie @@   Ridoan              30-11-2025           02-12-2025             work        ----------
-## realfemi @@          Ridoan              30-11-2025           20-10-2025             work        ----------
-## adrian_wojto @@      Tanvier + Masum     03-12-2025(06/11/25) 20-10-2025             work        ----------
-## iyad234  @@          Tanvier + Masum     03-12-2025(06/11/25) 20-10-2025             work        ----------
+## realfemi @@          Ridoan (nonb assigned)             30-11-2025           20-10-2025             work        ----------
+## adrian_wojto @@      Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
+## iyad234  @@          Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
 
 
+saifalqubaisi 24
+sirreel1 6
+ddtdant 30n
 
 ## saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
 ## sirreel1 @@    	    Masum               20-10-2025           27-10-2025             Work        ----------
