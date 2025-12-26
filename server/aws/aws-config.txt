@@ -44,7 +44,7 @@ add rule-> custome TCP + port range(8443) + anywhere-IPv4 + 0.0.0.0/0 ->ave rule
 Admin User Creation: if forget user and pass follow:
 
 run this : sudo clpctl user:list
-set new one: sudo cloctl user:add --userName=whvtell --password=whvtell@2025 --email=whvtell338@gmail.com --firstName=whvtell --lastName=creative --role=admin
+set new one: sudo cloctl user:add --userName=whvtell0000 --password=whvtell00000@2025 --email=whvtell00000338@gmail.com --firstName=whvtell --lastName=creative --role=admin
 
 *->  add site-> create static html site (select)-> d
 *-> add site-> create php site (select)-> application - laravel11 + sudomain name + php version + site use + site user pass -> create. 

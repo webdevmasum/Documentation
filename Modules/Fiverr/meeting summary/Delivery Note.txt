@@ -14,14 +14,14 @@ I've completed the following tasks:
 - I've converted your Figma design into a Website.
 - I've implemented a Map as per your reference website.
 
-Please take a look at: https://bayxzvd.myrdbx.io/
+Please take a look at: 
 
 Since your website is completed I've transferred to your domain.
 
 To log in to your website, please follow this information:
-Login URL: https://bayxzvd.myrdbx.io/wp-login.php
+Login URL: 
 Login Username: admin
-Login Password: pass
+Login Password: 
 
 I've thoroughly tested everything and everything is functioning perfectly.
 

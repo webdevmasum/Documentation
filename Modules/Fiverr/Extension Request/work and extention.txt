@@ -6,7 +6,7 @@ As per your order requirement and message request, I've completed the following 
 - I've completed the creation and editing of the MyCourse, Section, Unit, and Lesson modules in my course system.
 
 For your help, I have added a video explanation. 
-Please watch video: https://app.usebubbles.com/cVMSoagxcuQAvViMxsFR5A/project-update
+Please watch video: 
 
 I have completed the backend part of the course creation module and have already updated you about it. As you know, the "MyCourse" module is a bit complex, and while developing the previous flow, I have been continuously facing and resolving various issues. The quiz section of the "MyCourse" module is still pending development. It will take me some time to complete that part. I hope you will kindly allow me the necessary time and support me throughout this process.
 

@@ -6,7 +6,7 @@ If you have an individual Apple developer account then I need full access to you
 
 And for the play console, you can give access to my m-ai-l. 
 
-Please look at the documents:- https://docs.google.com/document/d/1FEAa57lkPQJP6E3R1ajanuCqdiDLv55ZhM8tQDiVhnI/edit?usp=sharing
+Please look at the documents:- 
 
 We'll need hosting and domain to host your backend code on the server. At this moment the backend is hosted on the local server. For hosting and domains, you can go to namecheap.
 

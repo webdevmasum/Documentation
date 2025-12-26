@@ -38,9 +38,9 @@ step-3: .env
 ********--------
 
 # this code for Stripe
-STRIPE_KEY=pk_test_51QJoHQGEF1Q9fsWzBhRRj418NdfC361iMdLYC28AU5COfpKTJsoanbBeyBA58kiZHv33jSrW5rqfaaoyqLNIjEoe00nbv2V9Y2
-STRIPE_SECRET=sk_test_51QJoHQGEF1Q9fsWzYKExuOTG0Yn5qka0uK4tl0y34zZga1YQnPsJVxxj5REYUZjYD1NQu2xx2i9gOhImRRiAu9a100vwgGQTFt
-STRIPE_WEBHOOK_SECRET=whsec_GdrxFyE5HTid8NowguoPSlhCVZqli9TA
+STRIPE_KEY=pk_test_51QJoHQGEF....................
+STRIPE_SECRET=sk_test_51QJoHQGEF1Q9f..........................GQTFt
+STRIPE_WEBHOOK_SECRET=whsec_GdrxFyE5HT.........................
 
 # FRONTEND_ROUTE_URL=http://localhost:5173/payment-success
 FRONTEND_SUCCESS_URL=http://localhost:5173/payment-success

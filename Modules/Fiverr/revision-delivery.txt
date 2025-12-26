@@ -11,7 +11,6 @@ Please have a look: https://arete-llp.netlify.app
 
 Also, you can control the contents from the admin dashboard. Here is your admin URL: https://mathewc.softvencefsd.xyz/
 
-In this URl, you'll find the admin dashboard credentials: https://docs.google.com/document/d/1WXvd1D8Lu5_clQkGae2lPbx7kKX24aWSRAqjAcJmlcQ/edit?usp=sharing
 
 For your help, I have added some video explanations.
 Please have a look at:

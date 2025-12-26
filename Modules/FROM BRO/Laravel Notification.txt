@@ -106,12 +106,12 @@ public function MailSend(Request $request)
 	QUEUE_CONNECTION=database
 
 	MAIL_MAILER=smtp
-	MAIL_HOST=mail.reigeeky.com
+	MAIL_HOST=
 	MAIL_PORT=465
-	MAIL_USERNAME=support@reigeeky.com
-	MAIL_PASSWORD=HRBO0aObLuw
+	MAIL_USERNAME=
+	MAIL_PASSWORD=
 	MAIL_ENCRYPTION=tls
-	MAIL_FROM_ADDRESS="support@reigeeky.com"
+	MAIL_FROM_ADDRESS="su"
 	MAIL_FROM_NAME="${APP_NAME}"
 
 

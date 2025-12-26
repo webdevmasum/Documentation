@@ -7,7 +7,7 @@ As per your order requirement and message request, I've completed the following 
 - I'm working on the quiz part.
 
 For your help, I have added a video explanation. 
-Please watch the video: https://app.usebubbles.com/pPFZ2jo6VHxMQyUxWG9Eko/project-update
+Please watch the video: 
 
 Based on your project requirements, I’ve structured the MyCourse module to follow a well-organized hierarchy. Each course consists of multiple sections, each section contains several units, and each unit includes multiple lessons. Within each lesson, there are quizzes and questions. Additionally, quiz progress tracking has been integrated as part of the flow.
 

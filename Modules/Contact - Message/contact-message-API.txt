@@ -342,15 +342,15 @@ step-6: API Controller .ENV Credentials like
 
 # Looking to send emails in production? Check out our Email API/SMTP product!
 MAIL_MAILER=smtp
-MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_HOST=
 MAIL_PORT=587
-MAIL_USERNAME=b9754398580118
-MAIL_PASSWORD=1b1aa7a122468c
+MAIL_USERNAME=
+MAIL_PASSWORD=
 MAIL_ENCRYPTION=tls
-MAIL_FROM_ADDRESS="bovane4211@kytstore.com"
+MAIL_FROM_ADDRESS=""
 MAIL_FROM_NAME="${APP_NAME}"
 
-ADMIN_EMAIL=bovane4211@kytstore.com
+ADMIN_EMAIL=@kytstore.com
 
 
 

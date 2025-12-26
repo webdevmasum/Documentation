@@ -9,10 +9,10 @@ create FTP Account
 
 search FTP and get credentials like user, server, port and collect that pass
 
-FTP Username: softvencefsd@mariamsha.softvencefsd.xyz
-FTP server: ftp.softvencefsd.xyz
+FTP Username: 
+FTP server: 
 FTP & explicit FTPS port:  21
-password:WP7X3qX!AEhI
+password:
 
 
 

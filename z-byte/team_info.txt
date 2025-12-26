@@ -1,2 +1,11 @@
 
 
+google console
+create new project
+side menu-> APIs & Service-> auth consent screen
+external-> app name+ mail+ domain + mail
+credentials-> create credentials-> auth url
+
+client id, client secret.
+
+

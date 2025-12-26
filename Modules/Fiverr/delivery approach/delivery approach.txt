@@ -13,7 +13,7 @@ As per your order requirements, I have completed the following tasks:
 - I've developed a M-a-il setting.
 
 For your help, I have added a video explanation. 
-Please have a look at: https://app.usebubbles.com/hRCLnjoDeDLEhiWvww1DRY
+Please have a look at: 
 
 I am pleased to inform you that I have almost completed the backend part of the project and I have been able to create the REST API successfully. I am currently preparing to connect the API with the front end within the coming days. I have also been providing periodic updates from my local server to keep you updated regarding the progress so far.
 

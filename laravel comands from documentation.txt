@@ -41,11 +41,7 @@ composer update
 composer dump-autoload
 
 
-"
-themariiedhome
-Pass: "sD+,;S7GKgoc"
 
-"
 
 php artisan about 			( show environment, cache, driver )
 php artisan queue:work 			( for mail sending )
@@ -69,10 +65,6 @@ php artisan migrate:fresh --seed
 php artisan storage:link 		{ To create image path }
 
 
-New cPanel credentials
-Domain: https://softvencefsd.xyz:2083/
-User: softvence
-Password: z}Rk#^R8]R=$([}a
 
 
 git project run system..

@@ -67,7 +67,7 @@ As per your Project requirement, I have fixed the following tasks:
 
 Note: Your app needs some cr-ede-nti-als for Apple login. If you provide those cr-ede-nti-als to me, I can complete the Apple login.
 
-The required cr-ede-nti-als are: https://docs.google.com/document/d/1Ckb3dMKwnvb4zL-ovp-ZblWdsc4b45nDEMCqiNjOhRE/edit?usp=sharing
+The required cr-ede-nti-als are: 
 
 Note: For AI integration, please p-u-rc-ha-se the AI API key, which can be obtained from the OpenAI dashboard.
  

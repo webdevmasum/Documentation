@@ -6,11 +6,11 @@ Install Stripe
 -->> composer require stripe/stripe-php
 
 .env
--->> Publishable key: pk_test_51QJoHQGEF1Q9fsWzBhRRj418NdfC361iMdLYC28AU5COfpKTJsoanbBeyBA58kiZHv33jSrW5rqfaaoyqLNIjEoe00nbv2V9Y2
+-->> Publishable key: pk_test_51QJoHQ................................bv2V9Y2
 
--->> Secret key: sk_test_51QJoHQGEF1Q9fsWzYKExuOTG0Yn5qka0uK4tl0y34zZga1YQnPsJVxxj5REYUZjYD1NQu2xx2i9gOhImRRiAu9a100vwgGQTFt
+-->> Secret key: sk_test_51QJoHQGEF1Q9fs.............................gGQTFt
 
--->> STRIPE_WEBHOOK_SECRET=whsec_pTFPc5i0G5VWsGb1DuHntAExDtolFFxo
+-->> STRIPE_WEBHOOK_SECRET=whsec_p......................
 
 
 config/services.php
@@ -190,7 +190,7 @@ step-3: API Testing
 --> Output:
 
 {
-    "clientSecret": "pi_3QhTeHGEF1Q9fsWz1gionW4Z_secret_v76ZI17jmvzP1DnKOOweCUe3k"
+    "clientSecret": "pi_3QhTeHGEF1Q9f..................................CUe3k"
 }
 
 
