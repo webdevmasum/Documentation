@@ -1,0 +1,59 @@
+Project		            assigned	        Assigned-date       update-date	    update      Delivery        Note
+
+hirecardrive	        Masum               20-10-2025           20-10-2025             work        deliverd**
+gianmarcosalett         Masum		        20-10-2025           29-10-2025             work        deliverd        Client server need
+malikdoc	            Masum		        20-10-2025           30-10-2025             ----        deliverd        Client server need
+mariamshah	            Masum + Tanvir	    20-10-2025           05-10-2025***          work        deliverd**       Client server need
+browgod	                Masum       	    20-10-2025           16-10-2025*            server      deliverd
+peteim3     	        Masum               20-10-2025           09-10-2025             server      27-09-2025
+# mick140178   	        Masum + Ridwan 		20-10-2025           27-10-2025==**         Work        03-09-2025      [1+3 extend need google and apple login]
+dukeautorepair          Masum + Tanvir		20-10-2025           20-10-2025**           Work        deliverd        Client server accaseable (domain ache hosting nai)
+lalanikhurram 	        Sazzad       		20-10-2025           27-10-2025==           work        deliverd
+pacificfirepro    	    Sazzad           	20-10-2025           20-10-2025             ----        20-08-2025      [date untrack]
+afreed17 	            Tanvir		        20-10-2025           20-10-2025             ----        deliverd
+meister_eckart**	    Tanvir		        20-10-2025           20-10-2025             ----        25-09-2025      [need to end]
+ciyeone	                Tanvir       		20-10-2025           20-10-2025             ----        deliverd        [need to deliver]
+gabipoli    	        Rahin           	20-10-2025           20-10-2025             ----        09-09-2025
+norbertellmt  	        Rahin       		20-10-2025           20-10-2025             ----        deliverd        revision
+mikesworks93    	    Rahin               20-10-2025           20-10-2025             ----        ----------
+troyb            	    Ridoan + Tanvir     20-10-2025           20-10-2025              ----        ----------
+
+
+
+
+
+saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
+moises510**       	    Ridoan              20-10-2025           20-10-2025             done        ----------
+sirreel1 @@    	        Masum               20-10-2025           27-10-2025             Work        ----------
+gsscbhh @@              Masum               30-11-2025           20-10-2025             work        ----------
+hatemverymuch @@ 	    Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
+Aviation 3K @@   	    Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
+faheemakram @@          Sazzad              03-12-2025           ----------             work        ----------
+jorgefranco95 @@ 	    Tanvir           	20-10-2025           20-10-2025             work        25-07-2025      extention[23 sep]
+solertia33 @@    	    Tanvir              20-10-2025           20-10-2025             work        24-07-2025
+enzolacausa @@          Rahin               20-10-2025           20-10-2025             need        ---------- 
+mikaelteo @@  	        Rahin       		20-10-2025           20-10-2025             work        09-10-2025      extention[done]
+felicerosee @@    	    Ridoan              20-10-2025           20-10-2025             work        ----------
+ddtdant @@    	        Ridoan              20-10-2025           20-10-2025             work        ----------
+camrone1 @@        	    Ridoan              20-10-2025           20-10-2025             work        ----------
+realfemi @@             Ridoan (nonb assigned)             30-11-2025           20-10-2025             work        ----------
+adrian_wojto @@         Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
+
+lightuptech  @@        Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
