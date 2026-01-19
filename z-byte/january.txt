@@ -22,35 +22,135 @@ troyb            	    Ridoan + Tanvir     20-10-2025           20-10-2025       
 
 
 
-saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        19-09-2025      extention[16 sep]
-moises510**       	    Ridoan              20-10-2025           20-10-2025             done        ----------
+saifalqubaisi** 	    Masum           	20-10-2025           30-10-2025=*           Work        deliverd      extention[16 sep]
+moises510**       	    Ridoan              20-10-2025           20-10-2025             done        deliverd
+
+lightuptech  @ *        Masum+ Kh+Hr        03-12-2025(06/11/25) 20-10-2025             work        ----------
+sergedherve  @@ *        Masum + Atikur      03-12-2025(06/11/25) 20-10-2025             work          ----------
+beauschultz784  @@*      Masum               03-12-2025(06/11/25) 20-10-2025             work          ----------
 sirreel1 @@    	        Masum               20-10-2025           27-10-2025             Work        ----------
 gsscbhh @@              Masum               30-11-2025           20-10-2025             work        ----------
 hatemverymuch @@ 	    Masum + Sazzad      20-10-2025           30-10-2025             work        24-08-2025
-Aviation 3K @@   	    Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
-faheemakram @@          Sazzad              03-12-2025           ----------             work        ----------
-jorgefranco95 @@ 	    Tanvir           	20-10-2025           20-10-2025             work        25-07-2025      extention[23 sep]
-solertia33 @@    	    Tanvir              20-10-2025           20-10-2025             work        24-07-2025
-enzolacausa @@          Rahin               20-10-2025           20-10-2025             need        ---------- 
-mikaelteo @@  	        Rahin       		20-10-2025           20-10-2025             work        09-10-2025      extention[done]
+Aviation 3K @@*   	    Sazzad + Masum      20-10-2025           30-10-2025             work        24-07-2025
+
+jorgefranco95 @@ 	    Tanvir           	20-10-2025           20-10-2025             work        deliverd      extention[23 sep]
+solertia33 @@*    	    Tanvir              20-10-2025           20-10-2025             work        24-07-2025
+iyad234  @@             Tanvir              03-12-2025(06/11/25) 20-10-2025             work        ----------
+faisaqasim5  @@*         Tanvir              03-12-2025(06/11/25) 20-10-2025             work        ----------
+
+faheemakram @@*          Rahin               03-12-2025           ----------             work        ----------
+enzolacausa @@ *         Rahin               20-10-2025           20-10-2025             need        ---------- 
+mikaelteo @@  	        Rahin       		20-10-2025           20-10-2025             work        deliverd      extention[done]
+
 felicerosee @@    	    Ridoan              20-10-2025           20-10-2025             work        ----------
 ddtdant @@    	        Ridoan              20-10-2025           20-10-2025             work        ----------
 camrone1 @@        	    Ridoan              20-10-2025           20-10-2025             work        ----------
-realfemi @@             Ridoan (nonb assigned)             30-11-2025           20-10-2025             work        ----------
-adrian_wojto @@         Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
+realfemi @@*               Ridoan              30-11-2025           20-10-2025             work        ----------
+troyb @@*               Ridoan              30-11-2025           20-10-2025             work        ----------
 
-lightuptech  @@        Tanvir + Masum      03-12-2025(06/11/25) 20-10-2025             work        ----------
-
-
-
-
+adrian_wojto @@         ------------     03-12-2025(06/11/25) 20-10-2025             work        ----------
+gokafor @@              ------------     03-12-2025(06/11/25) 20-10-2025             work        ----------
+akm499 @@               ------------     03-12-2025(06/11/25) 20-10-2025             work        ----------
 
 
 
+lightuptech 	-- 	#FO21B51CCF786 		- Masum + Harun + Khadimul
+sergedherve 	--	#FO622P04C004		- Masum + Atikur
+beauschultz784	-- 	#FO22213A35688		- Masum
+gsscbhh		--	#FO2D882FA042		- Masum
+solertia33	--	#FO721B946F703 		- Tanvir + Masum (collaboration + module)
+iyad234		--	#FO32209338007 		- Tanvir
+faisaqasim5	--	#FO31B37401185 		- Tanvir + Masum (collaboration + module)
+faheemakram	--	#FO82FA29DE3C6		- Rahin
+enzolacausa	--	#FO621A865DF04 		- Rahin + Masum (collaboration + module)
+ddtdant		--	#FO4219BCFBB86		- Ridoan
+camrone1	--	#FO528AD24C0C7 		- Ridoan
+realfemi	--	#FO72F4F41C9C7 		- Ridoan
+troyb		--	#FO11473F39245 		- Ridoan
+adrian_wojto	--	#FO61B4C7D3582 		- Masum
+Aviation	--	#FO2DAB7B5542 		- Masum + Sazzad + Harun + Khadimul
+hatemverymuch	--	#FO62FCEDC1848		- Sazzad 
 
 
 
 
+
+
+
+
+
+lightuptech -- 	#FO21B51CCF786 - Masum + Harun + Khadimul
+sergedherve --	#FO622P04C004 - Masum + Atikur
+beauschultz784 -- 	#FO22213A35688 - Masum
+gsscbhh	--	#FO2D882FA042 - Masum
+solertia33 --	#FO721B946F703 - Tanvir + Masum (collaboration + module)
+iyad234	--	#FO32209338007 - Tanvir
+faisaqasim5 --	#FO31B37401185 - Tanvir + Masum (collaboration + module)
+faheemakram	--	#FO82FA29DE3C6 - Rahin
+enzolacausa	--	#FO621A865DF04 - Rahin + Masum (collaboration + module)
+ddtdant	--	#FO4219BCFBB86 - Ridoan
+camrone1 --	#FO528AD24C0C7 - Ridoan
+realfemi --	#FO72F4F41C9C7 - Ridoan
+troyb --	#FO11473F39245 - Ridoan
+adrian_wojto --	#FO61B4C7D3582 - Masum
+Aviation --	#FO2DAB7B5542 - Masum + Sazzad + Harun + Khadimul
+hatemverymuch --	#FO62FCEDC1848 - Sazzad 
+
+
+
+solertia33
+jorgefranco95
+iyad234
+faisaqasim5
+
+
+
+
+Project		            assigned	        
+
+Modification -> 11
+*******************
+hirecardrive	        Masum           modification   		                        
+browgod	                Masum           modification       	            
+peteim3     	        Masum           modification                      
+mick140178   	        Masum + Ridwan 	modification	      
+afreed17 	            Tanvir	        modification	                
+meister_eckart**	    Tanvir          modification		            
+daviga            	    Tanvir          modification       		        
+norbertellmt  	        Rahin           modification      		          
+mikesworks93    	    Rahin           modification                 	          
+wilderbruno*     	    Ridoan          modification                  
+moises510**       	    Ridoan          modification             
+
+deliverd but work remaining -> 6
+********************************                   
+saifalqubaisi** 	    Masum               high work          	 
+sirreel1     	        Masum               high work          
+jorgefranco95  	        Tanvir              high work  	
+mikaelteo   	        Rahin               high work		      
+felicerosee     	    Ridoan              high work 
+dukeautorepair          Masum               high work     		               		        
+
+running -> 18
+*************
+beauschultz784          Masum                       running
+adrian_wojto            Masum                       running     
+gsscbhh                 Masum                       running 
+sergedherve             Masum + Atikur              running   
+lightuptech             Masum+Harun+Khadimul        running
+Gokafor                 Masum+Harun+Khadimul        running
+hatemverymuch  	        Masum + Sazzad              running   
+Aviation 3K    	        Masum+Sazzad+Harun+Khadimul running    
+enzolacausa             Rahin                       running     
+faheemakram             Rahin                       running          
+jacobf317               Rahin                       running          
+ddtdant     	        Ridoan                      running     
+camrone1         	    Ridoan                      running        
+realfemi                Ridoan                      running
+troyb            	    Ridoan                      running 
+solertia33     	        Tanvir                      running     
+iyad234                 Tanvir                      running     
+faisaqasim5         	Tanvir + Masum              running
 
 
 
