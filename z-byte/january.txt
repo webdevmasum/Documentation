@@ -133,24 +133,24 @@ dukeautorepair          Masum               high work
 
 running -> 18
 *************
-beauschultz784          Masum                       running
-adrian_wojto            Masum                       running     
-gsscbhh                 Masum                       running 
-sergedherve             Masum + Atikur              running   
-lightuptech             Masum+Harun+Khadimul        running
-Gokafor                 Masum+Harun+Khadimul        running
-hatemverymuch  	        Masum + Sazzad              running   
-Aviation 3K    	        Masum+Sazzad+Harun+Khadimul running    
-enzolacausa             Rahin                       running     
-faheemakram             Rahin                       running          
-jacobf317               Rahin                       running          
-ddtdant     	        Ridoan                      running     
-camrone1         	    Ridoan                      running        
-realfemi                Ridoan                      running
-troyb            	    Ridoan                      running 
-solertia33     	        Tanvir                      running     
-iyad234                 Tanvir                      running     
-faisaqasim5         	Tanvir + Masum              running
+beauschultz784          Masum                       running ok***
+adrian_wojto            Masum                       running no    
+gsscbhh                 Masum                       running ok---
+sergedherve             Masum + Atikur              running ok***  
+lightuptech             Masum+Harun+Khadimul        running no (masum-> kh, hr)
+Gokafor                 Masum+Harun+Khadimul        running no (atikur-lead kh,hr)
+hatemverymuch  	        Masum + Sazzad              running no  
+Aviation 4.5   	        Masum+Sazzad+Harun+Khadimul running no/ok   
+enzolacausa             Rahin                       running ok***    
+faheemakram             Rahin                       running ok***         
+jacobf317               Rahin                       running no         
+ddtdant     	        Ridoan                      running no    
+camrone1         	    Ridoan                      running no       
+realfemi                Ridoan                      running ok---
+troyb            	    Ridoan                      running ok---
+solertia33     	        Tanvir                      running ok---   
+iyad234                 Tanvir                      running ok***    
+faisaqasim5         	Tanvir + Masum              running no/ok (harun+khadimul)
 
 
 
