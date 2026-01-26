@@ -133,27 +133,36 @@ dukeautorepair          Masum               high work
 
 running -> 18
 *************
+Hirecardrive          Masum                         running ok***
 beauschultz784          Masum                       running ok***
 adrian_wojto            Masum                       running no    
 gsscbhh                 Masum                       running ok---
 sergedherve             Masum + Atikur              running ok***  
-lightuptech             Masum+Harun+Khadimul        running no (masum-> kh, hr)
+lightuptech             Masum+Harun+Khadimul        running no (masum-> kh, hr)-> client clarification desse na
 Gokafor                 Masum+Harun+Khadimul        running no (atikur-lead kh,hr)
 hatemverymuch  	        Masum + Sazzad              running no  
 Aviation 4.5   	        Masum+Sazzad+Harun+Khadimul running no/ok   
 enzolacausa             Rahin                       running ok***    
-faheemakram             Rahin                       running ok***         
+faheemakram             Rahin                       running ok*** criptomus payment         
 jacobf317               Rahin                       running no         
 ddtdant     	        Ridoan                      running no    
 camrone1         	    Ridoan                      running no       
-realfemi                Ridoan                      running ok---
-troyb            	    Ridoan                      running ok---
-solertia33     	        Tanvir                      running ok---   
+realfemi                Ridoan                      running ok--- deliverd
+troyb            	    Ridoan                      running ok--- 
+solertia33     	        Tanvir                      running ok--- deliverd   
 iyad234                 Tanvir                      running ok***    
 faisaqasim5         	Tanvir + Masum              running no/ok (harun+khadimul)
 
-
-
-
+1. Hirecardrive     jabe
+2. beauschultz784   jabe
+3. faheemakram      jabe
+4. iyad234          jabe
+5. realfemi         Deliverd
+6. solertia33       Deliverd
+7. Aviation         feb 5 tarikh jabe
+8. enzolacausa      jabe na (regular followuped, credentials provide kore nai, akhono baki ache)
+9. troyb            jabe na (Flutter crisis)
+10. faisaqasim5     jabe na (Advance AI integration ace, resource and costing provide koreni, communicate running, next week e meeting korbe)
+11. sergedherve     cancel (full kaj ses hoice but unfortunately cancel)
 
 
