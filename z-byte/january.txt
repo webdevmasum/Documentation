@@ -183,16 +183,18 @@ adrian_wojto (Advance)  Masum                       running no
 sirreel*                masum                       running no (masum-> kh, hr)-> client clarification desse na
 lightuptech(*)          Masum+Harun+Khadimul        running no (masum-> kh, hr)-> client clarification desse na
 Gokafor*                Masum+Atik                  running no (atikur-lead kh,hr)
-Aviation 4.5   	        Masum+Sazzad+Harun+Khadimul running no/ok   
-enzolacausa             Rahin                       running ok***    
-faheemakram             Rahin                       running ok*** criptomus payment         
+Aviation 4.5*   	    Masum+Sazzad+Harun+Khadimul running no/ok   
+enzolacausa*            Rahin                       running ok***    
+faheemakram*            Rahin                       running ok*** criptomus payment         
 jacobf317 (Advance)     Rahin                       running no         
 ddtdant  (large)   	    Ridoan                      running no    
 camrone1 (large)        Ridoan                      running no       
 troyb*         	        Ridoan                      running ok--- 
 faisaqasim5 (AI)        Tanvir                      running no/ok (harun+khadimul)
+
 edizphfactory (AI)      Tanvir                      running no/ok (harun+khadimul)
-pphjobdone  (AI)       	Harun+Khadimul              running no/ok (harun+khadimul)
+pphjobdone  (AI)       	Tanvir+Rahin                running no/ok (harun+khadimul)
+-------                	Harun+Khadimul              running no/ok (harun+khadimul)
 
 
 
