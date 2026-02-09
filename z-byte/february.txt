@@ -1,0 +1,63 @@
+running -> 18
+*************
+Hirecardrive*           Masum                       deliverd ok***
+beauschultz784*         Masum                       deliverd ok***
+realfemi*               Ridoan                      deliverd ok--- deliverd
+iyad234                 Tanvir                      deliverd ok***    
+solertia33     	        Tanvir                      deliverd ok--- deliverd   
+sergedherve             Masum + Atikur              cancel  
+hatemverymuch  	        Sazzad                      running (discussed)  
+
+adrian_wojto (Advance)  Masum                       running no (note)   
+sirreel*                masum                       running ok (feb)
+lightuptech(*)          Masum+Harun+Khadimul+Atik   running ok (feb)
+Gokafor*                Masum+Atik                  running ok (feb)
+Aviation 4.5*   	    Masum+Sazzad+Harun+Khadimul running no/ok   
+enzolacausa*            Rahin + Masum               running ok***    
+faheemakram D*          Rahin                       running ok*** criptomus payment         
+jacobf317 (Advance)     Rahin                       running no (trying)        
+ddtdant  (large)   	    Ridoan                      running no (note)  
+camrone1 (large)        Ridoan                      running no (note) discuss     
+troyb*         	        Ridoan                      running ok (feb) 
+jencjen                 Ridoan                      running ok (feb)
+faisaqasim5 (AI)        Tanvir                      running no/ok (harun+khadimul)
+
+edizphfactory (AI)      Tanvir                      running no/ok (non assigned)
+pphjobdone  (AI)       	Tanvir+Rahin                running no (15 march)
+fernandocaronet         Harun+Khadimul              running no/ok (feb..!!)
+
+
+
+Aviation-> 
+**********
+chatting, Booking, fixing, AWS, data upload, WP research.
+kh-> fixing, data upload, WP research
+Hr-> fixing, Booking
+Ma-> chatting
+Sa-> AWS
+
+lightuptech->
+************
+Atik-> Guiding (kh and Hr)
+
+Gokafor->
+************
+Atik-> Guiding (kh and Hr)
+Ma-> Payment, Notification
+
+Faisaqasim->
+***********
+Kh-> AI integration
+
+edizphactory->
+***********
+Alif-> Devninga/Pixel (10+10)
+Khadimul-> 
+
+AKM->
+***********
+Robin-> Devninga/Pixel
+Harun-> 
+
+fernandocaronet->
+***************
