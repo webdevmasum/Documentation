@@ -24,6 +24,14 @@ Help Video : https://youtu.be/LdmqMjxezjE?si=yFhcPg6_Sn4-7unS
 
 7. SSL install: (https://prnt.sc/qpixX3V_0LjQ)
 8. File Manage: (https://prnt.sc/CdoFBvYlMvP0)
+9. If face frontend issue?? 
+    Vhost (https://prnt.sc/guJsXjgPF30h)
+
+    index index.html;
+  
+   location / {
+        try_files $uri /index.html;
+    }
 
 
 Bhuuuuuuuuum....................!!
