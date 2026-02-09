@@ -1,0 +1,41 @@
+
+
+VPS Setup Hostinger and Namecheap with CloudPanel:
+**************************************************
+
+Help Video : https://youtu.be/LdmqMjxezjE?si=yFhcPg6_Sn4-7unS
+(If see must like comment pls)
+
+
+1. Login server: check domain hosting and packages.
+2. SSH create: ssh root@76.13.253.299  ->(example) -> enter password (root/ubunto install pass)
+    example Hostinger-> (https://prnt.sc/ncRw8ckaxc__) Namecheap-> (https://prnt.sc/f85PbD20y4VP)
+3. CloudPanel Setup: https://www.cloudpanel.io/docs/v2/getting-started/other/
+    example step (https://prnt.sc/vdSsqC_N2JGa)
+4. First cludpanel user and login setup.
+    add site: for php and static for frontend (https://prnt.sc/bqNCY5WId65D) (https://prnt.sc/-wC1jyvnW4Ro)
+5. DNS / Nameservers Setup:
+    Hostinger: (https://prnt.sc/9Q_hpx9O-1GY) (https://prnt.sc/g_UgOdYtCs2U)
+    Namecheap: (https://prnt.sc/TAbvsRKfHhLx)
+    Explaination: (https://prnt.sc/hfHkf-3cmrvf)
+
+6. DNS Check: https://dnschecker.org/#A/mentis-learning.com
+    check IP or domain name (https://prnt.sc/3em4pIoWdDlG)
+
+7. SSL install: (https://prnt.sc/qpixX3V_0LjQ)
+8. File Manage: (https://prnt.sc/CdoFBvYlMvP0)
+
+
+Bhuuuuuuuuum....................!!
+
+
+
+
+
+
+
+
+
+
+
+
