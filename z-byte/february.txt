@@ -25,6 +25,7 @@ faisaqasim5 (AI)        Tanvir                      running no/ok (harun+khadimu
 edizphfactory (AI)      Tanvir                      running no/ok (non assigned)
 pphjobdone  (AI)       	Tanvir+Rahin                running no (15 march)
 fernandocaronet         Harun+Khadimul              running no/ok (feb..!!)
+healthyhair             Khadimul                    running (22-2-26 assign date)
 
 
 
@@ -61,3 +62,37 @@ Harun->
 
 fernandocaronet->
 ***************
+
+
+
+
+running -> 18
+*************
+Project                 Assigned                    Assigned-Date       Deliverd-Date       Delivery-Plan  
+
+Hirecardrive*           Masum                       20-10-2025          20-10-2025          deliverd ok***
+beauschultz784*         Masum                       20-10-2025          20-10-2025          deliverd ok***
+realfemi*               Ridoan                      20-10-2025          20-10-2025          deliverd ok--- deliverd
+iyad234                 Tanvir                      20-10-2025          20-10-2025          deliverd ok***    
+solertia33     	        Tanvir                      20-10-2025          20-10-2025          deliverd ok--- deliverd   
+sergedherve             Masum + Atikur              20-10-2025          20-10-2025          cancel  
+hatemverymuch  	        Sazzad                      20-10-2025          20-10-2025          running (discussed)  
+         
+faheemakram D*          Rahin                       20-10-2025          ----------          running ok*** criptomus payment         
+adrian_wojto (Advance)  Masum                       20-10-2025          ----------          running no (note)   
+sirreel*                masum                       20-10-2025          ----------          running ok (feb)
+lightuptech(*)          Masum+Harun+Khadimul+Atik   20-10-2025          ----------          running ok (feb)
+Gokafor*                Masum+Atik                  20-10-2025          ----------          running ok (feb)
+Aviation 4.5*   	    Masum+Sazzad+Harun+Khadimul 20-10-2025          ----------          running no/ok   
+enzolacausa*            Rahin + Masum               20-10-2025          ----------          running ok***    
+jacobf317 (Advance)     Ridoan + Atik               20-01-2026          ----------          running no (trying)        
+jacobf317 (Advance)     Ridoan + Atik               20-01-2026          ----------          running no (trying)        
+ddtdant  (large)   	    Ridoan                      ----------          17-02-2026          running no (note)  
+camrone1 (large)        Ridoan                      20-10-2025          ----------          running no (note) discuss     
+troyb*         	        Ridoan                      14-12-2025          ----------          running ok (feb) 
+jencjen                 Ridoan                      01-02-2026          ----------          running ok (feb)
+faisaqasim5 (AI)        Tanvir                      29-12-2025          ----------          running no/ok (harun+khadimul)
+         
+edizphactory (AI)       Khadimul+Mainur             08-02-2026          ----------          running no/ok (non assigned)
+fernandocaronet(UI+B)   Harun+Khadimul              03-02-2026          ----------          running no/ok (feb..!!)
+healthyhair             Khadimul+Masum              22-02-2026          ----------          running 
