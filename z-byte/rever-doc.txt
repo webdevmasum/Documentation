@@ -191,3 +191,11 @@ Laravel App (Event Broadcasting)
 ✔ Firewall e port open kora lagbe na jodi Nginx proxy use koro
 ✔ SSL thakle REVERB_SCHEME=https dite hobe
 ✔ Supervisor na use korle production e crash korbe
+
+
+
+Another help video-1: https://youtu.be/oxqNb4ppqSc?si=Gb2feAA3bg_oTvnS
+Another help video-2: https://youtu.be/Iuq6jME4ft8?si=DJfx_sCfF-3o3R_7
+
+
+
