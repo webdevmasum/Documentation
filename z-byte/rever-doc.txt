@@ -1,0 +1,193 @@
+📌 Laravel Reverb ki?
+
+Laravel Reverb holo ekta WebSocket server ja real-time communication er jonno use hoy.
+Mane:
+
+Live chat
+
+Notification instantly show kora
+
+Real-time update (dashboard, game, etc.)
+
+Ei doc ta mainly dekhacche Ubuntu VPS + Nginx + Supervisor use kore production e Reverb setup kivabe korte hoy.
+
+🔥 Full Setup Process (Step-by-Step Explanation)
+✅ Step 1: Install Laravel Reverb
+
+Project root folder e giye run korba:
+
+-->> "php artisan reverb:install"
+
+🔎 Eta ki kore?
+
+Reverb package install kore
+
+config file generate kore
+
+.env e required variable add kore
+
+✅ Step 2: .env File Configure Kora
+
+Doc er page 1 e dekha jacche .env e ei type variable add hobe:
+
+Example:
+
+        REVERB_APP_ID=your-id
+        REVERB_APP_KEY=your-key
+        REVERB_APP_SECRET=your-secret
+        REVERB_HOST=your-domain.com
+        REVERB_PORT=443
+        REVERB_SCHEME=https
+
+🔎 Important Explanation:
+    Variable	Meaning
+    REVERB_APP_ID	App er unique ID
+    REVERB_APP_KEY	Security key
+    REVERB_APP_SECRET	Secret key
+    REVERB_HOST	Tomar domain
+    REVERB_PORT	443 (https)
+    REVERB_SCHEME	https
+
+👉 Jodi local test koro tahole:
+
+    REVERB_HOST=127.0.0.1
+    REVERB_PORT=8080
+    REVERB_SCHEME=http
+
+✅ Step 3: Nginx Reverse Proxy Setup
+
+Production e WebSocket directly expose na kore, Nginx diye proxy kora hoy.
+
+Nginx config file e add korte hobe:
+
+        location /app {
+            proxy_http_version 1.1;
+            proxy_set_header Host $http_host;
+            proxy_set_header Scheme $scheme;
+            proxy_set_header SERVER_PORT $server_port;
+            proxy_set_header REMOTE_ADDR $remote_addr;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_pass http://127.0.0.1:8080;
+        }
+
+
+🔎 Eta ki kore?
+
+WebSocket request Nginx receive kore
+
+Tarpor 127.0.0.1:8080 (Reverb server) e forward kore
+
+Upgrade header diye WebSocket connection allow kore
+
+🔁 Then Restart Nginx:
+
+        sudo nginx -t
+        sudo systemctl restart nginx
+
+✅ Step 4: Laravel Optimize Kora
+
+Production e always optimize kora uchit.
+
+Run:
+
+        php artisan key:generate
+        php artisan optimize
+        php artisan config:cache
+        php artisan route:cache
+        php artisan view:cache
+        npm run build
+
+🔎 Eta ki kore?
+
+Config cache kore
+
+Route cache kore
+
+Performance fast kore
+
+✅ Step 5: Test Reverb
+
+Run:
+
+    -->>    php artisan reverb:start
+
+Jodi error na dei tahole working.
+
+⚠️ Kintu eta temporary. Ctrl + C dile stop hoye jabe.
+
+Production e eta use kora jabe na.
+
+🚀 Step 6: Supervisor Use Kora (Most Important Part)
+
+Production e jate server auto background e chole, tai Supervisor use korte hoy.
+
+🔹 Supervisor Install:
+
+        sudo apt-get install supervisor
+
+
+🔹 Config File Create:
+
+        cd /etc/supervisor/conf.d/
+        sudo touch laravel-worker.conf
+
+🔹 Ei config add koro:
+
+        [program:laravel-worker]
+        process_name=%(program_name)s_%(process_num)02d
+        command=php /var/www/your-project-folder/artisan reverb:start
+        autostart=true
+        autorestart=true
+        killasgroup=true
+        stopasgroup=true
+        numprocs=1
+        redirect_stderr=true
+        stdout_logfile=/var/www/your-project-folder/reverb.log
+
+🔎 Eta ki kore?
+Option	Meaning
+autostart=true	Server restart hole auto start hobe
+autorestart=true	Crash korle auto restart
+stdout_logfile	Log file save korbe
+🔹 Apply Supervisor:
+
+        sudo supervisorctl reread
+        sudo supervisorctl update
+        sudo supervisorctl start laravel-worker:*
+
+🔹 Status Check:
+        sudo supervisorctl status
+
+Expected output:
+
+        laravel-worker:laravel-worker_00 RUNNING
+
+🎯 Final Result
+
+Ekhon:
+
+Reverb background e run kortese
+
+Server restart holeo auto start hobe
+
+Nginx diye secure WebSocket connection cholbe
+
+Production ready real-time app
+
+⚡ Real Workflow Summary
+
+User Browser
+⬇
+Nginx (Reverse Proxy)
+⬇
+Laravel Reverb (WebSocket Server)
+⬇
+Laravel App (Event Broadcasting)
+
+🧠 Extra Important Tips
+
+✔ Always HTTPS use koro
+✔ Firewall e port open kora lagbe na jodi Nginx proxy use koro
+✔ SSL thakle REVERB_SCHEME=https dite hobe
+✔ Supervisor na use korle production e crash korbe
