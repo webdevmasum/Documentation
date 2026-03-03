@@ -4,7 +4,7 @@ VPS Setup Hostinger and Namecheap with CloudPanel:
 **************************************************
 
 Help Video : https://youtu.be/LdmqMjxezjE?si=yFhcPg6_Sn4-7unS
-(If see must like comment pls)
+(If see must like comment)
 
 
 1. Login server: check domain hosting and packages.
