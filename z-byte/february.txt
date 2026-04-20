@@ -94,7 +94,7 @@ jencjen                 Ridoan                      01-02-2026          --------
 faisaqasim5 (AI)        Tanvir                      29-12-2025          ----------          running no/ok (harun+khadimul)
          
 edizphactory (AI)       Khadimul+Mainur             08-02-2026          ----------          running no/ok (non assigned)
-fernandocaronet(UI+B)   Harun+Khadimul              03-02-2026          ----------          running no/ok (feb..!!)
+fernandocaronet(UI+B)   Atik                        03-02-2026          ----------          running no/ok (feb..!!)
 healthyhair             Khadimul+Masum              22-02-2026          ----------          running 
 
 
@@ -111,6 +111,7 @@ enzolacausa         bb/cc  asiqur+Atik
 brenttobin          cc      Masum
 hatemverymuch       cc      Setu
 sirreel1            cc      Masum
+hirecardrive        cc      Masum
 
 
 aviationinsider     bb  Khaadimul+Masum+ashikur+shefat
@@ -118,7 +119,7 @@ faisaqasim5         bb
 edizphactory        bb
 fernandocaronet     bb
 lightuptech         bb 
-adrian_wojto        bb x
+adrian_wojto        bb x Masum
 
 
 mickelmcs           bb/cc jonmogoto rivision (backend-Alif)
@@ -133,20 +134,56 @@ Graham cotter           cc (Riaz)
 
 WIP-------------------
 
-mtliff -> Masum        CC
+mtliff -> Masum        CC 
 gokafor--- next wip    cc
 mariaalisia next wip   cc/bb
 healthyhair            bb
 phainistonny           bb
 troy1515               cc Naymur deployment 
 
-knighly                cc (shefat)
 
 
 
 
 
 
+
+running -> 18
+*************
+Project                 Assigned      
+
+beauschultz784*         Masum  bazuka               
+adrian_wojto (Advance)  Masum  bazuka 
+
+mtliff                  Masum  WIP              
+Hirecardrive*           Masum  bazuka 80%                    
+brenttobin*             Masum  bazuka 75%                                     
+sirreel*                masum  bazuka 60%  
+mikaelteo               cc/bb  bazuka 70%
+Daviga                  cc/bb  bazuka 75% 
+Gokafor*                Masum+Atik   bazuka 90%
+
+         
+fernandocaronet(UI+B)   Atik   bazuka 10% (client clarification desse na)
+
+faheemakram             Atik   bazuka 75%                    
+enzolacausa*            Atik   bazuka 85%
+lightuptech(*)          Atik   bazuka 80%
+iyad234                 Atik   bazuka 50% (20% running month-> client cool hobe)
+
+camrone1 (large)        Ridoan         (deliverd) 
+
+felicerosee             Ridoan  WIP
+jacobf317 (Advance)     Ridoan + Atik  WIP               
+ddtdant  (large)   	    Ridoan         bazuka     
+         
+faisaqasim5 (AI)        khadimul        bazuka 70%
+edizphactory (AI)       Khadimul+Mainur bazuka 70%
+healthyhair             Khadimul+Masum  bazuka 30%
+Aviation*   	        Masum+Sazzad+Harun+Khadimul     bazuka 80% 
+
+mariaalisia             Not Assigned WIP 
+phainistonny            Not Assigned WIP fullstack
 
 
 
