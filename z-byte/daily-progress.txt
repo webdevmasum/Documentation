@@ -1,0 +1,35 @@
+
+📢 Code Collective Daily Updates
+
+➡️ Projects in Progress
+
+1. Project Name — mohamedmouzou | ext: 0 | Days: 5 days | ETA:  19-May-2026 | Profile:  Devforge_  | Status: In Progress | Next:  I’ll set a meeting with the client and create a user flow.
+
+2. Project Name — maxhilbert  | ext: 0 | Days: 7 | ETA:  9-May-2026  | Profile:  Rank_champ | Status: In Progress | Next: Today, I will provide the final update. If the client approves it, we will move forward with the delivery
+
+3. Project Name — mtliff | ext: 1 | Days: 52 days | ETA: May 16, 2026 (with in may) | Profile:  Wp_monkey | Status: In Progress  | Next: The project is quite large, and we are trying our best to complete it within the given timeline.
+
+4. Project Name — asoneth1 | ext: 5 | Days: 182 days | ETA:  31-May-2026 | Profile:  brainbox_Fiver | Status: In Progress | Next: The client has not been able to host their website on the main domain yet, and the process is still ongoing. The client insists on linking their real website to the Apple Developer Account before creating the account, which has delayed progress for a long time. Following Ridoy bhai’s instructions, we have been sending follow-ups. However, the client has not completed MFA verification, and this issue has remained unresolved for many days.
+
+5. Project Name — Sirreel1 | ext: 4 | Days: 120 days | ETA:  8-May-2026 | Profile:  Web_genius | Status: In Progress | Next: Work on subscription, Apple login, notifications, and deployment is ongoing. Subscription is about 60% complete, notification API and push notifications about 40% done. [The subscription works correctly in the local environment, but on the live server, there is a package conflict.] There was some delay due to backend rush, but now progress is steady and we expect completion in this timeline. The client is calm and cooperative.
+
+6. Project Name — troy1515 | ext: 1 | Days: 52 days | ETA:  29-May-2026  | Profile:  Web_genius| Status: In Progress | Next: The client was hospitalized and couldn’t create the Apple Developer Account earlier. Four days ago, they finally provided it, and I’ve already uploaded the app to TestFlight for testing. Now, subscription, Apple login, Google login, and push notifications remain. I’ve requested the necessary accounts and followed up for a meeting—once the client is provided, I’ll move quickly to complete these pending features.
+
+7. Project Name — edizphactory | ext: 2 | Days: 100 days | ETA:  12-May-2026  | Profile: adspike | Status: In Progress | Next: A Bangladeshi client-an AI will be used to conduct IELTS exams, and previous data will also need to be updated.
+
+❗️Rivision and normal -> 2
+
+1. Project Name — enzolacausa | ext: 12 | Days: 230 days | ETA:  21-May-2026 | Profile:  Wix_buddy | Status: Normal | Next: The client has reported some issues and mentioned that they will provide an issue document, but it has not been shared yet. We are continuing to follow up from our end.
+
+2. Project Name — Iyad | ext: 5 | Days: 151 days | ETA:  6-May-2026 | Profile:  Tech_chips | Status: Rivision | Next: The client has provided some modifications, but they do not align with the original requirements. These new changes significantly increase the scope and add many additional functionalities. The client was quite anxious, but I managed to calm them down by assuring that we will complete it within the timeline.
+
+⚠️ Projects at Risk:2
+
+-> Iyad - Tech_chips
+-> enzolacausa - Wix_buddy
+
+🚫 Cancelled Today: 00
+
+❗️ Hyper Client: ( 01 )
+-> Iyad
+

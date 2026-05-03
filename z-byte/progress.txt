@@ -1,0 +1,136 @@
+
+
+
+
+
+
+
+
+
+
+
+- enzolacausa 
+- sirreel1 - Web_genius
+- fernandocaronet
+- asoneth1
+- Iyad 
+- troy1515- Web_genius
+- mtliff
+- fernandocaronet
+- brenttobin
+- mrsmith122 
+- knighly
+- fernandoneh 
+- kayleewallac616
+- maxhilbert
+- mickelmcs - appswizard_Fiverr
+- asoneth1 - brainbox_Fiver
+
+📢 Code Collective Daily Updates
+
+* Project Name — mohamedmouzou | ext: 0 | Days: 1 days | ETA:  19-May-2026 | Profile:  Devforge_  | Status: In Progress | Next:  I’ll set a meeting with the client and create a user flow.
+
+* Project Name — kayleewallac616  | ext: 0 | Days: 10 days | ETA:  4-May-2026  | Profile: webmastery | Status: In Progress | Next: Client is now reviewing the design and  if there is no issue, will deliver within the timeline 
+
+* Project Name — maxhilbert  | ext: 0 | Days: 4 | ETA:  9-May-2026  | Profile:  Rank_champ | Status: In Progress | Next: Today, I will provide the final update. If the client approves it, we will move forward with the delivery
+
+* Project Name — brenttobin | ext: 1 | Days: 37  | ETA:  2-May-2026 | Profile:  Web_genius | Status: In Progress | Next: The delivery approach has been finalized. The delivery will be completed tomorrow. Another phase will begin after the support period.
+
+* Project Name — mtliff | ext: 1 | Days: 49 days | ETA: May 16, 2026 (with in may) | Profile:  Wp_monkey | Status: In Progress  | Next: The project is quite large, and we are trying our best to complete it within the given timeline.
+
+* Project Name — enzolacausa | ext: 12 | Days: 227 days | ETA:  21-May-2026 | Profile:  Wix_buddy | Status: Normal | Next: The client has reported some issues and mentioned that they will provide an issue document, but it has not been shared yet. We are continuing to follow up from our end.
+
+* Project Name — Iyad | ext: 5 | Days: 148 days | ETA:  6-May-2026 | Profile:  Tech_chips | Status: Rivision | Next: The client has provided some modifications, but they do not align with the original requirements. These new changes significantly increase the scope and add many additional functionalities. The client was quite anxious, but I managed to calm them down by assuring that we will complete it within the timeline.
+
+* Project Name — asoneth1 | ext: 5 | Days: 179 days | ETA:  31-May-2026 | Profile:  brainbox_Fiver | Status: In Progress | Next: The client has not been able to host their website on the main domain yet, and the process is still ongoing. The client insists on linking their real website to the Apple Developer Account before creating the account, which has delayed progress for a long time. Following Ridoy bhai’s instructions, we have been sending follow-ups. However, the client has not completed MFA verification, and this issue has remained unresolved for many days.
+
+* Project Name — Sirreel1 | ext: 4 | Days: 116 days | ETA:  8-May-2026 | Profile:  Web_genius | Status: In Progress | Next: Work on subscription, Apple login, notifications, and deployment is ongoing. Subscription is about 60% complete, notification API and push notifications about 40% done. [The subscription works correctly in the local environment, but on the live server, there is a package conflict.] There was some delay due to backend rush, but now progress is steady and we expect completion in this timeline. The client is calm and cooperative.
+
+* Project Name — troy1515 | ext: 1 | Days: 50 days | ETA:  29-May-2026  | Profile:  Web_genius| Status: In Progress | Next: The client was hospitalized and couldn’t create the Apple Developer Account earlier. Four days ago, they finally provided it, and I’ve already uploaded the app to TestFlight for testing. Now, subscription, Apple login, Google login, and push notifications remain. I’ve requested the necessary accounts and followed up for a meeting—once the client is provided, I’ll move quickly to complete these pending features.
+
+
+ Project Name — edizphactory | ext: 1 | Days: 50 days | ETA:  with in may | Profile:  adspike | Status: In Progress | Next: The client is Bangladeshi. We will close it within May.
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+* Project Name — kayleewallac616  | ext: 0 | Days: 13 days | ETA:  3-May-2026  | Profile: webmastery | Status: In Progress | Next: Delivery has been approached, and it will be delivered today. 
+
+* Project Name — brenttobin | ext: 1 | Days: 39  | ETA:  2-May-2026 | Profile:  Web_genius | Status: In Progress | Next: The delivery has been completed. We will bring it into a meeting and move forward to the next phase.
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+📢 Byte Builders Daily Updates
+
+➡️ Projects in Progress
+
+• jacobf317 -- Ext: 1 | Days: 71 | ETA: Within May | Profile: Webgenious0 | Status: WIP | Next: Complete and delivery asap
+
+• phoebefreedman -- Ext: 0 | Days: 12 | ETA: 1st week of May | Profile: Webgenious0 | Status: WIP | Next: Complete and delivery asap
+
+• lightuptech -- Ext: 6 | Days: 125 | ETA: 1st week of May | Profile: Webgenious0 | Status: WIP | Next: Complete and delivery asap
+
+• felicerosee -- Ext: 0 | Days: 2 | ETA: 29th April | Profile: Webgenious0 | Status: WIP | Next: Complete and delivery asap
+
+• pphjobdone-- Ext: 6 | Days: 137 | ETA: Within May | Profile: tech_wix | Status: WIP | Next: Complete asap and deliver to client
+
+• tomsperformance-- Ext: 0 | Days: 16 | ETA: Within 15th May | Profile: tech_wix | Status: WIP | Next: Complete asap and deliver to client
+
+• fernandoneh -- Ext: 0 | Days: 23 | ETA: Within 25th May | Profile: E_Com wizard | Status: WIP | Next: Complete asap and deliver to client
+
+• lizzygube -- Ext: 0 | Days: 6 | ETA: Within May | Profile: Codvanta_fiverr | Status: WIP | Next: Provide regular updates, connect with client, Complete asap, and deliver to client
+
+• fernandocaronet -- Ext: 2 | Days: 90 | ETA: Depends on client collaboration | Profile: tech_ace3_Fiverr | Status: WIP | Next: Trying to collaborate with client to move forward to complete the project; the client doesn't want to move forward as the progress didn't match his expectation, but doesn't specify the misalignment or adjustment
+
+• faisaqasim5 -- Ext: 5 | Days: 157 | ETA: Within May | Profile: Tech_hype1 | Status: WIP | Next: Complete asap and deliver to client [Research-based (LLM Model Training) project, causing delays ]
+
+• healthyhair -- Ext: 2 | Days: 70 | ETA: Within May | Profile: Devscout | Status: WIP | Next: Complete asap and deliver to client [ Client doesn't respond regularly, causing delays ]
+
+• mariaalisia -- Ext: 0 | Days: 18 | ETA: Within May | Profile: Rank champ | Status: WIP | Next: Complete asap and deliver to client
+
+• phainistonny -- Ext: 0 | Days: 10 | ETA: Within May | Profile: Swiftech | Status: WIP | Next: Complete asap and deliver to client
+
+• dugoutlabs -- Ext: 12 | Days: 570 | ETA: N/A | Profile: wp_monkey | Status: WIP | Next: Will proceed with cancel
+
+• december73 -- Ext: 0 | Days: 22 | ETA: Within May | Profile: devsparrow_Fiverr | Status: WIP | Next: Complete asap and deliver to client
+
+• Zenitifiled -- Ext: 2 | Days: 52 | ETA: Within May | Profile: Webgenious0 | Status: WIP | Next: Complete asap and deliver to client
+
+• stephtai -- Ext: 0 | Days: 1 | ETA: Within May | Profile: WP_Monkey | Status: WIP | Next: Complete asap and deliver to client
+
+➡️ Projects in Revision ( 0 )
+
+➡️ Stuck Projects ⚠️
+
+dugoutlabs -- Days: 570 | Value: $2240 | Profile: wp_monkey | Issue: Client doesn't want to move forward by showing his personal  issues | Status: WIP  Last Follow-up: 14th April | Next: Will proceed with cancel
+
+➡️ Cancelled Projects ❌
+ddtdant999999 — Reason: client agreed to accept the delivery without payment-related features and accepted and appreciated with 5 stars, then the order was cancelled from the support after several days of completing the order, though we are collaborating with the client regularly | Support: Open | Compensation: Under discussion
+
+🚀 Deployments: 00
+
+🔧 Revision Completed:
+  faheemakram ||  webharbor
+
+🚫 Cancelled Today: 00
+
+❗️ Hyper Client: ( 00 )
+
+❗️ Critical Stuck:
+• dugoutlabs  — wp_monkey
+
+⚠️ Projects at Risk:
+• fernandocaronet — tech_ace3_Fiverr
+
+
+
+
+
+
+
+
+
